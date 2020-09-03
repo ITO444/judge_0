@@ -10,7 +10,7 @@
         $b = strval($_POST['box']);
         exec('rm stuff/*');
         $box = exec("isolate --cg -b $b --init").'/box';
-        $stuff = "/media/sf_judge/resources/stuff/$b";
+        $stuff = env('APP_PATH')."resources/stuff/$b";
         if($language != 'py'){
             $language = 'cpp';
         }

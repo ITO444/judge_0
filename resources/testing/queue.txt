@@ -1,6 +1,0 @@
-nothing
-hi hi box 7 hi hi sleep 1 hi gi box 7 hi gi sleep 5 hi 1 box 0 bye 1 sleep 5 hi 2 box 1 bye 2 sleep 1 hi 2 box 0 bye 2 sleep 1 hi long box 1\nhi fast box 0\nbye fast sleep 1\nhi fast box 0\nbye fast sleep 1\nbye long sleep 10\nhi 
-loooong box 1\nhi fast box 0\nbye fast sleep 1\nhi fast box 0\nbye fast sleep 1\nhi fast box 0\nbye fast sleep 1\nhi fast box 0\nbye fast sleep 1\nhi fast box 0\nbye fast sleep 1\nhi fast box 0\nbye fast sleep 1\nbye 
-loooong sleep 30\nhi 
-sadfasdf box 0\nbye 
-sadfasdf sleep 1\nhi hi box 5\nbye hi sleep 1\nhi wheee box 6\nbye wheee sleep 12\nhi a box 3\nbye a sleep 0\nhi testing box 6\nbye testing sleep 4\n

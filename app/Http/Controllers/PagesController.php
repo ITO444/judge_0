@@ -43,7 +43,7 @@ class PagesController extends Controller
             ];
             dispatch(new ProcessSubmission($data));
         }
-        $output = file_get_contents("/media/sf_judge/resources/testing/queue.txt");
+        $output = file_get_contents(env('APP_PATH')."resources/testing/queue.txt");
         return view('pages.queue')->with('output', $output);
     }
 }

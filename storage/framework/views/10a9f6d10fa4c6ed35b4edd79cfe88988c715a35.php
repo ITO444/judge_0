@@ -2,13 +2,16 @@
 
 <?php $__env->startSection('content'); ?>
     <div class="jumbotron text-center">
-        <h1>Judge</h1>
+        <h1><?php echo e(config('app.name')); ?></h1>
+        <p>
+            When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+            \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+        </p>
         <?php if(Auth::guest()): ?>
-            <p>[insert some text here]</p>
-            <a href="<?php echo e(url('redirect')); ?>">
+            <a href="<?php echo e(url('redirect')); ?>" class="btn btn-primary">
                 Login as DGS Student/Staff
             </a>
-            <a href="<?php echo e(url('login')); ?>">
+            <a href="<?php echo e(url('login')); ?>" class="btn btn-primary">
                 Login as Others
             </a>
         <?php else: ?>
