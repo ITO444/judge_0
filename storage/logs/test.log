@@ -284,3 +284,388 @@ sadfasdf"
 [2020-09-02 05:19:17][yRkTeomNvuRElAQvZghw527IwR9JOiqb] Processed:  App\Jobs\ProcessSubmission
 [2020-09-02 05:23:02][Go39A16PPpn3TnGFVHs6MAy2Ja051KZA] Processing: App\Jobs\ProcessSubmission
 [2020-09-02 05:23:03][Go39A16PPpn3TnGFVHs6MAy2Ja051KZA] Processed:  App\Jobs\ProcessSubmission
+[2020-09-04 10:46:57][VEjv0s6mNIgy12dHSB8WB9FCC68tn0MG] Processing: App\Jobs\ProcessRunner
+[2020-09-04 10:47:00][VEjv0s6mNIgy12dHSB8WB9FCC68tn0MG] Processing: App\Jobs\ProcessRunner
+[2020-09-04 10:47:03][VEjv0s6mNIgy12dHSB8WB9FCC68tn0MG] Processing: App\Jobs\ProcessRunner
+[2020-09-04 10:47:03][VEjv0s6mNIgy12dHSB8WB9FCC68tn0MG] Failed:     App\Jobs\ProcessRunner
+
+   PhpAmqpLib\Exception\AMQPHeartbeatMissedException 
+
+  Missed server heartbeat
+
+  at /media/sf_judge/vendor/php-amqplib/php-amqplib/PhpAmqpLib/Wire/IO/AbstractIO.php:154
+    150|             $lastActivity = max($this->last_read, $this->last_write);
+    151|             $now = microtime(true);
+    152|             if (($now - $lastActivity) > $this->heartbeat * 2 + 1) {
+    153|                 $this->close();
+  > 154|                 throw new AMQPHeartbeatMissedException('Missed server heartbeat');
+    155|             }
+    156|         }
+    157|     }
+    158|
+
+      [2m+30 vendor frames [22m
+  31  /media/sf_judge/artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
+[2020-09-04 11:16:38][tVj3RCuH8e2L3je7qlLr5qfg33YgZMBn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:16:39][tVj3RCuH8e2L3je7qlLr5qfg33YgZMBn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:16:42][tVj3RCuH8e2L3je7qlLr5qfg33YgZMBn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:16:42][tVj3RCuH8e2L3je7qlLr5qfg33YgZMBn] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:18:42][R2qFBORwsvvUEePGIlVX4uiTxHFaJGal] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:18:42][R2qFBORwsvvUEePGIlVX4uiTxHFaJGal] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:22:37][HnDqgSFiFgRSpbI7jeGOmU0dKKqrIDim] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:22:40][HnDqgSFiFgRSpbI7jeGOmU0dKKqrIDim] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:22:43][HnDqgSFiFgRSpbI7jeGOmU0dKKqrIDim] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:22:43][HnDqgSFiFgRSpbI7jeGOmU0dKKqrIDim] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:24:22][ZGvyvXDYz37Yl6RWiZzp2ISVPmJQQ8UV] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:24:25][ZGvyvXDYz37Yl6RWiZzp2ISVPmJQQ8UV] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:24:28][ZGvyvXDYz37Yl6RWiZzp2ISVPmJQQ8UV] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:24:28][ZGvyvXDYz37Yl6RWiZzp2ISVPmJQQ8UV] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:25:23][94f251ZqSnDQ3CKPjdrigZmWSS5ns4MO] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:25:25][94f251ZqSnDQ3CKPjdrigZmWSS5ns4MO] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:25:28][94f251ZqSnDQ3CKPjdrigZmWSS5ns4MO] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:25:28][94f251ZqSnDQ3CKPjdrigZmWSS5ns4MO] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:26:22][ncfoYYTdcsRFOjysKlyPvgWVe0jUTBT9] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:26:22][ncfoYYTdcsRFOjysKlyPvgWVe0jUTBT9] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:27:12][uaa6ylFueloWsAGkXhDgNl4HYjNBi565] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:27:13][uaa6ylFueloWsAGkXhDgNl4HYjNBi565] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:27:15][uaa6ylFueloWsAGkXhDgNl4HYjNBi565] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:27:15][uaa6ylFueloWsAGkXhDgNl4HYjNBi565] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:30:16][hL3odaj9LpRbdGGGo1UzRTlKbXzdDfjZ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:30:18][hL3odaj9LpRbdGGGo1UzRTlKbXzdDfjZ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:30:19][hL3odaj9LpRbdGGGo1UzRTlKbXzdDfjZ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:30:20][hL3odaj9LpRbdGGGo1UzRTlKbXzdDfjZ] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:32:53][dp1mtR79DeyvRZiA1wY4EP9lyI3wNuun] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:32:53][dp1mtR79DeyvRZiA1wY4EP9lyI3wNuun] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:33:19][gFYvHnM7zIOJyrtJi1KwiDR9WgXipo4g] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:33:20][gFYvHnM7zIOJyrtJi1KwiDR9WgXipo4g] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:34:25][Ew1l4MzOw97hUjGIapl8I7hXhK9CPdRT] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 11:34:27][Ew1l4MzOw97hUjGIapl8I7hXhK9CPdRT] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 11:34:28][Ew1l4MzOw97hUjGIapl8I7hXhK9CPdRT] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 11:34:28][Ew1l4MzOw97hUjGIapl8I7hXhK9CPdRT] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:35:10][XtPa2zNofaSNBFZZdr9IdqnosrbtPiH5] Processing: App\Jobs\ProcessRunner
+[2020-09-04 11:35:10][XtPa2zNofaSNBFZZdr9IdqnosrbtPiH5] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:35:41][Rkb7ikeFc6acZuFmJRLuAfAiR9PKxgOq] Processing: App\Jobs\ProcessRunner
+OK (1.157 sec real, 1.640 sec wall)
+mv: cannot move '/var/local/lib/isolate/3/box/program.exe' to '/media/sf_judge/storage/usercode/2': No such file or directory
+[2020-09-04 11:35:43][Rkb7ikeFc6acZuFmJRLuAfAiR9PKxgOq] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:37:05][BdGBrUkZ9MCe7txwmT0euQiIRGnt14oG] Processing: App\Jobs\ProcessRunner
+rm: cannot remove '/media/sf_judge/storage/app/run/4/*': No such file or directory
+OK (0.808 sec real, 0.843 sec wall)
+[2020-09-04 11:37:06][BdGBrUkZ9MCe7txwmT0euQiIRGnt14oG] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:47:11][HlmOdAlcRWskVazevP3VehM98BpL5dYC] Processing: App\Jobs\ProcessRunner
+rm: cannot remove '/media/sf_judge/storage/app/run/6/*': No such file or directory
+OK (0.773 sec real, 0.793 sec wall)
+[2020-09-04 11:47:12][HlmOdAlcRWskVazevP3VehM98BpL5dYC] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:49:08][ZeRYWZcwMghACBWQVF59kvJa74rBn7bn] Processing: App\Jobs\ProcessRunner
+OK (0.815 sec real, 0.846 sec wall)
+[2020-09-04 11:49:09][ZeRYWZcwMghACBWQVF59kvJa74rBn7bn] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:49:33][8wRMicxjt2NpOBlbnH7H8WG8RxG7Ybyy] Processing: App\Jobs\ProcessRunner
+hiOK (0.782 sec real, 0.813 sec wall)
+[2020-09-04 11:49:34][8wRMicxjt2NpOBlbnH7H8WG8RxG7Ybyy] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:50:06][8a5GJyExxDHZ44bULWZt65SpdtlhhQ4y] Processing: App\Jobs\ProcessRunner
+hiOK (0.792 sec real, 0.831 sec wall)
+[2020-09-04 11:50:07][8a5GJyExxDHZ44bULWZt65SpdtlhhQ4y] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:52:37][1IL8NoWg8nxo3s26zVnytdkIXWeR82dT] Processing: App\Jobs\ProcessRunner
+g++: error: program.cpp: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+Exited with error status 1
+[2020-09-04 11:52:38][1IL8NoWg8nxo3s26zVnytdkIXWeR82dT] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:53:12][yQO6FSrjuLKOF2NptDiBgizT5B8cRShp] Processing: App\Jobs\ProcessRunner
+OK (0.857 sec real, 0.877 sec wall)
+[2020-09-04 11:53:14][yQO6FSrjuLKOF2NptDiBgizT5B8cRShp] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:55:50][ramnrv13kXyvSxGA30EPuOTDelRwcJ6C] Processing: App\Jobs\ProcessRunner
+:([2020-09-04 11:55:51][ramnrv13kXyvSxGA30EPuOTDelRwcJ6C] Processing: App\Jobs\ProcessRunner
+:([2020-09-04 11:55:54][ramnrv13kXyvSxGA30EPuOTDelRwcJ6C] Processing: App\Jobs\ProcessRunner
+:([2020-09-04 11:55:54][ramnrv13kXyvSxGA30EPuOTDelRwcJ6C] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 11:56:46][JuSKKUXTwIj7WH81ANjFq1LBAEcO9ZDk] Processing: App\Jobs\ProcessRunner
+:(OK (0.888 sec real, 0.926 sec wall)
+[2020-09-04 11:56:48][JuSKKUXTwIj7WH81ANjFq1LBAEcO9ZDk] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 11:59:13][A3PU5bmmX0slzITUWTvRBMvbMhgbS6Tm] Processing: App\Jobs\ProcessRunner
+total 80
+ 4 drwxr-xr-x  21 root root  4096 Jun 12 03:40 .
+ 4 drwxr-xr-x  21 root root  4096 Jun 12 03:40 ..
+ 0 lrwxrwxrwx   1 root root     7 Apr 23 07:32 bin -> usr/bin
+ 4 drwxr-xr-x   4 root root  4096 Jun 12 01:06 boot
+ 4 drwxr-xr-x   2 root root  4096 Jun  3 13:54 cdrom
+ 0 drwxr-xr-x  19 root root  4080 Sep  4 01:53 dev
+ 4 drwxr-xr-x 101 root root  4096 Jun 19 01:29 etc
+ 4 drwxr-xr-x   3 root root  4096 Jun  3 14:10 home
+ 4 drwxr-xr-x   3 root root  4096 Jun  4 12:38 isolate
+ 0 lrwxrwxrwx   1 root root     7 Apr 23 07:32 lib -> usr/lib
+ 0 lrwxrwxrwx   1 root root     9 Apr 23 07:32 lib32 -> usr/lib32
+ 0 lrwxrwxrwx   1 root root     9 Apr 23 07:32 lib64 -> usr/lib64
+ 0 lrwxrwxrwx   1 root root    10 Apr 23 07:32 libx32 -> usr/libx32
+16 drwx------   2 root root 16384 Jun  3 13:52 lost+found
+ 4 drwxr-xr-x   3 root root  4096 Jun  5 01:14 media
+ 4 drwxr-xr-x   2 root root  4096 Apr 23 07:32 mnt
+ 4 drwxr-xr-x   3 root root  4096 Jun  4 03:43 opt
+ 0 dr-xr-xr-x 163 root root     0 Sep  4 01:53 proc
+ 4 drwx------   6 root root  4096 Jun  5 16:13 root
+ 0 drwxr-xr-x  30 root root   960 Sep  4 08:59 run
+ 0 lrwxrwxrwx   1 root root     8 Apr 23 07:32 sbin -> usr/sbin
+ 4 drwxr-xr-x   6 root root  4096 Jun  3 14:10 snap
+ 4 drwxr-xr-x   2 root root  4096 Apr 23 07:32 srv
+ 0 dr-xr-xr-x  13 root root     0 Sep  4 01:53 sys
+ 4 drwxrwxrwt  11 root root  4096 Sep  4 11:39 tmp
+ 4 drwxr-xr-x  14 root root  4096 Apr 23 07:34 usr
+ 4 drwxr-xr-x  14 root root  4096 Jun  4 00:21 var
+:(OK (0.804 sec real, 0.843 sec wall)
+[2020-09-04 11:59:14][A3PU5bmmX0slzITUWTvRBMvbMhgbS6Tm] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:00:04][9Z8I0XBlDE91SyutfAImz19nwokseOVi] Processing: App\Jobs\ProcessRunner
+:(OK (0.740 sec real, 0.779 sec wall)
+[2020-09-04 12:00:05][9Z8I0XBlDE91SyutfAImz19nwokseOVi] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:02:26][CMC0AzI98ny1rBJHvP57zkHhTUQbG5WL] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:02:29][CMC0AzI98ny1rBJHvP57zkHhTUQbG5WL] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:02:32][CMC0AzI98ny1rBJHvP57zkHhTUQbG5WL] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:02:33][CMC0AzI98ny1rBJHvP57zkHhTUQbG5WL] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 12:03:01][XnlzggykMT3CVUp377Ouh69UaaJeRmjn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:03:01][XnlzggykMT3CVUp377Ouh69UaaJeRmjn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:03:02][XnlzggykMT3CVUp377Ouh69UaaJeRmjn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:03:02][XnlzggykMT3CVUp377Ouh69UaaJeRmjn] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 12:04:48][ndXSsmMUveaGdd6qmasD5vzFVvMUTHGh] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:04:49][ndXSsmMUveaGdd6qmasD5vzFVvMUTHGh] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:05:19][JicEdzF1MVFwGG9rwMeFaJdMv5qqAR12] Processing: App\Jobs\ProcessRunner
+.[2020-09-04 12:05:19][JicEdzF1MVFwGG9rwMeFaJdMv5qqAR12] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:10:31][kypi7IaCtNCkbNhNRHa51wk0IXQ9Piiy] Processing: App\Jobs\ProcessRunner
+/var/local/lib/isolate/1
+/box[2020-09-04 12:10:31][kypi7IaCtNCkbNhNRHa51wk0IXQ9Piiy] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:15:01][oCt1CG6Q5kbnrBj7psmkdJFVaFhJH83Z] Processing: App\Jobs\ProcessRunner
+/var/local/lib/isolate/7
+/box[2020-09-04 12:15:01][oCt1CG6Q5kbnrBj7psmkdJFVaFhJH83Z] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:33:23][s0yFwNhgubAk0T6n6ZrTwQF5K1I5OhqE] Processing: App\Jobs\ProcessRunner
+0/var/local/lib/isolate/3
+/box[2020-09-04 12:33:23][s0yFwNhgubAk0T6n6ZrTwQF5K1I5OhqE] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:34:04][dEveDS6UFXvVK88YTzFfEBbjqVYzdIrn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:34:07][dEveDS6UFXvVK88YTzFfEBbjqVYzdIrn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:34:10][dEveDS6UFXvVK88YTzFfEBbjqVYzdIrn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:34:10][dEveDS6UFXvVK88YTzFfEBbjqVYzdIrn] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 12:34:48][aa4yjt571bobc2xnJO7wKa2SSZINKU2v] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:34:49][aa4yjt571bobc2xnJO7wKa2SSZINKU2v] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:34:51][aa4yjt571bobc2xnJO7wKa2SSZINKU2v] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:34:51][aa4yjt571bobc2xnJO7wKa2SSZINKU2v] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 12:35:50][5Xql4l0OosjGB5dfS0D8nHNcTvHQ57cS] Processing: App\Jobs\ProcessRunner
+string(25) "/var/local/lib/isolate/7
+"
+/box[2020-09-04 12:35:50][5Xql4l0OosjGB5dfS0D8nHNcTvHQ57cS] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 12:40:24][AXoeYHbWu5qJIxzIjxQE3DJTO0KHzRVD] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:40:25][AXoeYHbWu5qJIxzIjxQE3DJTO0KHzRVD] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:40:27][AXoeYHbWu5qJIxzIjxQE3DJTO0KHzRVD] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:40:27][AXoeYHbWu5qJIxzIjxQE3DJTO0KHzRVD] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 12:41:19][FtVOPvee38apxLTbiTJc5XuSBBDjHNUk] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:41:21][FtVOPvee38apxLTbiTJc5XuSBBDjHNUk] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:41:23][FtVOPvee38apxLTbiTJc5XuSBBDjHNUk] Processing: App\Jobs\ProcessRunner
+[2020-09-04 12:41:23][FtVOPvee38apxLTbiTJc5XuSBBDjHNUk] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 13:15:04][Da6p3eM45YH5gKpxn392DeDVA8mfQ817] Processing: App\Jobs\ProcessRunner
+/var/local/lib/isolate/0/box[2020-09-04 13:15:04][Da6p3eM45YH5gKpxn392DeDVA8mfQ817] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:19:11][wIZ66v45Lzu1rcl3haZJqCJvVwFrZlej] Processing: App\Jobs\ProcessRunner
+:([2020-09-04 13:19:12][wIZ66v45Lzu1rcl3haZJqCJvVwFrZlej] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:19:51][a5B4cjTA4TYLELJmrqM8upK1tV7roBP1] Processing: App\Jobs\ProcessRunner
+:([2020-09-04 13:19:51][a5B4cjTA4TYLELJmrqM8upK1tV7roBP1] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:20:15][Oq9c4KWZnv20xdY4Ar83vQytMtVoRPfY] Processing: App\Jobs\ProcessRunner
+:([2020-09-04 13:20:15][Oq9c4KWZnv20xdY4Ar83vQytMtVoRPfY] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:20:42][NKS9fURwui5waSTmCxTm6O1vnXtTeCLJ] Processing: App\Jobs\ProcessRunner
+The command "'mv' '/media/sf_judge/storage/app/run/2/*' '/var/local/lib/isolate/2/box'" failed.
+
+Exit Code: 1(General error)
+
+Working directory: /
+
+Output:
+================
+
+
+Error Output:
+================
+mv: cannot stat '/media/sf_judge/storage/app/run/2/*': No such file or directory
+:([2020-09-04 13:20:42][NKS9fURwui5waSTmCxTm6O1vnXtTeCLJ] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:24:47][beNe1Yrf9i4im1s1tuyVFOBtRJnv0Znq] Processing: App\Jobs\ProcessRunner
+The command "'rm' '/media/sf_judge/storage/app/run/5/*'" failed.
+
+Exit Code: 1(General error)
+
+Working directory: /
+
+Output:
+================
+
+
+Error Output:
+================
+rm: cannot remove '/media/sf_judge/storage/app/run/5/*': No such file or directory
+:([2020-09-04 13:24:47][beNe1Yrf9i4im1s1tuyVFOBtRJnv0Znq] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:25:36][6EkW7ahItRvcwp3cOOmvkFtTL1syu6zR] Processing: App\Jobs\ProcessRunner
+The command "'rm /media/sf_judge/storage/app/run/4/*'" failed.
+
+Exit Code: 127(Command not found)
+
+Working directory: /
+
+Output:
+================
+
+
+Error Output:
+================
+sh: 1: exec: rm /media/sf_judge/storage/app/run/4/*: not found
+:([2020-09-04 13:25:36][6EkW7ahItRvcwp3cOOmvkFtTL1syu6zR] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:27:45][06DzAzGhpBIzvGWpwKucmWiROW5Dvv1m] Processing: App\Jobs\ProcessRunner
+[2020-09-04 13:27:45][06DzAzGhpBIzvGWpwKucmWiROW5Dvv1m] Processing: App\Jobs\ProcessRunner
+[2020-09-04 13:27:48][06DzAzGhpBIzvGWpwKucmWiROW5Dvv1m] Processing: App\Jobs\ProcessRunner
+[2020-09-04 13:27:49][06DzAzGhpBIzvGWpwKucmWiROW5Dvv1m] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 13:32:58][i4h9xLvHlxMiysBcjk3IqNPEuLYnFCaH] Processing: App\Jobs\ProcessRunner
+The command "'rm' '/media/sf_judge/storage/app/run/1/' '*'" failed.
+
+Exit Code: 1(General error)
+
+Working directory: /
+
+Output:
+================
+
+
+Error Output:
+================
+rm: cannot remove '/media/sf_judge/storage/app/run/1/': Is a directory
+rm: cannot remove '*': No such file or directory
+:([2020-09-04 13:32:59][i4h9xLvHlxMiysBcjk3IqNPEuLYnFCaH] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:34:01][EqqTQRKtfJThyAEC2ahY7HW40UfnIner] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 13:34:02][EqqTQRKtfJThyAEC2ahY7HW40UfnIner] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:38:49][PqKJEC4iA2zKCXuvbRRh7tnTqOS5FQTG] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 13:38:49][PqKJEC4iA2zKCXuvbRRh7tnTqOS5FQTG] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:45:47][gPsqv5yjAuMZvKRxP7xlsnnSWFW7XmRz] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 13:45:48][gPsqv5yjAuMZvKRxP7xlsnnSWFW7XmRz] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:48:07][rBpQqlIs0G4aCshwNPzXWHn9TsvP8mgZ] Processing: App\Jobs\ProcessRunner
+OK (0.808 sec real, 0.840 sec wall)
+[2020-09-04 13:48:08][rBpQqlIs0G4aCshwNPzXWHn9TsvP8mgZ] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:48:39][IVKH44UsSkwRAcRHCZYzbx5FrBuD67iv] Processing: App\Jobs\ProcessRunner
+OK (0.880 sec real, 0.921 sec wall)
+[2020-09-04 13:48:40][IVKH44UsSkwRAcRHCZYzbx5FrBuD67iv] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:49:02][4JTGPGVYQyYGETUJgXgrjwHKPzrV1GyM] Processing: App\Jobs\ProcessRunner
+execve("g++"): No such file or directory
+[2020-09-04 13:49:02][4JTGPGVYQyYGETUJgXgrjwHKPzrV1GyM] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:53:26][pTAGbui7Xef8NleiPYDePDKxQTyBjMcM] Processing: App\Jobs\ProcessRunner
+[2020-09-04 13:53:27][pTAGbui7Xef8NleiPYDePDKxQTyBjMcM] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:54:26][xWiM2jRRYOwYpQlECQQjmjopk04RfDq2] Processing: App\Jobs\ProcessRunner
+[2020-09-04 13:54:27][xWiM2jRRYOwYpQlECQQjmjopk04RfDq2] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:55:53][gGqAhJ4vlXjQ1OIuiPHnGdXYQxTHwPKS] Processing: App\Jobs\ProcessRunner
+[2020-09-04 13:55:54][gGqAhJ4vlXjQ1OIuiPHnGdXYQxTHwPKS] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:56:29][iet4Dfu05IcUXGKCsup7v7p7Aj1tswzZ] Processing: App\Jobs\ProcessRunner
+hi[2020-09-04 13:56:30][iet4Dfu05IcUXGKCsup7v7p7Aj1tswzZ] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 13:57:10][m4DBRO992cchBMzVaLhMXWNs8PiX2TYP] Processing: App\Jobs\ProcessRunner
+OK (0.677 sec real, 0.713 sec wall)
+[2020-09-04 13:57:12][m4DBRO992cchBMzVaLhMXWNs8PiX2TYP] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 14:24:49][o0epK5bLLUxjnjy5b3sKOmEWzJwLwlZr] Processing: App\Jobs\ProcessRunner
+program.cpp: In function ‘int main()’:
+program.cpp:4:21: error: ‘r’ was not declared in this scope
+    4 |     cout << "Hello";r
+      |                     ^
+Exited with error status 1
+[2020-09-04 14:24:50][o0epK5bLLUxjnjy5b3sKOmEWzJwLwlZr] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 14:53:44][WTBdTKKrgy0CudmBRxU6bxtWiuVW6HoH] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:53:47][WTBdTKKrgy0CudmBRxU6bxtWiuVW6HoH] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:53:50][WTBdTKKrgy0CudmBRxU6bxtWiuVW6HoH] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:53:50][WTBdTKKrgy0CudmBRxU6bxtWiuVW6HoH] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 14:54:23][lhnMlpdr9B8UDFzI48Z9HqhZHkef9mPX] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:54:25][lhnMlpdr9B8UDFzI48Z9HqhZHkef9mPX] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:54:27][lhnMlpdr9B8UDFzI48Z9HqhZHkef9mPX] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:54:27][lhnMlpdr9B8UDFzI48Z9HqhZHkef9mPX] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 14:54:57][nnZHtaGPKpTMqYwoidTLtFcLNDLGcSXP] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:54:59][nnZHtaGPKpTMqYwoidTLtFcLNDLGcSXP] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:54:59][nnZHtaGPKpTMqYwoidTLtFcLNDLGcSXP] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:54:59][nnZHtaGPKpTMqYwoidTLtFcLNDLGcSXP] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 14:56:02][G7MskQDK0y5o057dUUyRVsgWI3IR6osC] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:56:04][G7MskQDK0y5o057dUUyRVsgWI3IR6osC] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:56:05][G7MskQDK0y5o057dUUyRVsgWI3IR6osC] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:56:05][G7MskQDK0y5o057dUUyRVsgWI3IR6osC] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 14:56:48][8Rhkq406ms1nwgssCrBQirS2XYPZBFAr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:56:52][8Rhkq406ms1nwgssCrBQirS2XYPZBFAr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:56:54][8Rhkq406ms1nwgssCrBQirS2XYPZBFAr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:56:54][8Rhkq406ms1nwgssCrBQirS2XYPZBFAr] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 14:58:09][qQYRX56Xg1Me34whMQ3B3k8BUxAznNSr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:58:10][qQYRX56Xg1Me34whMQ3B3k8BUxAznNSr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:58:11][qQYRX56Xg1Me34whMQ3B3k8BUxAznNSr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:58:11][qQYRX56Xg1Me34whMQ3B3k8BUxAznNSr] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 14:59:22][P8JBis66GYk3JD01L8sqMDM7ELVe4LXe] Processing: App\Jobs\ProcessRunner
+[2020-09-04 14:59:22][P8JBis66GYk3JD01L8sqMDM7ELVe4LXe] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 14:59:56][jbfQLO7d0KuRsunk5YpmVvYyoTcPSI15] Processing: App\Jobs\ProcessRunner
+OK (0.762 sec real, 0.800 sec wall)
+[2020-09-04 15:00:00][jbfQLO7d0KuRsunk5YpmVvYyoTcPSI15] Processing: App\Jobs\ProcessRunner
+OK (1.058 sec real, 1.083 sec wall)
+[2020-09-04 15:00:02][jbfQLO7d0KuRsunk5YpmVvYyoTcPSI15] Processing: App\Jobs\ProcessRunner
+OK (0.688 sec real, 0.724 sec wall)
+[2020-09-04 15:00:03][jbfQLO7d0KuRsunk5YpmVvYyoTcPSI15] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 15:00:27][5VEnK15A2PV8dh3NfMNRwSXizNsZqJiI] Processing: App\Jobs\ProcessRunner
+OK (0.712 sec real, 0.735 sec wall)
+[2020-09-04 15:00:28][5VEnK15A2PV8dh3NfMNRwSXizNsZqJiI] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:04:30][S9B5BJFjLl8lJinn1T1lQRrKzLO6xuEy] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:04:32][S9B5BJFjLl8lJinn1T1lQRrKzLO6xuEy] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:08:50][emHMoe39FPYljaQKzLS5KkE0H3BdwwJ5] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:08:51][emHMoe39FPYljaQKzLS5KkE0H3BdwwJ5] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:09:10][RVo2op3WcFEqXpkBHj6Gcx7OBsfeSUdn] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:09:12][RVo2op3WcFEqXpkBHj6Gcx7OBsfeSUdn] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:10:29][lX1U93MdBzkqB8EORiD5ASV0gKcaGSJ9] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:10:30][lX1U93MdBzkqB8EORiD5ASV0gKcaGSJ9] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:35:27][OJT684wFF4do81Z3BsyyFldqqKqQN4pB] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:35:27][OJT684wFF4do81Z3BsyyFldqqKqQN4pB] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:35:43][VetcGgT8HOKkCur9AyIg52x12On2iN6F] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:35:44][VetcGgT8HOKkCur9AyIg52x12On2iN6F] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:35:57][EpyqTIShb8aAGLHRB8iQHMGQ2pKo4Gha] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:35:59][EpyqTIShb8aAGLHRB8iQHMGQ2pKo4Gha] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:42:40][Hk4nnwpceEspOMycKQTcISsY36X53Qop] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:42:41][Hk4nnwpceEspOMycKQTcISsY36X53Qop] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:43:16][LzLGGTogt4UpG584GuYNmd0IwP424V9F] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:43:17][LzLGGTogt4UpG584GuYNmd0IwP424V9F] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:44:11][dcl7NU6aoyWsp0PLhdhyXIZuyhOsm2rQ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:44:12][dcl7NU6aoyWsp0PLhdhyXIZuyhOsm2rQ] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:45:05][Xa0U2vY0mkpt58TbhiG8H5CUPCgiLUQ5] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:45:06][Xa0U2vY0mkpt58TbhiG8H5CUPCgiLUQ5] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:46:48][CE0CDa1Fps9NokrdpTLh5AvXOxh3muVf] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:46:50][CE0CDa1Fps9NokrdpTLh5AvXOxh3muVf] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:47:08][5qqUO9E94Ld57qx4OmiysxHApdKUMl5Q] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:47:09][5qqUO9E94Ld57qx4OmiysxHApdKUMl5Q] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 15:48:45][o6NmNCg4lPhjGsgg5dMbGwDTtvb5puR6] Processing: App\Jobs\ProcessRunner
+[2020-09-04 15:48:47][o6NmNCg4lPhjGsgg5dMbGwDTtvb5puR6] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 16:05:05][aJiqRvGO6msBjNJkiLIf9HIlWtFxsYeJ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 16:05:08][aJiqRvGO6msBjNJkiLIf9HIlWtFxsYeJ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 16:05:13][aJiqRvGO6msBjNJkiLIf9HIlWtFxsYeJ] Processing: App\Jobs\ProcessRunner
+[2020-09-04 16:05:15][aJiqRvGO6msBjNJkiLIf9HIlWtFxsYeJ] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 16:09:32][Pcicn8MaLRI57kwuyVvFHoQuoai9IhMd] Processing: App\Jobs\ProcessRunner
+[2020-09-04 16:09:34][Pcicn8MaLRI57kwuyVvFHoQuoai9IhMd] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 16:10:15][RS68Djk1UvF0DhUGTfSa4yP6jPPIBDhR] Processing: App\Jobs\ProcessRunner
+[2020-09-04 16:10:17][RS68Djk1UvF0DhUGTfSa4yP6jPPIBDhR] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 16:10:44][xVsMmdMScQTugeCvcAiW7P2s8dSBLYVg] Processing: App\Jobs\ProcessRunner
+[2020-09-04 16:10:45][xVsMmdMScQTugeCvcAiW7P2s8dSBLYVg] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:07:19][M054tqphis8yKMWjChl141i89YXxsLGp] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:07:21][M054tqphis8yKMWjChl141i89YXxsLGp] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:07:32][nu3UaEOd3GAemVi9JyTBSkQ8KqzoRV4u] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:07:34][nu3UaEOd3GAemVi9JyTBSkQ8KqzoRV4u] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:12:31][5tMxguwwrxQjrjmuegeMqqz20iodsPRE] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:12:33][5tMxguwwrxQjrjmuegeMqqz20iodsPRE] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:12:36][5tMxguwwrxQjrjmuegeMqqz20iodsPRE] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:12:36][5tMxguwwrxQjrjmuegeMqqz20iodsPRE] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 17:15:13][aP0HWk8hJtROYhOwGok2UC8tTK3tEszX] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:15:17][aP0HWk8hJtROYhOwGok2UC8tTK3tEszX] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:15:18][aP0HWk8hJtROYhOwGok2UC8tTK3tEszX] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:15:19][aP0HWk8hJtROYhOwGok2UC8tTK3tEszX] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 17:15:43][XbZEaguxY7g5KzoGQ6ppA6EWSmNj5VFP] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:15:46][XbZEaguxY7g5KzoGQ6ppA6EWSmNj5VFP] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:15:46][XbZEaguxY7g5KzoGQ6ppA6EWSmNj5VFP] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:15:47][XbZEaguxY7g5KzoGQ6ppA6EWSmNj5VFP] Failed:     App\Jobs\ProcessRunner
+[2020-09-04 17:16:37][W7pZ8QTNUtFbqUvIWdJ6MB4dpSjImbnS] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:16:39][W7pZ8QTNUtFbqUvIWdJ6MB4dpSjImbnS] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:16:48][bzRYnjueWX3QD7fut2z0L2jIGM9Xlnz2] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:16:50][bzRYnjueWX3QD7fut2z0L2jIGM9Xlnz2] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:18:11][33z81JFDYJwJg4684vUsCPqPvo3kBooB] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:18:13][33z81JFDYJwJg4684vUsCPqPvo3kBooB] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:19:08][WTSFy7PN7Q7I6CWKR4KTs7JrSzqpPkBr] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:19:10][WTSFy7PN7Q7I6CWKR4KTs7JrSzqpPkBr] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:20:16][gyinQqDmjRus0ZKTsdLnFIz42JcnVKN0] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:20:19][gyinQqDmjRus0ZKTsdLnFIz42JcnVKN0] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:22:29][xjXlsLc7UHUpbIEFCl8sj9mjxbpq0hAf] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:22:32][xjXlsLc7UHUpbIEFCl8sj9mjxbpq0hAf] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:23:02][RuTF0EILI9B4lZEfJzxs4Jt0kttudVEd] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:23:02][RuTF0EILI9B4lZEfJzxs4Jt0kttudVEd] Processed:  App\Jobs\ProcessRunner
+[2020-09-04 17:23:23][dVb1GDAgHplr73AsET0wgqAE9CPVCfGW] Processing: App\Jobs\ProcessRunner
+[2020-09-04 17:23:24][dVb1GDAgHplr73AsET0wgqAE9CPVCfGW] Processed:  App\Jobs\ProcessRunner

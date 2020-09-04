@@ -22,9 +22,12 @@ Route::get('/', 'PagesController@index');
 Route::get('/users/{id}', 'PagesController@user');
 Route::get('/settings', 'PagesController@settings');
 
-Route::get('/test', function(){return view('test.index');});
-Route::post('/test', function(){return view('test.index');});
-Route::get('/ace', function(){return view('test.ace');});
+Route::get('/runner', 'RunnerController@index');
+Route::post('/runner/run', 'RunnerController@run');
+Route::post('/runner/save', 'RunnerController@save');
+Route::post('/runner/language', 'RunnerController@language');
+Route::post('/runner/check', 'RunnerController@check');
+
 Route::get('/queue','PagesController@queue');
 Route::post('/queue', 'PagesController@queue');
 
