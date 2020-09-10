@@ -90,6 +90,6 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         return $this->registered($request, $user)
-            ?: redirect($this->redirectPath())->with('success', "An account is created, please remind $user->name to verify the account using the url sent to $user->email within a week. The password can be set at ".route('password.request'));
+            ?: redirect($this->redirectPath())->with('success', "An account is created, please remind $user->name to set the password at ".route('password.request')." and verify the account within a week using the url sent to $user->email");
     }
 }
