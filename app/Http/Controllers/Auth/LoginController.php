@@ -81,11 +81,12 @@ class LoginController extends Controller
             $newUser                  = new User;
             $newUser->name            = explode('@', $user->email)[0];
             $newUser->display         = $user->name;
-            $newUser->level           = 0;
+            $newUser->level           = 1;
             $newUser->email           = $user->email;
             $newUser->google_id       = $user->id;
             $newUser->avatar          = $user->avatar;
             $newUser->avatar_original = $user->avatar_original;
+            $newUser->email_verified_at = $newUser->freshTimestamp();
             $newUser->save();
             auth()->login($newUser, true);
         }

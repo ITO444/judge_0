@@ -16,8 +16,7 @@
             </a>
         @else
             <p>Welcome {{Auth::user()->name}}, what would you like to do today?</p>
-            <a href="/test" class="btn btn-primary">Test</a>
-            <a href="/queue" class="btn btn-primary">Queue</a>
+            <a href="/runner" class="btn btn-primary">Runner</a>
             <a href="/users/{{Auth::user()->id}}" class="btn btn-primary">User</a>
             <a href="/home" class="btn btn-primary">Home</a>
         @endif

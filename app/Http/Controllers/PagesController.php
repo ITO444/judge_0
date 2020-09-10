@@ -25,7 +25,7 @@ class PagesController extends Controller
     public function user($id){
         $user = User::find($id);
         if(!$user){
-            return redirect('/'.auth()->user()->id);
+            return redirect('/users/'.auth()->user()->id);
         }
         return view('pages.user')->with('user', $user);
     }

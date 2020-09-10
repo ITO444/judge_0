@@ -18,7 +18,7 @@ class RunnerController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'verified']);
     }
 
     public function index(){
@@ -88,7 +88,7 @@ class RunnerController extends Controller
         }
         return response()->json([
             'status' => $status,
-            'result' => $result,
+            'result' => htmlspecialchars($result),
             'done' => $done
         ]);
     }

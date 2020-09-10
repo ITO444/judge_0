@@ -10,13 +10,13 @@
         {{Form::select('language', ['cpp' => 'C++', 'py' => 'Python'], 'cpp', ['class' => 'form-control'])}}
     </div>
     <div class="row">
-        <div class="col form-group">
+        <div class="col-md form-group">
             {{Form::label('code', 'Code')}}
             <div id='savestatus' class="d-inline text-muted"></div>
             <div id="editor" class="rounded">{{$code}}</div>
             {{Form::textarea('code', $code, ['class' => 'form-control', 'style' => 'display: none'])}}
         </div>
-        <div class="col form-group">
+        <div class="col-md form-group">
             {{Form::label('input', 'Input')}}
             {{Form::textarea('input', $input, ['class' => 'form-control'])}}
         </div>

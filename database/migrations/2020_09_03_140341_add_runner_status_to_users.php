@@ -14,7 +14,7 @@ class AddRunnerStatusToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('runner_status');
+            $table->string('runner_status')->default('');
         });
     }
 

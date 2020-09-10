@@ -60,7 +60,7 @@ class Run
             $error = $process->getErrorOutput();
             if($compile == 0){
                 $process = new Process(['mv', "$boxThere/program.exe", "$dirFull"]);
-                $process->run();
+                //$process->run();
             }
         }else{
             $process = new Process([
@@ -87,16 +87,16 @@ class Run
     public static function execute($boxId, $language, $dir)
     {
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--cleanup']);
-        $process->run();
+        //$process->run();
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--init']);
-        $process->run();
+        //$process->run();
         $boxHereS = "/run/$boxId";
         $boxHere = env('APP_PATH')."storage/app$boxHereS";
-        $boxThere = rtrim($process->getOutput()).'/box';
+        $boxThere = "/var/local/lib/isolate/$boxId/box";//rtrim($process->getOutput()).'/box';
         $dirFull = env('APP_PATH')."/storage/app".$dir;
         if($language == 'py'){$ext = 'py';}else{$ext = 'exe';}
         Storage::delete(Storage::allFiles($boxHereS));
-        Storage::copy("$dir/program.$ext", "$boxHereS/program.$ext");
+        //Storage::copy("$dir/program.$ext", "$boxHereS/program.$ext");
         Storage::copy("$dir/input.txt", "$boxHereS/input.txt");
         $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
         $process->run();
@@ -106,7 +106,7 @@ class Run
                 'isolate', '--cg', '-b', $boxId,
                 '-t', '2', '-m', '262144', '-e', '-p',
                 '-i', 'input.txt', '-o', 'output.txt',
-                '-M', "$boxHere/compile.txt", '--run', '--', 'program.exe'
+                '-M', "$boxHere/execute.txt", '--run', '--', 'program.exe'
             ]);
             $execute = $process->run();
             $error = $process->getErrorOutput();
@@ -115,7 +115,7 @@ class Run
                 'isolate', '--cg', '-b', $boxId,
                 '-t', '2', '-m', '262144', '-e', '-p',
                 '-i', 'input.txt', '-o', 'output.txt',
-                '-M', "$boxHere/compile.txt", '--run', '--',
+                '-M', "$boxHere/execute.txt", '--run', '--',
                 '/usr/bin/python3', '-O', '-S', 'program.py'
             ]);
             $execute = $process->run();
