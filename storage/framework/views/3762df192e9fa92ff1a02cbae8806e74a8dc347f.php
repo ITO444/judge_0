@@ -11,7 +11,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-
+                <?php if(auth()->guard()->check()): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/runner">Code Runner</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users/<?php echo e(auth()->user()->id); ?>" class="nav-link">My Page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">New User</a>
+                </li>
+                <?php endif; ?>
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -28,11 +38,6 @@
                             <a class="dropdown-item" href="<?php echo e(route('login')); ?>"><?php echo e(__('Others')); ?></a>
                         </div>
                     </li>
-                    <?php if(Route::has('register')): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo e(route('register')); ?>"><?php echo e(__('Register')); ?></a>
-                        </li>
-                    <?php endif; ?>
                 <?php else: ?>
                     <li class="nav-item dropdown">
                         <li>

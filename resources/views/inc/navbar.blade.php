@@ -10,7 +10,17 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-
+                @auth
+                <li class="nav-item">
+                    <a class="nav-link" href="/runner">Code Runner</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users/{{auth()->user()->id}}" class="nav-link">My Page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">New User</a>
+                </li>
+                @endauth
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -27,11 +37,6 @@
                             <a class="dropdown-item" href="{{ route('login') }}">{{ __('Others') }}</a>
                         </div>
                     </li>
-                    @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                        </li>
-                    @endif
                 @else
                     <li class="nav-item dropdown">
                         <li>

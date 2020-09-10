@@ -8,6 +8,10 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+
 
 class RegisterController extends Controller
 {
@@ -29,7 +33,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = "/register";//RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -38,7 +42,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
     }
 
     /**
@@ -51,8 +55,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'not_regex:/dgs\.edu\.hk$/'],
+            //'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -69,7 +73,23 @@ class RegisterController extends Controller
             'display' => $data['name'],
             'level' => 0,
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make(Str::random(8)),
         ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath())->with('success', "An account is created, please remind $user->name to verify the account using the url sent to $user->email within a week. The password can be set at ".route('password.request'));
     }
 }
