@@ -28,8 +28,11 @@ Route::post('/runner/save', 'RunnerController@save');
 Route::post('/runner/language', 'RunnerController@language');
 Route::post('/runner/check', 'RunnerController@check');
 
-Route::get('/queue','PagesController@queue');
-Route::post('/queue', 'PagesController@queue');
+Route::get('/admin/users', 'AdminController@viewUsers');
+Route::post('/admin/users/save/{id}', 'AdminController@saveUser');
+
+//Route::get('/queue','PagesController@queue');
+//Route::post('/queue', 'PagesController@queue');
 
 Auth::routes([
     //'register' => false, // Registration Routes...
