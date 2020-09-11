@@ -17,23 +17,28 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
-Route::get('/', 'PagesController@index');
+Route::get('', 'PagesController@index');
 
-Route::get('/users/{id}', 'PagesController@user');
-Route::get('/settings', 'PagesController@settings');
+Route::get('users/{user}', 'PagesController@user');
+Route::get('settings', 'PagesController@settings');
+Route::post('settings/save', 'PagesController@saveSettings');
 
-Route::get('/runner', 'RunnerController@index');
-Route::post('/runner/run', 'RunnerController@run');
-Route::post('/runner/save', 'RunnerController@save');
-Route::post('/runner/language', 'RunnerController@language');
-Route::post('/runner/check', 'RunnerController@check');
+Route::group(['prefix' => 'runner'], function () {
+    Route::get('', 'RunnerController@index');
+    Route::post('run', 'RunnerController@run');
+    Route::post('save', 'RunnerController@save');
+    Route::post('language', 'RunnerController@language');
+    Route::post('check', 'RunnerController@check');
+});
 
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('users', function ()    {
+        // Matches The "/admin/users" URL
+    });
+});
 Route::get('/admin', 'AdminController@index');
-Route::get('/admin/users', 'AdminController@viewUsers');
-Route::post('/admin/users/save/{id}', 'AdminController@saveUser');
-
-//Route::get('/queue','PagesController@queue');
-//Route::post('/queue', 'PagesController@queue');
+Route::get('/admin/users', 'AdminController@viewUsers')->middleware('admin:5');
+Route::post('/admin/users/save/{user}', 'AdminController@saveUser')->middleware('admin:5');
 
 Auth::routes([
     //'register' => false, // Registration Routes...

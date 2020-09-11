@@ -59,8 +59,9 @@ class Run
             $compile = $process->run();
             $error = $process->getErrorOutput();
             if($compile == 0){
-                $process = new Process(['mv', "$boxThere/program.exe", "$dirFull"]);
-                //$process->run();
+                $process = new Process(['mv', "$boxThere/program.exe", "$boxHere"]);
+                $process->run();
+                Storage::copy("$boxHereS/program.exe", "$dir/program.exe");
             }
         }else{
             $process = new Process([
@@ -87,16 +88,16 @@ class Run
     public static function execute($boxId, $language, $dir)
     {
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--cleanup']);
-        //$process->run();
+        $process->run();
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--init']);
-        //$process->run();
+        $process->run();
         $boxHereS = "/run/$boxId";
         $boxHere = base_path()."/storage/app$boxHereS";
         $boxThere = "/var/local/lib/isolate/$boxId/box";//rtrim($process->getOutput()).'/box';
         $dirFull = base_path()."/storage/app".$dir;
         if($language == 'py'){$ext = 'py';}else{$ext = 'exe';}
         Storage::delete(Storage::allFiles($boxHereS));
-        //Storage::copy("$dir/program.$ext", "$boxHereS/program.$ext");
+        Storage::copy("$dir/program.$ext", "$boxHereS/program.$ext");
         Storage::copy("$dir/input.txt", "$boxHereS/input.txt");
         $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
         $process->run();

@@ -52,6 +52,10 @@
                             <!--span class="caret"></span-->
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/settings">
+                                <?php echo e(__('Settings')); ?>
+
+                            </a>
                             <a class="dropdown-item" href="<?php echo e(route('logout')); ?>"
                                 onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">

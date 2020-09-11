@@ -47,22 +47,22 @@
             </div>
             <hr/>
             @foreach($users as $user)
-                @if(auth()->user()->level <= $user->level)
-                    <div class="row my-1">
-                        <div class="col">{{$user->name}}</div>
-                        <div class="col">{{$user->display}}</div>
-                        <div class="col text-truncate">{{$user->email}}</div>
-                        <div class="col">{{$user->google_id?"DGS":"Others"}}</div>
-                        <div class="col">{{$user->level}}</div>
+                @if(auth()->user()->level <= $user->level || (auth()->user()->level <= 5 && !$user->google_id))
+                    <div class="row form-group">
+                        <div class="col col-form-label">{{$user->name}}</div>
+                        <div class="col col-form-label">{{$user->display}}</div>
+                        <div class="col col-form-label text-truncate">{{$user->email}}</div>
+                        <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
+                        <div class="col col-form-label">{{$user->level}}</div>
                         <div class="col"><button type="button" class="btn btn-secondary" disabled>Go</button></div>
                     </div>
                 @else
-                    {{Form::open(['action' => ['AdminController@saveUser', $user->id], 'method' => 'POST', 'class' => 'row my-1'])}}
-                        <div class="col">{{Form::text("name", $user->name, ['class'=>'w-100'])}}</div>
-                        <div class="col">{{Form::text("display", $user->display, ['class'=>'w-100'])}}</div>
-                        <div class="col text-truncate">{{$user->email}}</div>
-                        <div class="col">{{$user->google_id?"DGS":"Others"}}</div>
-                        <div class="col">{{Form::text("level", $user->level, ['class'=>'w-100'])}}</div>
+                    {{Form::open(['action' => ['AdminController@saveUser', $user->id], 'method' => 'POST', 'class' => 'row form-group'])}}
+                        <div class="col">{{Form::text("name", $user->name, ['class'=>'form-control'])}}</div>
+                        <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control'])}}</div>
+                        <div class="col col-form-label text-truncate">{{$user->email}}</div>
+                        <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
+                        <div class="col">{{Form::number("level", $user->level, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::submit('Go', ['class' => 'btn btn-primary'])}}</div>
                     {{Form::close()}}
                 @endif

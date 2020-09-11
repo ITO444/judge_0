@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Jobs\ProcessSubmission;
+use Illuminate\Support\Facades\Validator;
 
 class PagesController extends Controller
 {
@@ -22,28 +23,24 @@ class PagesController extends Controller
         return view('pages.index');
     }
 
-    public function user($id){
-        $user = User::find($id);
-        if(!$user){
-            return redirect('/users/'.auth()->user()->id);
-        }
+    public function user(User $user){
         return view('pages.user')->with('user', $user);
     }
 
     public function settings(){
-        return view('pages.index');
+        return view('pages.settings')->with('user', auth()->user());
     }
 
-    public function queue(){
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $input = $_POST['input'];
-            $data = [
-                'in' => $_POST['input'],
-                'sleep' => $_POST['sleep'],
-            ];
-            dispatch(new ProcessSubmission($data));
+    public function saveSettings(Request $request){
+        $validator = Validator::make($request->all(), [
+            "display" => ['required', 'string', 'max:32'],
+        ]);
+        if ($validator->fails()) {
+            return redirect('/settings')->withErrors($validator);
         }
-        $output = file_get_contents(env('APP_PATH')."resources/testing/queue.txt");
-        return view('pages.queue')->with('output', $output);
+        $user = auth()->user();
+        $user->display = $request["display"];
+        $user->save();
+        return redirect('/settings')->with('success', 'Info Saved');
     }
 }

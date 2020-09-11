@@ -27,21 +27,20 @@ class AdminController extends Controller
         return view('admin.users')->with('users', $users);
     }
 
-    public function saveUser(Request $request, $id){
+    public function saveUser(Request $request, User $user){
         $myLevel = auth()->user()->level;
         $validator = Validator::make($request->all(), [
-            "name" => ['required', 'string', 'max:32', "unique:users,name,$id"],
+            "name" => ['required', 'string', 'max:32', "unique:users,name,$user->id"],
             "display" => ['required', 'string', 'max:32'],
             "level" => ['required', 'integer', "between:0, $myLevel"],
         ]);
         if ($validator->fails()) {
             return redirect('/admin/users')->withErrors($validator);
         }
-        $user = User::find($id);
-        if($myLevel <= $user->level){
-            return redirect('/admin/users')->with('error', 'Your level is too low');
+        if($myLevel <= $user->level || ($myLevel <= 5 && !$user->google_id)){
+            return redirect('/admin/users')->with('error', 'Permission Denied');
         }
-        $user->name = $request['name'];
+        $user->name = $request["name"];
         $user->display = $request["display"];
         $user->level = $request["level"];
         $user->save();
