@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <a href="/admin" class="btn btn-secondary">Back</a><br/><br/>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">

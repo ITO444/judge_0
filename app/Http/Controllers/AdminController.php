@@ -15,7 +15,11 @@ class AdminController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'admin:4']);
+    }
+
+    public function index(){
+        return view('admin.index')->with('level', auth()->user()->level);
     }
 
     public function viewUsers(){

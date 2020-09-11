@@ -28,6 +28,7 @@ Route::post('/runner/save', 'RunnerController@save');
 Route::post('/runner/language', 'RunnerController@language');
 Route::post('/runner/check', 'RunnerController@check');
 
+Route::get('/admin', 'AdminController@index');
 Route::get('/admin/users', 'AdminController@viewUsers');
 Route::post('/admin/users/save/{id}', 'AdminController@saveUser');
 

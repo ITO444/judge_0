@@ -21,6 +21,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/register">New User</a>
                 </li>
+                <?php if(auth()->user()->level >= 4): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+                <?php endif; ?>
                 <?php endif; ?>
             </ul>
 
@@ -47,7 +52,7 @@
                             </a>
                         </li>
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <span class="caret"></span>
+                            <!--span class="caret"></span-->
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="<?php echo e(route('logout')); ?>"
