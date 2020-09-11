@@ -5,7 +5,7 @@
     <h3>Users</h3>
     <div class="card">
         <div class="card-header btn" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="false" aria-controls="collapse">
-            Sort and Filter (dummy, not implemented yet) <span class="dropdown-toggle"></span>
+            Sort and Filter (dummy, not implemented yet) <span class="dropdown-toggle float-right"></span>
         </div>
         <div class="collapse" id="collapse">
             <div class="card-body">

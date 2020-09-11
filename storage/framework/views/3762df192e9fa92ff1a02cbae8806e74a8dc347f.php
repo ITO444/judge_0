@@ -18,9 +18,6 @@
                 <li class="nav-item">
                     <a href="/users/<?php echo e(auth()->user()->id); ?>" class="nav-link">My Page</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">New User</a>
-                </li>
                 <?php if(auth()->user()->level >= 4): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Admin</a>
