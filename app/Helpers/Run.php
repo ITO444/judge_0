@@ -39,9 +39,9 @@ class Run
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--init']);
         $process->run();
         $boxHereS = "/run/$boxId";
-        $boxHere = env('APP_PATH')."storage/app$boxHereS";
+        $boxHere = base_path()."/storage/app$boxHereS";
         $boxThere = rtrim($process->getOutput()).'/box';
-        $dirFull = env('APP_PATH')."/storage/app".$dir;
+        $dirFull = base_path()."/storage/app".$dir;
         Storage::delete(Storage::allFiles($boxHereS));
         Storage::copy("$dir/program.$language", "$boxHereS/program.$language");
         $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
@@ -91,9 +91,9 @@ class Run
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--init']);
         //$process->run();
         $boxHereS = "/run/$boxId";
-        $boxHere = env('APP_PATH')."storage/app$boxHereS";
+        $boxHere = base_path()."/storage/app$boxHereS";
         $boxThere = "/var/local/lib/isolate/$boxId/box";//rtrim($process->getOutput()).'/box';
-        $dirFull = env('APP_PATH')."/storage/app".$dir;
+        $dirFull = base_path()."/storage/app".$dir;
         if($language == 'py'){$ext = 'py';}else{$ext = 'exe';}
         Storage::delete(Storage::allFiles($boxHereS));
         //Storage::copy("$dir/program.$ext", "$boxHereS/program.$ext");
