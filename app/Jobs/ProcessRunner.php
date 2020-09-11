@@ -40,6 +40,7 @@ class ProcessRunner implements ShouldQueue
         $user = User::find($userId);
         $user->runner_status = 'Compiling';
         $user->save();
+        Storage::delete("/usercode/$userId/program.exe");
         Storage::put("/usercode/$userId/output.txt", '');
 
         $boxId = $data["boxId"];

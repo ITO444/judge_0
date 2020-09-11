@@ -59,9 +59,8 @@ class Run
             $compile = $process->run();
             $error = $process->getErrorOutput();
             if($compile == 0){
-                $process = new Process(['mv', "$boxThere/program.exe", "$boxHere"]);
+                $process = new Process(['mv', "$boxThere/program.exe", "$dirFull"]);
                 $process->run();
-                Storage::copy("$boxHereS/program.exe", "$dir/program.exe");
             }
         }else{
             $process = new Process([
@@ -103,6 +102,8 @@ class Run
         $process->run();
 
         if($language == 'cpp'){
+            $process = new Process(["chmod", "744", "$boxThere/program.exe"]);
+            $process->run();
             $process = new Process([
                 'isolate', '--cg', '-b', $boxId,
                 '-t', '2', '-m', '262144', '-e', '-p',
