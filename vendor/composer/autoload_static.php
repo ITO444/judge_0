@@ -112,6 +112,7 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
             'PhpAmqpLib\\' => 11,
+            'PheRum\\BBCode\\' => 14,
         ),
         'O' => 
         array (
@@ -378,6 +379,10 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         array (
             0 => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib',
         ),
+        'PheRum\\BBCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pherum/laravel-bbcode/src',
+        ),
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
@@ -533,6 +538,8 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Contest' => __DIR__ . '/../..' . '/app/Contest.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Helpers\\Run' => __DIR__ . '/../..' . '/app/Helpers/Run.php',
+        'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
@@ -547,6 +554,7 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'App\\Http\\Controllers\\SubmissionsController' => __DIR__ . '/../..' . '/app/Http/Controllers/SubmissionsController.php',
         'App\\Http\\Controllers\\TasksController' => __DIR__ . '/../..' . '/app/Http/Controllers/TasksController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
+        'App\\Http\\Middleware\\Admin' => __DIR__ . '/../..' . '/app/Http/Middleware/Admin.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\CheckForMaintenanceMode' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckForMaintenanceMode.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -556,6 +564,7 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Image' => __DIR__ . '/../..' . '/app/Image.php',
+        'App\\Jobs\\ProcessRunner' => __DIR__ . '/../..' . '/app/Jobs/ProcessRunner.php',
         'App\\Jobs\\ProcessSubmission' => __DIR__ . '/../..' . '/app/Jobs/ProcessSubmission.php',
         'App\\Participation' => __DIR__ . '/../..' . '/app/Participation.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
@@ -3407,6 +3416,10 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
+        'PheRum\\BBCode\\BBCodeParser' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/BBCodeParser.php',
+        'PheRum\\BBCode\\BBCodeServiceProvider' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/BBCodeServiceProvider.php',
+        'PheRum\\BBCode\\Facades\\BBCode' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/Facades/BBCode.php',
+        'PheRum\\BBCode\\Traits\\ArrayTrait' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/Traits/ArrayTrait.php',
         'PhpAmqpLib\\Channel\\AMQPChannel' => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib/Channel/AMQPChannel.php',
         'PhpAmqpLib\\Channel\\AbstractChannel' => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib/Channel/AbstractChannel.php',
         'PhpAmqpLib\\Connection\\AMQPConnection' => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib/Connection/AMQPConnection.php',

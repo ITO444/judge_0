@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.1",
+        "pherum/laravel-bbcode": "^1.0",
         "predis/predis": "~1.0",
         "symfony/debug": "^4.4",
         "vladimir-yuldashev/laravel-queue-rabbitmq": "^10.2"

@@ -75,6 +75,17 @@
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
+  'pherum/laravel-bbcode' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'PheRum\\BBCode\\BBCodeServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'BBCode' => 'PheRum\\BBCode\\Facades\\BBCode',
+    ),
+  ),
   'vladimir-yuldashev/laravel-queue-rabbitmq' => 
   array (
     'providers' => 
