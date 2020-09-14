@@ -112,7 +112,6 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
             'PhpAmqpLib\\' => 11,
-            'PheRum\\BBCode\\' => 14,
         ),
         'O' => 
         array (
@@ -145,6 +144,7 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+            'Genert\\BBCode\\' => 14,
         ),
         'F' => 
         array (
@@ -379,10 +379,6 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         array (
             0 => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib',
         ),
-        'PheRum\\BBCode\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/pherum/laravel-bbcode/src',
-        ),
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
@@ -438,6 +434,10 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Genert\\BBCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/genert/bbcode/src',
         ),
         'Fruitcake\\Cors\\' => 
         array (
@@ -1423,6 +1423,12 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'Fideloper\\Proxy\\TrustedProxyServiceProvider' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustedProxyServiceProvider.php',
         'Fruitcake\\Cors\\CorsServiceProvider' => __DIR__ . '/..' . '/fruitcake/laravel-cors/src/CorsServiceProvider.php',
         'Fruitcake\\Cors\\HandleCors' => __DIR__ . '/..' . '/fruitcake/laravel-cors/src/HandleCors.php',
+        'Genert\\BBCode\\BBCode' => __DIR__ . '/..' . '/genert/bbcode/src/BBCode.php',
+        'Genert\\BBCode\\BBCodeServiceProvider' => __DIR__ . '/..' . '/genert/bbcode/src/BBCodeServiceProvider.php',
+        'Genert\\BBCode\\Facades\\BBCode' => __DIR__ . '/..' . '/genert/bbcode/src/Facades/BBCode.php',
+        'Genert\\BBCode\\Parser\\BBCodeParser' => __DIR__ . '/..' . '/genert/bbcode/src/Parser/BBCodeParser.php',
+        'Genert\\BBCode\\Parser\\HTMLParser' => __DIR__ . '/..' . '/genert/bbcode/src/Parser/HTMLParser.php',
+        'Genert\\BBCode\\Parser\\Parser' => __DIR__ . '/..' . '/genert/bbcode/src/Parser/Parser.php',
         'GuzzleHttp\\Client' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Client.php',
         'GuzzleHttp\\ClientInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/ClientInterface.php',
         'GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
@@ -3416,10 +3422,6 @@ class ComposerStaticInita25f4f2de9c4ab988ac3383575c5c83c
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
-        'PheRum\\BBCode\\BBCodeParser' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/BBCodeParser.php',
-        'PheRum\\BBCode\\BBCodeServiceProvider' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/BBCodeServiceProvider.php',
-        'PheRum\\BBCode\\Facades\\BBCode' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/Facades/BBCode.php',
-        'PheRum\\BBCode\\Traits\\ArrayTrait' => __DIR__ . '/..' . '/pherum/laravel-bbcode/src/Traits/ArrayTrait.php',
         'PhpAmqpLib\\Channel\\AMQPChannel' => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib/Channel/AMQPChannel.php',
         'PhpAmqpLib\\Channel\\AbstractChannel' => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib/Channel/AbstractChannel.php',
         'PhpAmqpLib\\Connection\\AMQPConnection' => __DIR__ . '/..' . '/php-amqplib/php-amqplib/PhpAmqpLib/Connection/AMQPConnection.php',

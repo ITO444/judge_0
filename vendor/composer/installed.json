@@ -930,6 +930,63 @@
         ]
     },
     {
+        "name": "genert/bbcode",
+        "version": "1.1.2",
+        "version_normalized": "1.1.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Genert/bbcode.git",
+            "reference": "8c52c54fe08cc1a38566c7a02d39bc8b3c9453ff"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Genert/bbcode/zipball/8c52c54fe08cc1a38566c7a02d39bc8b3c9453ff",
+            "reference": "8c52c54fe08cc1a38566c7a02d39bc8b3c9453ff",
+            "shasum": ""
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^6.1"
+        },
+        "time": "2018-10-20T15:53:05+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Genert\\BBCode\\BBCodeServiceProvider"
+                ],
+                "aliases": {
+                    "Invoice": "Genert\\BBCode\\Facades\\BBCode"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Genert\\BBCode\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Genert Org",
+                "email": "hi@genert.org",
+                "homepage": "http://genert.org"
+            }
+        ],
+        "description": "BBCode parser from or to HTML.",
+        "keywords": [
+            "PSR-1",
+            "PSR-2",
+            "PSR-4",
+            "bbcode",
+            "laravel",
+            "parser"
+        ]
+    },
+    {
         "name": "guzzlehttp/guzzle",
         "version": "6.5.4",
         "version_normalized": "6.5.4.0",
@@ -2457,64 +2514,6 @@
             }
         ],
         "description": "Library for handling version information and constraints"
-    },
-    {
-        "name": "pherum/laravel-bbcode",
-        "version": "1.0.6",
-        "version_normalized": "1.0.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PheRum/laravel-bbcode.git",
-            "reference": "6a5c5cb7f6ff0febd119aeef3aa0c7b44dd68c62"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/PheRum/laravel-bbcode/zipball/6a5c5cb7f6ff0febd119aeef3aa0c7b44dd68c62",
-            "reference": "6a5c5cb7f6ff0febd119aeef3aa0c7b44dd68c62",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/support": "^5.0 || ^6.0 || ^7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^6.5 || ^8.5"
-        },
-        "time": "2020-03-25T16:14:35+00:00",
-        "type": "library",
-        "extra": {
-            "laravel": {
-                "providers": [
-                    "PheRum\\BBCode\\BBCodeServiceProvider"
-                ],
-                "aliases": {
-                    "BBCode": "PheRum\\BBCode\\Facades\\BBCode"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "PheRum\\BBCode\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Joseph Landberg",
-                "email": "joseph.landberg@gmail.com",
-                "homepage": "http://github.com/golonka/"
-            }
-        ],
-        "description": "Parse your BBCode easy with this library.",
-        "homepage": "http://github.com/pherum/laravel-bbcode",
-        "keywords": [
-            "bbcode",
-            "laravel",
-            "parser"
-        ]
     },
     {
         "name": "php-amqplib/php-amqplib",

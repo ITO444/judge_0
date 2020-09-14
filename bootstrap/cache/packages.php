@@ -24,6 +24,17 @@
       0 => 'Fruitcake\\Cors\\CorsServiceProvider',
     ),
   ),
+  'genert/bbcode' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Genert\\BBCode\\BBCodeServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Invoice' => 'Genert\\BBCode\\Facades\\BBCode',
+    ),
+  ),
   'laravel/socialite' => 
   array (
     'providers' => 
@@ -73,17 +84,6 @@
     'providers' => 
     array (
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    ),
-  ),
-  'pherum/laravel-bbcode' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'PheRum\\BBCode\\BBCodeServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'BBCode' => 'PheRum\\BBCode\\Facades\\BBCode',
     ),
   ),
   'vladimir-yuldashev/laravel-queue-rabbitmq' => 
