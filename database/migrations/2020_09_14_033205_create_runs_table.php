@@ -15,6 +15,12 @@ class CreateRunsTable extends Migration
     {
         Schema::create('runs', function (Blueprint $table) {
             $table->id();
+            $table->integer('submission_id');
+            $table->integer('test_id');
+            $table->integer('result');
+            $table->integer('runtime');
+            $table->integer('memory');
+            $table->integer('score');
             $table->timestamps();
         });
     }

@@ -36,4 +36,15 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $table = 'users';
+    public $primaryKey = 'id';
+    public $timestamps = true;
+    
+    public function submissions(){
+        return $this->hasMany('App\Submission');
+    }
+    public function participations(){
+        return $this->hasMany('App\Participation');
+    }
 }
