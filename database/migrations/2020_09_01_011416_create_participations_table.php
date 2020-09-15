@@ -15,6 +15,11 @@ class CreateParticipationsTable extends Migration
     {
         Schema::create('participations', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
+            $table->integer('contest_id');
+            $table->integer('type');
+            $table->dateTime('start');
+            $table->integer('score');
             $table->timestamps();
         });
     }
