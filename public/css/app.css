@@ -10899,3 +10899,9 @@ a.text-dark:focus {
   }
 }
 
+#editor {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+

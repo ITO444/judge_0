@@ -123,6 +123,8 @@ class Run
             $execute = $process->run();
             $error = $process->getErrorOutput();
         }
+        $process = new Process(['truncate', '-s', "1024K", "$boxThere/output.txt"]);
+        $process->run();
         $process = new Process(['mv', "$boxThere/output.txt", "$boxHere"]);
         $process->run();
         $output = Storage::get("$boxHereS/output.txt");

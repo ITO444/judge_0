@@ -16,7 +16,7 @@
                     <a class="nav-link" href="/runner">Code Runner</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/<?php echo e(auth()->user()->id); ?>" class="nav-link">My Page</a>
+                    <a href="/user/<?php echo e(auth()->user()->id); ?>" class="nav-link">My Page</a>
                 </li>
                 <?php if(auth()->user()->level >= 2): ?>
                 <li class="nav-item">

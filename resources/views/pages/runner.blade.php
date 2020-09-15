@@ -14,11 +14,11 @@
             {{Form::label('code', 'Code')}}
             <div id='savestatus' class="d-inline text-muted"></div>
             <div id="editor" class="rounded">{{$code}}</div>
-            {{Form::textarea('code', $code, ['class' => 'form-control', 'style' => 'display: none'])}}
+            {{Form::textarea('code', $code, ['class' => 'form-control', 'style' => 'display: none; height: 400px'])}}
         </div>
         <div class="col-md form-group">
             {{Form::label('input', 'Input')}}
-            {{Form::textarea('input', $input, ['class' => 'form-control'])}}
+            {{Form::textarea('input', $input, ['class' => 'form-control', 'style' => 'height: 400px'])}}
         </div>
     </div>
     <a id='toggle' class='btn btn-light'>Toggle highlighting</a>
@@ -26,7 +26,7 @@
     <div id='runstatus' class="d-inline text-muted"></div>
     {!! Form::close() !!}
     <pre id='result'></pre>
-<script src="/js/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var language = "cpp";
     var ace_modes = {"cpp": "c_cpp", "py": "python"};
@@ -84,6 +84,7 @@
                 error: function(xhr){
                     alert("An error occured: " + xhr.status + " " + xhr.statusText);
                     $("#runstatus").html('Error');
+                    clearInterval(waiting);
                 }
             });
         }, 200);

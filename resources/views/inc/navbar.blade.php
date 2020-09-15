@@ -15,7 +15,7 @@
                     <a class="nav-link" href="/runner">Code Runner</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/{{auth()->user()->id}}" class="nav-link">My Page</a>
+                    <a href="/user/{{auth()->user()->id}}" class="nav-link">My Page</a>
                 </li>
                 @if(auth()->user()->level >= 2)
                 <li class="nav-item">
