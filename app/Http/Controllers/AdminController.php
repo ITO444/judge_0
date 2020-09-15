@@ -37,8 +37,11 @@ class AdminController extends Controller
         if ($validator->fails()) {
             return redirect('/admin/users')->withErrors($validator);
         }
-        if($myLevel <= $user->level || ($myLevel <= 5 && !$user->google_id)){
-            return redirect('/admin/users')->with('error', 'Permission Denied');
+        if($myLevel <= 5 && !$user->google_id){
+            return abort(404);
+        }
+        if($myLevel <= $user->level){
+            return redirect('/admin/users')->with('error', 'The level you set cannot be higher than your level');
         }
         $user->name = $request["name"];
         $user->display = $request["display"];

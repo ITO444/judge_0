@@ -3,6 +3,7 @@
 @section('content')
     <div class="jumbotron text-center">
         <h1>{{config('app.name')}}</h1>
+        Testing LaTeX
         <p>
             When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
             \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
@@ -17,7 +18,7 @@
         @else
             <p>Welcome {{Auth::user()->name}}, what would you like to do today?</p>
             <a href="/runner" class="btn btn-primary">Runner</a>
-            <a href="/users/{{Auth::user()->id}}" class="btn btn-primary">User</a>
+            <a href="/user/{{Auth::user()->id}}" class="btn btn-primary">User</a>
             <a href="/home" class="btn btn-primary">Home</a>
         @endif
     </div>

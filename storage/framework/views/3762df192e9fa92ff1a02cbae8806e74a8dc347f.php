@@ -18,6 +18,11 @@
                 <li class="nav-item">
                     <a href="/users/<?php echo e(auth()->user()->id); ?>" class="nav-link">My Page</a>
                 </li>
+                <?php if(auth()->user()->level >= 2): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tasks">Tasks</a>
+                </li>
+                <?php endif; ?>
                 <?php if(auth()->user()->level >= 4): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Admin</a>
@@ -43,7 +48,7 @@
                 <?php else: ?>
                     <li class="nav-item dropdown">
                         <li>
-                            <a class="nav-link" href="/users/<?php echo e(Auth::user()->id); ?>">
+                            <a class="nav-link" href="/user/<?php echo e(Auth::user()->id); ?>">
                                 <?php echo e(Auth::user()->name); ?>
 
                             </a>

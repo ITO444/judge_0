@@ -17,6 +17,11 @@
                 <li class="nav-item">
                     <a href="/users/{{auth()->user()->id}}" class="nav-link">My Page</a>
                 </li>
+                @if(auth()->user()->level >= 2)
+                <li class="nav-item">
+                    <a class="nav-link" href="/tasks">Tasks</a>
+                </li>
+                @endif
                 @if(auth()->user()->level >= 4)
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Admin</a>
@@ -42,7 +47,7 @@
                 @else
                     <li class="nav-item dropdown">
                         <li>
-                            <a class="nav-link" href="/users/{{Auth::user()->id}}">
+                            <a class="nav-link" href="/user/{{Auth::user()->id}}">
                                 {{ Auth::user()->name }}
                             </a>
                         </li>

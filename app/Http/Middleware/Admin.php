@@ -13,9 +13,13 @@ class Admin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $level)
+    public function handle($request, Closure $next, $level, $special = 10, $to = 10)
     {
-        if ($request->user()->level < $level) {
+        $userLevel = $request->user()->level;
+        if($userLevel == $special){
+            $userLevel = $to;
+        }
+        if ($userLevel < $level) {
             return abort(404);
         }
         return $next($request);

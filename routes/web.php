@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', 'PagesController@index');
 
-Route::get('users/{user}', 'PagesController@user');
+Route::get('user/{user}', 'PagesController@user');
 Route::get('settings', 'PagesController@settings');
 Route::post('settings/save', 'PagesController@saveSettings');
 
@@ -32,13 +32,26 @@ Route::group(['prefix' => 'runner'], function () {
 });
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::get('users', function ()    {
-        // Matches The "/admin/users" URL
-    });
+    Route::get('', 'AdminController@index')->middleware('admin:4');
+    Route::get('users', 'AdminController@viewUsers')->middleware('admin:5');
+    Route::post('users/save/{user}', 'AdminController@saveUser')->middleware('admin:5');
+    Route::get('task', 'TasksController@create')->middleware('admin:4');
+    Route::post('task/save', 'TasksController@store')->middleware('admin:4');
 });
-Route::get('/admin', 'AdminController@index');
-Route::get('/admin/users', 'AdminController@viewUsers')->middleware('admin:5');
-Route::post('/admin/users/save/{user}', 'AdminController@saveUser')->middleware('admin:5');
+
+Route::get('tasks', 'TasksController@index')->middleware('admin:2');
+
+Route::group(['prefix' => 'task/{task}'], function () {
+    Route::get('', 'TasksController@show')->middleware('admin:2');
+    Route::get('solution', 'TasksController@solution')->middleware('admin:4');
+    Route::get('edit', 'TasksController@edit')->middleware('admin:4');
+    Route::post('edit/save', 'TasksController@update')->middleware('admin:4');
+    Route::get('edit/tests', 'TasksController@editTests')->middleware('admin:4');
+    Route::post('edit/tests/save', 'TasksController@saveTests')->middleware('admin:4');
+    Route::post('edit/tests/delete', 'TasksController@deleteTests')->middleware('admin:4');
+    Route::get('submit', 'TasksController@submit')->middleware('admin:2');
+    Route::post('submit/save', 'TasksController@saveSubmit')->middleware('admin:2');
+});
 
 Auth::routes([
     //'register' => false, // Registration Routes...

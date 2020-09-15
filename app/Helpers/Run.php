@@ -32,7 +32,7 @@ class Run
      * @param string $dir
      * @return int
      */
-    public static function compile($boxId, $language, $dir)
+    public static function compileRunner($boxId, $language, $dir)
     {
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--cleanup']);
         $process->run();
@@ -84,7 +84,7 @@ class Run
      * @param string $dir
      * @return int
      */
-    public static function execute($boxId, $language, $dir)
+    public static function executeRunner($boxId, $language, $dir)
     {
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--cleanup']);
         $process->run();

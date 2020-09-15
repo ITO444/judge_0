@@ -46,7 +46,7 @@ class ProcessRunner implements ShouldQueue
         $boxId = $data["boxId"];
         $language = $data["language"];
         $dir = "/usercode/$userId";
-        $compile = Run::compile($boxId, $language, $dir);
+        $compile = Run::compileRunner($boxId, $language, $dir);
         
         if($compile){
             $user->runner_status = 'Compilation Error';
@@ -56,7 +56,7 @@ class ProcessRunner implements ShouldQueue
 
         $user->runner_status = 'Running';
         $user->save();
-        $execute = Run::execute($boxId, $language, $dir);
+        $execute = Run::executeRunner($boxId, $language, $dir);
         if($execute){
             $user->runner_status = 'Runtime Error';
             $user->save();
