@@ -41,6 +41,9 @@
             </div>
             <div class="col-md-6 col-form-label">
                 {{$user->level}}
+                @if($user->level == 4)
+                     (7 for tasks)
+                @endif
             </div>
         </div>
         <div class="form-group row mb-0">

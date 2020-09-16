@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Test extends Model
 {
@@ -11,5 +12,8 @@ class Test extends Model
     public $timestamps = true;
     public function task(){
         return $this->belongsTo('App\Task');
+    }
+    public function size($ext){
+        return Storage::size("tests/$this->id.$ext");
     }
 }

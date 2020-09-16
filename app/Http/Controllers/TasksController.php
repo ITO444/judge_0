@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Task;
+use App\Test;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class TasksController extends Controller
 {
@@ -58,7 +61,7 @@ class TasksController extends Controller
         $task->title = $request['title'];
         $task->source_size = 4096;
         $task->compile_time = 30;
-        $task->runtime_limit = 1;
+        $task->runtime_limit = 1000;
         $task->memory_limit = 262144;
         $task->output_limit = 32768;
         $task->view_level = $myLevel;
@@ -107,7 +110,7 @@ class TasksController extends Controller
         if($myLevel < $task->edit_level){
             return abort(404);
         }
-        return view('tasks.edit')->with('task', $task);
+        return view('tasks.edit')->with('task', $task)->with('myLevel', $myLevel);
     }
 
     /**
@@ -131,12 +134,12 @@ class TasksController extends Controller
             "title" => ['required', 'string'],
             "source_size" => ['nullable', 'integer', "between:0, 4096"],
             "compile_time" => ['nullable', 'integer', "between:0, 30"],
-            "runtime_limit" => ['nullable', 'integer', "between:0, 10"],
+            "runtime_limit" => ['nullable', 'numeric', "between:0, 10"],
             "memory_limit" => ['nullable', 'integer', "between:0, 1048576"],
-            "output_limit" => ['nullable', 'integer', "between:0, 32768"],
-            "view_level" => ['nullable', 'integer', "between:0, $myLevel"],
-            "submit_level" => ['nullable', 'integer', "between:0, $myLevel"],
-            "edit_level" => ['nullable', 'integer', "between:0, $myLevel"],
+            "output_limit" => ['nullable', 'integer', "between:0, 65536"],
+            "view_level" => ['nullable', 'integer', "between:1, $myLevel"],
+            "submit_level" => ['nullable', 'integer', "between:1, $myLevel"],
+            "edit_level" => ['nullable', 'integer', "between:4, $myLevel"],
             "task_type" => ['required', 'integer', "between:0, 1"],
             "date_created" => ['required', 'date'],
             "origin" => ['nullable', 'string'],
@@ -151,7 +154,7 @@ class TasksController extends Controller
         $task->title = $request["title"];
         $task->source_size = $request["source_size"] ?: 4096;
         $task->compile_time = $request["compile_time"] ?: 30;
-        $task->runtime_limit = $request["runtime_limit"] ?: 1;
+        $task->runtime_limit = $request["runtime_limit"] ? (int)($request["runtime_limit"] * 1000) : 1000;
         $task->memory_limit = $request["memory_limit"] ?: 262144;
         $task->output_limit = $request["output_limit"] ?: 32768;
         $task->view_level = $request["view_level"] ?: $myLevel;
@@ -191,6 +194,85 @@ class TasksController extends Controller
             return abort(404);
         }
         return view('tasks.solution')->with('task', $task)->with('myLevel', $myLevel);
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tests(Task $task, Test $test = NULL)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($test && $test->task->id != $task->id){
+            return abort(404);
+        }
+        if($myLevel < $task->edit_level){
+            return abort(404);
+        }
+        return view('tasks.tests')->with('task', $task)->with('myLevel', $myLevel)->with('testChange', $test?$test->id:NULL);
+    }
+
+    public function saveTest(Request $request, Task $task, Test $test = NULL)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($test && $test->task->id != $task->id){
+            return abort(404);
+        }
+        if($myLevel < $task->edit_level){
+            return abort(404);
+        }
+        $validator = Validator::make($request->all(), [
+            "inputFile" => ['nullable', 'file', 'max:65536', 'mimes:txt'],
+            "inputText" => ['nullable', 'string', 'max:67108864'],
+            "outputFile" => ['nullable', 'file', 'max:65536', 'mimes:txt'],
+            "outputText" => ['nullable', 'string', 'max:67108864'],
+        ]);
+        if ($validator->fails()) {
+            return redirect("/task/$task->id/tests")->withErrors($validator);
+        }
+        $new = false;
+        if(!$test){
+            $test = new Test;
+            $test->task_id = $task->id;
+            $test->save();
+            $new = true;
+        }else $test->touch();
+        if($request["inputFile"]){
+            Storage::putFileAs('tests', $request["inputFile"], "$test->id.in");
+        }else{
+            Storage::put("tests/$test->id.in", $request["inputText"]);
+        }
+        if($request["outputFile"]){
+            Storage::putFileAs('tests', $request["outputFile"], "$test->id.out");
+        }else{
+            Storage::put("tests/$test->id.out", $request["outputText"]);
+        }
+        if($new){
+            return redirect("/task/$task->id/tests")->with('success', "Test case added");
+        }
+        return redirect("/task/$task->id/tests/$test->id")->with('success', "Test case changed");
+    }
+
+    public function deleteTest(Task $task, Test $test = NULL)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($test && $test->task->id != $task->id){
+            return abort(404);
+        }
+        if($myLevel < $task->edit_level){
+            return abort(404);
+        }
+        return redirect("/task/$task->id/tests")->with('error', 'ITO hasn\'t implemented this yet');
     }
 
     /**

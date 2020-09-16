@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <a href="/task/{{$task->id}}" class="btn btn-secondary">Back</a><br/><br/>
+    @include("tasks.top")
     <h3>Edit Task</h3>
     {{Form::open(['action' => ['TasksController@update', $task->id], 'method' => 'POST'])}}
     <div class="row form-group">
@@ -17,31 +17,31 @@
         </div>
     </div>
     <div class="row form-group">
-        {{Form::label('source_size', 'Source Size Limit', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+        {{Form::label('source_size', 'Source Size Limit (K)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
             {{Form::number("source_size", $task->source_size, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
-        {{Form::label('compile_time', 'Compile Time Limit', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+        {{Form::label('compile_time', 'Compile Time Limit (s)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
             {{Form::number("compile_time", $task->compile_time, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
-        {{Form::label('runtime_limit', 'Run Time Limit', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+        {{Form::label('runtime_limit', 'Run Time Limit (s, up to 3 dp)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
-            {{Form::number("runtime_limit", $task->runtime_limit, ['class' => 'form-control'])}}
+            {{Form::text("runtime_limit", $task->runtime_limit / 1000, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
-        {{Form::label('memory_limit', 'Memory Limit', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+        {{Form::label('memory_limit', 'Memory Limit (K)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
             {{Form::number("memory_limit", $task->memory_limit, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
-        {{Form::label('output_limit', 'Output Size Limit', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+        {{Form::label('output_limit', 'Output Size Limit (K)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
             {{Form::number("output_limit", $task->output_limit, ['class' => 'form-control'])}}
         </div>
@@ -49,19 +49,19 @@
     <div class="row form-group">
         {{Form::label('view_level', 'View Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
-            {{Form::number("view_level", $task->view_level, ['class' => 'form-control'])}}
+            {{Form::selectRange("view_level", 1, $myLevel, $task->view_level, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
         {{Form::label('submit_level', 'Submit Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
-            {{Form::number("submit_level", $task->submit_level, ['class' => 'form-control'])}}
+            {{Form::selectRange("submit_level", 1, $myLevel, $task->submit_level, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
         {{Form::label('edit_level', 'Edit Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
         <div class="col-md-6">
-            {{Form::number("edit_level", $task->edit_level, ['class' => 'form-control'])}}
+            {{Form::selectRange("edit_level", 4, $myLevel, $task->edit_level, ['class' => 'form-control'])}}
         </div>
     </div>
     <div class="row form-group">
@@ -103,9 +103,18 @@
             {{Form::textarea("solution", $task->solution, ['class' => 'form-control'])}}
         </div>
     </div>
+    <div class="row form-group">
+        <div class="col-md-4 col-form-label text-md-right">
+            Test Cases
+        </div>
+        <div class="col-md-6 col-form-label">
+            {{$task->tests()->count()}}
+        </div>
+    </div>
     <div class="form-group row mb-0">
         <div class="col-md-8 offset-md-4">
             {{Form::submit('Save', ['class' => 'btn btn-primary'])}}
+            <a href="/task/{{$task->id}}/tests" class="btn btn-secondary">Manage test data</a>
         </div>
     </div>
     {{Form::close()}}

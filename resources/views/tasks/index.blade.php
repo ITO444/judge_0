@@ -1,15 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <a href="/" class="btn btn-secondary">Back</a><br/><br/>
-    <h1>Tasks</h1>
+    <h1>Tasks
+    @if($myLevel >= 4)
+        <a href="/admin/task" class="btn btn-primary float-right">New Task</a>
+    @endif
+    </h1>
+    <br/>
     @if(count($tasks) > 0)
         {{$tasks->links()}}
         <table class="table table-striped table-bordered table-hover">
             <tr>
                 <th>Task ID</th>
                 <th>Title</th>
-                <th>Action</th>
+                <th>Actions</th>
             </tr>
         @foreach($tasks as $task)
             @if($myLevel >= $task->view_level)
@@ -32,6 +36,6 @@
         </table>
         {{$tasks->links()}}
     @else
-        <p>No answers found</p>
+        <p>No tasks found</p>
     @endif
 @endsection

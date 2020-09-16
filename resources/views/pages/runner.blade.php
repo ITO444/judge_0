@@ -14,18 +14,18 @@
             {{Form::label('code', 'Code')}}
             <div id='savestatus' class="d-inline text-muted"></div>
             <div id="editor" class="rounded">{{$code}}</div>
-            {{Form::textarea('code', $code, ['class' => 'form-control', 'style' => 'display: none; height: 400px'])}}
+            {{Form::textarea('code', $code, ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px'])}}
         </div>
         <div class="col-md form-group">
             {{Form::label('input', 'Input')}}
-            {{Form::textarea('input', $input, ['class' => 'form-control', 'style' => 'height: 400px'])}}
+            {{Form::textarea('input', $input, ['class' => 'form-control text-monospace', 'style' => 'height: 400px'])}}
         </div>
     </div>
-    <a id='toggle' class='btn btn-light'>Toggle highlighting</a>
-    {{Form::submit('Run', ['class' => 'btn btn-primary'])}}
+    {{Form::submit('Run', ['class' => 'btn btn-success'])}}
+    <a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
     <div id='runstatus' class="d-inline text-muted"></div>
     {!! Form::close() !!}
-    <pre id='result'></pre>
+    <pre id='result' class='text-monospace'></pre>
 <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var language = "cpp";

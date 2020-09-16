@@ -62,7 +62,7 @@
                         <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control'])}}</div>
                         <div class="col col-form-label text-truncate">{{$user->email}}</div>
                         <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
-                        <div class="col">{{Form::number("level", $user->level, ['class'=>'form-control'])}}</div>
+                        <div class="col">{{Form::selectRange("level", 0, auth()->user()->level, $user->level, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::submit('Go', ['class' => 'btn btn-primary'])}}</div>
                     {{Form::close()}}
                 @endif
