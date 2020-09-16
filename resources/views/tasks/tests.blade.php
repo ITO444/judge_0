@@ -27,50 +27,61 @@
             @if($test->id == $testChange)
         </table><hr/>
             <div class="card">
-                <h3 class="card-header text-center">Change Test {{$loop->iteration}}</h3><div class="card-body">
-                {{Form::open(['action' => ['TasksController@saveTest', $task->id, $test->id], 'files' => 'true'])}}
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <h3 class="col-md-4 text-md-right">Input</h3>
-                        </div><br/>
-                        <div class="row form-group">
-                            {{Form::label('inputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                            <div class="col-md-6 col-form-label">
-                                {{Form::file("inputFile", ['class' => 'form-control-file'])}}
+                <h3 class="card-header text-center" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="{{session('success')?'false':'true'}}" aria-controls="collapse">
+                    Change Test {{$loop->iteration}} <span class="dropdown-toggle float-right"></span>
+                </h3>
+                <div class="collapse {{session('success')?'':'show'}}" id="collapse"><div class="card-body">
+                    {{Form::open(['action' => ['TasksController@saveTest', $task->id, $test->id], 'files' => 'true'])}}
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                <h3 class="col-md-4 text-md-right">Input</h3>
+                            </div><br/>
+                            <div class="row form-group">
+                                {{Form::label('inputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+                                <div class="col-md-6 col-form-label">
+                                    {{Form::file("inputFile", ['class' => 'form-control-file'])}}
+                                </div>
+                            </div>
+                            <p class="text-center">OR</p>
+                            <div class="row form-group">
+                                {{Form::label('inputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+                                <div class="col-md-6">
+                                    {{Form::textarea("inputText", $input, ['class' => 'form-control text-monospace'])}}
+                                </div>
                             </div>
                         </div>
-                        <p class="text-center">OR</p>
-                        <div class="row form-group">
-                            {{Form::label('inputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                            <div class="col-md-6">
-                                {{Form::textarea("inputText", '', ['class' => 'form-control text-monospace'])}}
+                        <div class="col">
+                            <div class="row">
+                                <h3 class="col-md-4 text-md-right">Output</h3>
+                            </div><br/>
+                            <div class="row form-group">
+                                {{Form::label('outputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+                                <div class="col-md-6 col-form-label">
+                                    {{Form::file("outputFile", ['class' => 'form-control-file'])}}
+                                </div>
+                            </div>
+                            <p class="text-center">OR</p>
+                            <div class="row form-group">
+                                {{Form::label('outputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+                                <div class="col-md-6">
+                                    {{Form::textarea("outputText", $output, ['class' => 'form-control text-monospace'])}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="row">
-                            <h3 class="col-md-4 text-md-right">Output</h3>
-                        </div><br/>
-                        <div class="row form-group">
-                            {{Form::label('outputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                            <div class="col-md-6 col-form-label">
-                                {{Form::file("outputFile", ['class' => 'form-control-file'])}}
-                            </div>
-                        </div>
-                        <p class="text-center">OR</p>
-                        <div class="row form-group">
-                            {{Form::label('outputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                            <div class="col-md-6">
-                                {{Form::textarea("outputText", '', ['class' => 'form-control text-monospace'])}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center">{{Form::submit('Save', ['class' => 'btn btn-lg btn-primary'])}}</div>
-                {{Form::close()}}
-            </div></div><hr/>
-        <table class="table table-striped table-bordered table-hover">
+                    <div class="text-center">{{Form::submit('Save', ['class' => 'btn btn-lg btn-primary'])}}</div>
+                    {{Form::close()}}
+                </div></div>
+            </div><hr/>
+        <table class="table table-striped table-bordered table-hover text-center">
+            <tr>
+                <th>Test</th>
+                <th>Input</th>
+                <th>Output</th>
+                <th>Last Touched</th>
+                <th>Actions</th>
+            </tr>
             @endif
         @endforeach
         </table>

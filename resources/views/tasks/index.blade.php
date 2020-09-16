@@ -19,7 +19,7 @@
             @if($myLevel >= $task->view_level)
             <tr>
                 <td>{{$task->task_id}}</td>
-                <td><a href="/task/{{$task->id}}" class="btn btn-link">{{$task->title}}</a></td>
+                <td><a href="/task/{{$task->id}}">{{$task->title}}</a></td>
                 <td>
                     <a href="/task/{{$task->id}}" class="btn btn-primary">View</a>
                     @if($myLevel >= $task->submit_level)

@@ -213,7 +213,19 @@ class TasksController extends Controller
         if($myLevel < $task->edit_level){
             return abort(404);
         }
-        return view('tasks.tests')->with('task', $task)->with('myLevel', $myLevel)->with('testChange', $test?$test->id:NULL);
+        $testChange = NULL;
+        $input = "The input is not shown here as the file is over 1K, please remember to upload the input file even if you are just changing the output.";
+        $output = "The output is not shown here as the file is over 1K, please remember to upload the output file even if you are just changing the input.";
+        if($test){
+            $testChange = $test->id;
+            if($test->size('in') <= 1024){
+                $input = Storage::get("tests/$test->id.in");
+            }
+            if($test->size('out') <= 1024){
+                $output = Storage::get("tests/$test->id.out");
+            }
+        }
+        return view('tasks.tests')->with('task', $task)->with('myLevel', $myLevel)->with('testChange', $testChange)->with('input', $input)->with('output', $output);
     }
 
     public function saveTest(Request $request, Task $task, Test $test = NULL)
@@ -229,9 +241,9 @@ class TasksController extends Controller
             return abort(404);
         }
         $validator = Validator::make($request->all(), [
-            "inputFile" => ['nullable', 'file', 'max:65536', 'mimes:txt'],
+            "inputFile" => ['required_without:inputText', 'file', 'max:65536', 'mimes:txt'],
             "inputText" => ['nullable', 'string', 'max:67108864'],
-            "outputFile" => ['nullable', 'file', 'max:65536', 'mimes:txt'],
+            "outputFile" => ['required_without:outputText', 'file', 'max:65536', 'mimes:txt'],
             "outputText" => ['nullable', 'string', 'max:67108864'],
         ]);
         if ($validator->fails()) {
