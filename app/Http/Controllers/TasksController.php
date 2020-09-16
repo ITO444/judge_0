@@ -287,6 +287,21 @@ class TasksController extends Controller
         return redirect("/task/$task->id/tests")->with('error', 'ITO hasn\'t implemented this yet');
     }
 
+    public function downloadTest(Task $task, Test $test = NULL)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($test && $test->task->id != $task->id){
+            return abort(404);
+        }
+        if($myLevel < $task->edit_level){
+            return abort(404);
+        }
+        return redirect("/task/$task->id/tests")->with('error', 'ITO hasn\'t implemented this yet');
+    }
+
     /**
      * Remove the specified resource from storage.
      *

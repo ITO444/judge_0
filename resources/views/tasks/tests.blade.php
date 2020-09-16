@@ -16,8 +16,8 @@
         @foreach($task->tests as $test)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td><a href="/test/{{$test->id}}/download/in" class="btn btn-link">Download</a>({{$test->size('in')}}B)</td>
-                <td><a href="/test/{{$test->id}}/download/out" class="btn btn-link">Download</a>({{$test->size('out')}}B)</td>
+                <td><a href="/task/{{$task->id}}/test/{{$test->id}}/download/in" class="btn btn-link">Download</a>({{$test->size('in')}}B)</td>
+                <td><a href="/task/{{$task->id}}/test/{{$test->id}}/download/out" class="btn btn-link">Download</a>({{$test->size('out')}}B)</td>
                 <td><a href="#" class="btn disabled">{{$test->updated_at}}</a></td>
                 <td>
                     <a href="/task/{{$task->id}}/tests/{{$test->id}}" class="btn btn-primary">Edit</a>
