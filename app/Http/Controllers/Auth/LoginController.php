@@ -75,11 +75,13 @@ class LoginController extends Controller
         $existingUser = User::where('email', $user->email)->first();
         if($existingUser){
             // log them in
+            $existingUser->real_name = $user->name;$existingUser->save();//delete this line in the future
             auth()->login($existingUser, true);
         } else {
             // create a new user
             $newUser                  = new User;
             $newUser->name            = explode('@', $user->email)[0];
+            $newUser->real_name       = $user->name;
             $newUser->display         = $user->name;
             $newUser->level           = 1;
             $newUser->email           = $user->email;

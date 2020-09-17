@@ -14,6 +14,14 @@
             </div>
         </div>
         <div class="row form-group">
+            <div class="col-md-4 col-form-label text-md-right">
+                Real Name
+            </div>
+            <div class="col-md-6 col-form-label">
+                {{$user->real_name}}
+            </div>
+        </div>
+        <div class="row form-group">
             {{Form::label('display', 'Display name', ['class' => 'col-md-4 col-form-label text-md-right'])}}
             <div class="col-md-6">
                 {{Form::text("display", $user->display, ['class' => 'form-control'])}}

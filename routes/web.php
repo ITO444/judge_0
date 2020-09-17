@@ -61,6 +61,7 @@ Auth::routes([
     //'reset' => false, // Password Reset Routes...
     'verify' => true, // Email Verification Routes...
 ]);
+
 Route::get('/redirect', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 

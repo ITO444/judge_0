@@ -25,7 +25,7 @@ class Run
     }
 
     /**
-     * Saves the user's code for runner
+     * Compiles the user's code for runner
      *
      * @param int $boxId
      * @param string $language
@@ -77,7 +77,7 @@ class Run
     }
 
     /**
-     * Saves the user's code for runner
+     * Executes the user's code for runner
      *
      * @param int $boxId
      * @param string $language

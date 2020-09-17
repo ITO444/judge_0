@@ -8,6 +8,7 @@ use App\Jobs\ProcessSubmission;
 use App\Jobs\ProcessRunner;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Run;
+use Illuminate\Support\Facades\Validator;
 
 class RunnerController extends Controller
 {
@@ -41,32 +42,65 @@ class RunnerController extends Controller
         if($user->runner_status != ''){
             return;
         }
+        $validator = Validator::make($request->all(), [
+            "code" => ['nullable', 'string', 'max:4096'],
+            "input" => ['nullable', 'string', 'max:65535'],
+            "language" => ['required', 'string', 'max:10', 'in:cpp,py'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => "Cannot run"
+            ]);
+        }
         $user->runner_status = 'On Queue';
         $user->save();
         $data = [
             'userId' => $userId,
-            'code' => $request->input('code'),
-            'input' => $request->input('input'),
-            'language' => $request->input('language'),
+            'code' => $request['code'],
+            'input' => $request['input'],
+            'language' => $request['language'],
         ];
         dispatch(new ProcessRunner($data));
-        return;
+        return response()->json([
+            'status' => 0
+        ]);
     }
 
     public function save(Request $request){
-        $code = $request->input('code');
-        $input = $request->input('input');
-        $language = $request->input('language');
+        $validator = Validator::make($request->all(), [
+            "code" => ['nullable', 'string', 'max:4096'],
+            "input" => ['nullable', 'string', 'max:65535'],
+            "language" => ['required', 'string', 'max:10', 'in:cpp,py'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'Cannot save'
+            ]);
+        }
+        $code = $request['code'];
+        $input = $request['input'];
+        $language = $request['language'];
         Run::saveRunner($language, $code, $input);
-        return;
+        return response()->json([
+            'status' => 'Saved'
+        ]);
     }
 
     public function language(Request $request){
-        $language = $request->input('language');
+        $validator = Validator::make($request->all(), [
+            "language" => ['required', 'string', 'max:10', 'in:cpp,py'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'Cannot switch'
+            ]);
+        }
+        $language = $request['language'];
         $directory = '/usercode/'.auth()->user()->id;
         $code = Storage::get("$directory/program.$language");
         return response()->json([
-            'code' => $code
+            'code' => $code,
+            'status' => 'Switched'
         ]);
     }
 

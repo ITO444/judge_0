@@ -39,7 +39,8 @@
         <div class="">
             <div class="row">
                 <div class="col">Username</div>
-                <div class="col">Display name</div>
+                <div class="col">Real Name</div>
+                <div class="col">Display Name</div>
                 <div class="col">Email</div>
                 <div class="col">Account Type</div>
                 <div class="col">User Level</div>
@@ -50,6 +51,7 @@
                 @if(auth()->user()->level <= $user->level || (auth()->user()->level <= 5 && !$user->google_id))
                     <div class="row form-group">
                         <div class="col col-form-label">{{$user->name}}</div>
+                        <div class="col col-form-label">{{$user->real_name}}</div>
                         <div class="col col-form-label">{{$user->display}}</div>
                         <div class="col col-form-label text-truncate">{{$user->email}}</div>
                         <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
@@ -59,8 +61,9 @@
                 @else
                     {{Form::open(['action' => ['AdminController@saveUser', $user->id], 'method' => 'POST', 'class' => 'row form-group'])}}
                         <div class="col">{{Form::text("name", $user->name, ['class'=>'form-control'])}}</div>
+                        <div class="col">{{Form::text("real_name", $user->real_name, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control'])}}</div>
-                        <div class="col col-form-label text-truncate">{{$user->email}}</div>
+                        <div class="col">{{Form::email("email", $user->email, ['class'=>'form-control'])}}</div>
                         <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
                         <div class="col">{{Form::selectRange("level", 0, auth()->user()->level, $user->level, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::submit('Go', ['class' => 'btn btn-primary'])}}</div>

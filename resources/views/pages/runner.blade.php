@@ -45,7 +45,7 @@
             url: '/runner/save',
             data: $('form').serialize(),
             success:function(data) {
-                $("#savestatus").html('Saved');
+                $("#savestatus").html(data.status);
             },
             error: function(xhr){
                 alert("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -99,7 +99,11 @@
             url: '/runner/run',
             data: $('form').serialize(),
             success:function(data) {
-                ajaxcheck();
+                if(data.status){
+                    alert(data.status);
+                }else{
+                    ajaxcheck();
+                }
             },
             error: function(xhr){
                 alert("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -129,7 +133,7 @@
             success:function(data) {
                 editor.session.setValue(data.code);
                 code.val(data.code);
-                $("#savestatus").html('Switched');
+                $("#savestatus").html(data.status);
             },
             error: function(xhr){
                 alert("An error occured: " + xhr.status + " " + xhr.statusText);

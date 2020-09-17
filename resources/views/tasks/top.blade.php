@@ -12,6 +12,9 @@
     <div class="btn btn-outline-secondary disabled">
         Date Created: {{$task->date_created}}
     </div>
+    <div class="btn btn-outline-secondary disabled">
+        By: {{$task->author}}
+    </div>
     @if($task->origin)
     <div class="btn btn-outline-secondary disabled">
         From: {{$task->origin}}

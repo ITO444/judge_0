@@ -46,8 +46,8 @@ class TasksController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "task_id" => ['required', 'string', "unique:tasks,task_id"],
-            "title" => ['required', 'string'],
+            "task_id" => ['required', 'string', "unique:tasks,task_id", "max:10"],
+            "title" => ['required', 'string', "max:64"],
         ]);
         if ($validator->fails()) {
             return redirect('/admin/task')->withErrors($validator);
@@ -69,6 +69,7 @@ class TasksController extends Controller
         $task->submit_level = $myLevel;
         $task->task_type = 0;
         $task->date_created = $task->freshTimestamp();
+        $task->author = auth()->user()->real_name;
         $task->origin = '';
         $task->statement = '';
         $task->checker = '';
@@ -130,22 +131,23 @@ class TasksController extends Controller
             return abort(404);
         }
         $validator = Validator::make($request->all(), [
-            "task_id" => ['required', 'string', "unique:tasks,task_id,$task->id"],
-            "title" => ['required', 'string'],
+            "task_id" => ['required', 'string', "unique:tasks,task_id,$task->id", 'max:10'],
+            "title" => ['required', 'string', 'max:64'],
             "source_size" => ['nullable', 'integer', "between:0, 4096"],
             "compile_time" => ['nullable', 'integer', "between:0, 30"],
             "runtime_limit" => ['nullable', 'numeric', "between:0, 10"],
             "memory_limit" => ['nullable', 'integer', "between:0, 1048576"],
-            "output_limit" => ['nullable', 'integer', "between:0, 65536"],
+            "output_limit" => ['nullable', 'integer', "between:0, 65535"],
             "view_level" => ['nullable', 'integer', "between:1, $myLevel"],
             "submit_level" => ['nullable', 'integer', "between:1, $myLevel"],
             "edit_level" => ['nullable', 'integer', "between:4, $myLevel"],
             "task_type" => ['required', 'integer', "between:0, 1"],
             "date_created" => ['required', 'date'],
-            "origin" => ['nullable', 'string'],
-            "statement" => ['nullable', 'string'],
-            "checker" => ['nullable', 'string'],
-            "solution" => ['nullable', 'string'],
+            "author" => ['nullable', 'string', 'max:64'],
+            "origin" => ['nullable', 'string', 'max:64'],
+            "statement" => ['nullable', 'string', 'max:65535'],
+            "checker" => ['nullable', 'string', 'max:4096'],
+            "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
             return redirect("/task/$task->id/edit")->withErrors($validator);
@@ -164,6 +166,7 @@ class TasksController extends Controller
         if($task->edit_level < $task->submit_level) $task->edit_level = $task->submit_level;
         $task->task_type = $request["task_type"];
         $task->date_created = $request["date_created"];
+        $task->author = $request["author"] ?: '';
         $task->origin = $request["origin"] ?: '';
         $task->statement = $request["statement"] ?: '';
         $task->checker = $request["checker"] ?: '';

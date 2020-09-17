@@ -31,7 +31,9 @@ class AdminController extends Controller
         $myLevel = auth()->user()->level;
         $validator = Validator::make($request->all(), [
             "name" => ['required', 'string', 'max:32', "unique:users,name,$user->id"],
+            "real_name" => ['required', 'string'],
             "display" => ['required', 'string', 'max:32'],
+            "email" => ['required', 'string', 'email', 'max:255', "unique:users,email,$user->id"],
             "level" => ['required', 'integer', "between:0, $myLevel"],
         ]);
         if ($validator->fails()) {
@@ -44,7 +46,9 @@ class AdminController extends Controller
             return redirect('/admin/users')->with('error', 'The level you set cannot be higher than your level');
         }
         $user->name = $request["name"];
+        $user->real_name = $request["real_name"];
         $user->display = $request["display"];
+        $user->email = $request["email"];
         $user->level = $request["level"];
         $user->save();
         return redirect('/admin/users')->with('success', 'Info Saved');
