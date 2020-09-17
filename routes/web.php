@@ -49,8 +49,11 @@ Route::group(['prefix' => 'task/{task}'], function () {
 
     Route::get('tests/{test?}', 'TasksController@tests')->middleware('admin:4');
     Route::post('test/save/{test?}', 'TasksController@saveTest')->middleware('admin:4');
-    Route::get('test/{test}/download/{ext}', 'TasksController@downloadTest')->middleware('admin:4');
+    Route::get('test/{testNumber}/download/{ext}', 'TasksController@downloadTest')->middleware('admin:4');
     Route::delete('tests/{test}', 'TasksController@deleteTest')->middleware('admin:4');
+
+    Route::get('grader', 'TasksController@grader')->middleware('admin:4');
+    Route::post('grader/save', 'TasksController@saveGrader')->middleware('admin:4');
 
     Route::get('submit', 'TasksController@submit')->middleware('admin:2');
     Route::post('submit/save', 'TasksController@saveSubmit')->middleware('admin:2');

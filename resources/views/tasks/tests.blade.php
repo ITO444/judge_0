@@ -2,30 +2,31 @@
 
 @section('content')
     @include("tasks.top")
-    <h3>Manage Test Data</h3>
+    <h3>Manage Test Data <a href="/task/{{$task->id}}/grader" class="btn btn-primary float-right">Edit Grader</a></h3>
     <br/>
     @if(count($task->tests) > 0)
-        <table class="table table-striped table-bordered table-hover text-center">
-            <tr>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover text-center text-nowrap">
+            <thead><tr>
                 <th>Test</th>
                 <th>Input</th>
                 <th>Output</th>
                 <th>Last Touched</th>
                 <th>Actions</th>
-            </tr>
+            </tr></thead><tbody>
         @foreach($task->tests as $test)
             <tr>
-                <td>{{$loop->iteration}}</td>
-                <td><a href="/task/{{$task->id}}/test/{{$test->id}}/download/in" class="btn btn-link">Download</a>({{$test->size('in')}}B)</td>
-                <td><a href="/task/{{$task->id}}/test/{{$test->id}}/download/out" class="btn btn-link">Download</a>({{$test->size('out')}}B)</td>
-                <td><a href="#" class="btn disabled">{{$test->updated_at}}</a></td>
+                <td><div class="col-form-label">{{$loop->iteration}}</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->id}}/test/{{$test->id}}/download/in" class="">Download</a> ({{$test->size('in')}}B)</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->id}}/test/{{$test->id}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
+                <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
-                    <a href="/task/{{$task->id}}/tests/{{$test->id}}" class="btn btn-primary">Edit</a>
-                    <a class="btn btn-primary" onclick="del({{$test->id}})">Delete</a>
+                    <a href="/task/{{$task->id}}/tests/{{$test->id}}" class="btn btn-primary btn">Edit</a>
+                    <a class="btn btn-primary btn" onclick="del({{$test->id}})">Delete</a>
                 </td>
             </tr>
             @if($test->id == $testChange)
-        </table><hr/>
+        </tbody></table><hr/>
             <div class="card">
                 <h3 class="card-header text-center" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="{{session('success')?'false':'true'}}" aria-controls="collapse">
                     Change Test {{$loop->iteration}} <span class="dropdown-toggle float-right"></span>
@@ -74,17 +75,18 @@
                     {{Form::close()}}
                 </div></div>
             </div><hr/>
-        <table class="table table-striped table-bordered table-hover text-center">
-            <tr>
+        <table class="table table-striped table-bordered table-hover text-center text-nowrap">
+            <thead><tr>
                 <th>Test</th>
                 <th>Input</th>
                 <th>Output</th>
                 <th>Last Touched</th>
                 <th>Actions</th>
-            </tr>
+            </tr></thead><tbody>
             @endif
         @endforeach
-        </table>
+        </tbody></table>
+    </div>
     @else
         <p>No test cases found</p>
     @endif

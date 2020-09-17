@@ -105,27 +105,6 @@
             </div>
             
             <div class="row form-group">
-                {{Form::label('statement', 'Statement', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                <div class="col-md-6">
-                    {{Form::textarea("statement", $task->statement, ['class' => 'form-control'])}}
-                </div>
-            </div>
-            
-            <div class="row form-group">
-                {{Form::label('checker', 'Checker', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                <div class="col-md-6">
-                    {{Form::textarea("checker", $task->checker, ['class' => 'form-control'])}}
-                </div>
-            </div>
-            
-            <div class="row form-group">
-                {{Form::label('solution', 'Solution', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                <div class="col-md-6">
-                    {{Form::textarea("solution", $task->solution, ['class' => 'form-control'])}}
-                </div>
-            </div>
-
-            <div class="row form-group">
                 <div class="col-md-4 col-form-label text-md-right">
                     Test Cases
                 </div>
@@ -133,6 +112,17 @@
                     {{$task->tests()->count()}}
                 </div>
             </div>
+            <hr/>
+            <div class="form-group">
+                {{Form::label('statement', 'Statement', ['class' => 'form-label'])}}
+                {{Form::textarea("statement", $task->statement, ['class' => 'form-control'])}}
+            </div>
+            
+            <div class="form-group">
+                {{Form::label('solution', 'Solution', ['class' => 'form-label'])}}
+                {{Form::textarea("solution", $task->solution, ['class' => 'form-control'])}}
+            </div>
+
             <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
                     {{Form::submit('Save', ['class' => 'btn btn-primary'])}}

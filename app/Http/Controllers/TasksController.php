@@ -47,7 +47,7 @@ class TasksController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "task_id" => ['required', 'string', "unique:tasks,task_id", "max:10"],
-            "title" => ['required', 'string', "max:64"],
+            "title" => ['required', 'string', "max:255"],
         ]);
         if ($validator->fails()) {
             return redirect('/admin/task')->withErrors($validator);
@@ -72,7 +72,8 @@ class TasksController extends Controller
         $task->author = auth()->user()->real_name;
         $task->origin = '';
         $task->statement = '';
-        $task->checker = '';
+        $task->grader = '';
+        $task->grader_status = '';
         $task->solution = '';
         $task->save();
         return redirect("/task/$task->id/edit")->with('success', 'Task Created');
@@ -132,21 +133,21 @@ class TasksController extends Controller
         }
         $validator = Validator::make($request->all(), [
             "task_id" => ['required', 'string', "unique:tasks,task_id,$task->id", 'max:10'],
-            "title" => ['required', 'string', 'max:64'],
-            "source_size" => ['nullable', 'integer', "between:0, 4096"],
+            "title" => ['required', 'string', 'max:255'],
+            "source_size" => ['nullable', 'integer', "between:0, 128"],
             "compile_time" => ['nullable', 'integer', "between:0, 30"],
             "runtime_limit" => ['nullable', 'numeric', "between:0, 10"],
             "memory_limit" => ['nullable', 'integer', "between:0, 1048576"],
-            "output_limit" => ['nullable', 'integer', "between:0, 65535"],
+            "output_limit" => ['nullable', 'integer', "between:0, 65536"],
             "view_level" => ['nullable', 'integer', "between:1, $myLevel"],
             "submit_level" => ['nullable', 'integer', "between:1, $myLevel"],
             "edit_level" => ['nullable', 'integer', "between:4, $myLevel"],
             "task_type" => ['required', 'integer', "between:0, 1"],
             "date_created" => ['required', 'date'],
-            "author" => ['nullable', 'string', 'max:64'],
-            "origin" => ['nullable', 'string', 'max:64'],
+            "author" => ['nullable', 'string', 'max:255'],
+            "origin" => ['nullable', 'string', 'max:255'],
             "statement" => ['nullable', 'string', 'max:65535'],
-            "checker" => ['nullable', 'string', 'max:4096'],
+            "grader" => ['nullable', 'string', 'max:131072'],
             "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
@@ -169,7 +170,7 @@ class TasksController extends Controller
         $task->author = $request["author"] ?: '';
         $task->origin = $request["origin"] ?: '';
         $task->statement = $request["statement"] ?: '';
-        $task->checker = $request["checker"] ?: '';
+        $task->grader = $request["grader"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
         return redirect("/task/$task->id/edit")->with('success', 'Saved');
@@ -256,6 +257,8 @@ class TasksController extends Controller
         if(!$test){
             $test = new Test;
             $test->task_id = $task->id;
+            $test->input_status = '';
+            $test->output_status = '';
             $test->save();
             $new = true;
         }else $test->touch();
@@ -275,7 +278,7 @@ class TasksController extends Controller
         return redirect("/task/$task->id/tests/$test->id")->with('success', "Test case changed");
     }
 
-    public function deleteTest(Task $task, Test $test = NULL)
+    public function deleteTest(Task $task, Test $test)
     {
         $myLevel = auth()->user()->level;
         if($myLevel == 4){
@@ -287,32 +290,81 @@ class TasksController extends Controller
         if($myLevel < $task->edit_level){
             return abort(404);
         }
-        return redirect("/task/$task->id/tests")->with('error', 'ITO hasn\'t implemented this yet');
+        Storage::delete(["$test->id.in", "$test->id.out"]);
+        $test->delete();
+        return redirect("/task/$task->id/tests")->with('success', 'Should I use green for a successful delete?')->with('error', 'Or should I use red since it\'s a delete?');
     }
 
-    public function downloadTest(Task $task, Test $test = NULL)
+    public function downloadTest(Task $task, int $testNumber, $ext)
     {
+        if($ext !== 'in' && $ext !== 'out'){
+            return abort(404);
+        }
         $myLevel = auth()->user()->level;
         if($myLevel == 4){
             $myLevel = 7;
         }
-        if($test && $test->task->id != $task->id){
-            return abort(404);
-        }
         if($myLevel < $task->edit_level){
             return abort(404);
         }
-        return redirect("/task/$task->id/tests")->with('error', 'ITO hasn\'t implemented this yet');
+        $tests = $task->tests;
+        if($testNumber > $tests->count() || $testNumber <= 0){
+            return abort(404);
+        }
+        $test = $tests->offsetGet($testNumber - 1);
+        return Storage::download("tests/$test->id.$ext", $task->task_id."_".$testNumber.".".$ext);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function grader(Task $task)
     {
-        //
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($myLevel < $task->edit_level){
+            return abort(404);
+        }
+        return view('tasks.grader')->with('task', $task)->with('myLevel', $myLevel);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function saveGrader(Request $request, Task $task)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($myLevel < $task->edit_level){
+            return abort(404);
+        }
+        $validator = Validator::make($request->all(), [
+            "option" => ['required', 'integer', "between:0, 1"],
+            "grader" => ['nullable', 'string', 'max:131072'],
+        ]);
+        if ($validator->fails()) {
+            return redirect("/task/$task->id/grader")->withErrors($validator);
+        }
+        if($request->option){
+            $task->grader = $request["grader"] ?: '';
+            $task->grader_status = "Saved";
+            $task->save();
+        }else{
+            $task->grader = $request["grader"] ?: '';
+            $task->grader_status = "";
+            $task->save();
+        }
+        return redirect("/task/$task->id/grader")->with('success', 'Saved');
     }
 }

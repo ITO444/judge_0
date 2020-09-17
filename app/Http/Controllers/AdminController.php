@@ -31,7 +31,7 @@ class AdminController extends Controller
         $myLevel = auth()->user()->level;
         $validator = Validator::make($request->all(), [
             "name" => ['required', 'string', 'max:32', "unique:users,name,$user->id"],
-            "real_name" => ['required', 'string'],
+            "real_name" => ['required', 'string', 'max:255'],
             "display" => ['required', 'string', 'max:32'],
             "email" => ['required', 'string', 'email', 'max:255', "unique:users,email,$user->id"],
             "level" => ['required', 'integer', "between:0, $myLevel"],

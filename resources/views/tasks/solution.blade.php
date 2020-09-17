@@ -3,5 +3,5 @@
 @section('content')
     @include("tasks.top")
     <h3>Solution</h3>
-    {{$task->solution}}
+    <p>{{$task->solution}}</p>
 @endsection

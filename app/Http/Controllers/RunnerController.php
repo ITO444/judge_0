@@ -43,9 +43,9 @@ class RunnerController extends Controller
             return;
         }
         $validator = Validator::make($request->all(), [
-            "code" => ['nullable', 'string', 'max:4096'],
-            "input" => ['nullable', 'string', 'max:65535'],
-            "language" => ['required', 'string', 'max:10', 'in:cpp,py'],
+            "code" => ['nullable', 'string', 'max:131072'],
+            "input" => ['nullable', 'string', 'max:67108864'],
+            "language" => ['required', 'string', 'in:cpp,py'],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -68,9 +68,9 @@ class RunnerController extends Controller
 
     public function save(Request $request){
         $validator = Validator::make($request->all(), [
-            "code" => ['nullable', 'string', 'max:4096'],
-            "input" => ['nullable', 'string', 'max:65535'],
-            "language" => ['required', 'string', 'max:10', 'in:cpp,py'],
+            "code" => ['nullable', 'string', 'max:131072'],
+            "input" => ['nullable', 'string', 'max:67108864'],
+            "language" => ['required', 'string', 'in:cpp,py'],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -88,7 +88,7 @@ class RunnerController extends Controller
 
     public function language(Request $request){
         $validator = Validator::make($request->all(), [
-            "language" => ['required', 'string', 'max:10', 'in:cpp,py'],
+            "language" => ['required', 'string', 'in:cpp,py'],
         ]);
         if ($validator->fails()) {
             return response()->json([
