@@ -32,7 +32,7 @@ Route::group(['prefix' => 'runner'], function () {
 });
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::get('', 'AdminController@index')->middleware('admin:4');
+    Route::get('', 'AdminController@index')->middleware('admin:4')->middleware('verified');
     Route::get('users', 'AdminController@viewUsers')->middleware('admin:5');
     Route::post('users/save/{user:name}', 'AdminController@saveUser')->middleware('admin:5');
     Route::get('task', 'TasksController@create')->middleware('admin:4');

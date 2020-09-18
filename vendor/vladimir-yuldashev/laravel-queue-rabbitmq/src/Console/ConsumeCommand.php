@@ -24,7 +24,7 @@ class ConsumeCommand extends WorkCommand
                             {--prefetch-size=0}
                             {--prefetch-count=1000}
 
-                            {--box-id=0 : ITO}
+                            {--box-id= : ITO}
                            ';
 
     protected $description = 'Consume messages';
@@ -40,7 +40,9 @@ class ConsumeCommand extends WorkCommand
         $consumer->setPrefetchCount((int) $this->option('prefetch-count'));
 
         //ITO
-        $consumer->setBoxId((int) $this->option('box-id'));
+        if($this->option('box-id') !== null){
+            $consumer->setBoxId((int) $this->option('box-id'));
+        }
 
         parent::handle();
     }

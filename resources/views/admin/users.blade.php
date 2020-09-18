@@ -59,7 +59,7 @@
                         <div class="col"><button type="button" class="btn btn-secondary" disabled>Go</button></div>
                     </div>
                 @else
-                    {{Form::open(['action' => ['AdminController@saveUser', $user->id], 'method' => 'POST', 'class' => 'row form-group'])}}
+                    {{Form::open(['action' => ['AdminController@saveUser', $user->name], 'method' => 'POST', 'class' => 'row form-group'])}}
                         <div class="col">{{Form::text("name", $user->name, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::text("real_name", $user->real_name, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control'])}}</div>

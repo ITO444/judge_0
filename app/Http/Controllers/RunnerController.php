@@ -60,7 +60,7 @@ class RunnerController extends Controller
             'input' => $request['input'],
             'language' => $request['language'],
         ];
-        dispatch(new ProcessRunner($data));
+        ProcessRunner::dispatch($data)->onQueue('code');
         return response()->json([
             'status' => 0
         ]);
