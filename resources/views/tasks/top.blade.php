@@ -1,4 +1,4 @@
-<h1><a href="/task/{{$task->id}}" class="text-body">{{$task->title}}</a></h1>
+<h1><a href="/task/{{$task->task_id}}" class="text-body">{{$task->title}}</a></h1>
 <div class="btn-group">
     <div class="btn btn-outline-secondary disabled">
         {{$task->task_id}}
@@ -22,12 +22,12 @@
     @endif
 </div>
 <div class="btn-group">
-    <a href="/task/{{$task->id}}" class="btn btn-outline-primary">View</a>
+    <a href="/task/{{$task->task_id}}" class="btn btn-outline-primary">View</a>
     @if($myLevel >= $task->submit_level)
-        <a href="/task/{{$task->id}}/submit" class="btn btn-outline-primary">Submit</a>
+        <a href="/task/{{$task->task_id}}/submit" class="btn btn-outline-primary">Submit</a>
         @if($myLevel >= $task->edit_level)
-            <a href="/task/{{$task->id}}/edit" class="btn btn-outline-primary">Edit</a>
-            <a href="/task/{{$task->id}}/solution" class="btn btn-outline-primary">Solution</a>
+            <a href="/task/{{$task->task_id}}/edit" class="btn btn-outline-primary">Edit</a>
+            <a href="/task/{{$task->task_id}}/solution" class="btn btn-outline-primary">Solution</a>
         @endif
     @endif
 </div>

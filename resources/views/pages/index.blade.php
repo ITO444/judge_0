@@ -16,9 +16,9 @@
                 Login as Others
             </a>
         @else
-            <p>Welcome {{Auth::user()->name}}, what would you like to do today?</p>
+            <p>Welcome {{auth()->user()->display}}, what would you like to do today?</p>
             <a href="/runner" class="btn btn-primary">Runner</a>
-            <a href="/user/{{Auth::user()->id}}" class="btn btn-primary">User</a>
+            <a href="/user/{{auth()->user()->name}}" class="btn btn-primary">User</a>
             <a href="/home" class="btn btn-primary">Home</a>
         @endif
     </div>

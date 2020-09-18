@@ -76,7 +76,7 @@ class TasksController extends Controller
         $task->grader_status = '';
         $task->solution = '';
         $task->save();
-        return redirect("/task/$task->id/edit")->with('success', 'Task Created');
+        return redirect("/task/$task->task_id/edit")->with('success', 'Task Created');
     }
 
     /**
@@ -151,7 +151,7 @@ class TasksController extends Controller
             "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->id/edit")->withErrors($validator);
+            return redirect("/task/$task->task_id/edit")->withErrors($validator);
         }
         $task->task_id = $request["task_id"];
         $task->title = $request["title"];
@@ -173,19 +173,7 @@ class TasksController extends Controller
         $task->grader = $request["grader"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
-        return redirect("/task/$task->id/edit")->with('success', 'Saved');
-    }
-
-    public function submit(Task $task)
-    {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->submit_level){
-            return abort(404);
-        }
-        return view('tasks.submit')->with('task', $task)->with('myLevel', $myLevel);
+        return redirect("/task/$task->task_id/edit")->with('success', 'Saved');
     }
 
     public function solution(Task $task)
@@ -251,7 +239,7 @@ class TasksController extends Controller
             "outputText" => ['nullable', 'string', 'max:67108864'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->id/tests")->withErrors($validator);
+            return redirect("/task/$task->task_id/tests")->withErrors($validator);
         }
         $new = false;
         if(!$test){
@@ -273,9 +261,9 @@ class TasksController extends Controller
             Storage::put("tests/$test->id.out", $request["outputText"]);
         }
         if($new){
-            return redirect("/task/$task->id/tests")->with('success', "Test case added");
+            return redirect("/task/$task->task_id/tests")->with('success', "Test case added");
         }
-        return redirect("/task/$task->id/tests/$test->id")->with('success', "Test case changed");
+        return redirect("/task/$task->task_id/tests/$test->id")->with('success', "Test case changed");
     }
 
     public function deleteTest(Task $task, Test $test)
@@ -292,7 +280,7 @@ class TasksController extends Controller
         }
         Storage::delete(["$test->id.in", "$test->id.out"]);
         $test->delete();
-        return redirect("/task/$task->id/tests")->with('success', 'Should I use green for a successful delete?')->with('error', 'Or should I use red since it\'s a delete?');
+        return redirect("/task/$task->task_id/tests")->with('success', 'Should I use green for a successful delete?')->with('error', 'Or should I use red since it\'s a delete?');
     }
 
     public function downloadTest(Task $task, int $testNumber, $ext)
@@ -354,7 +342,7 @@ class TasksController extends Controller
             "grader" => ['nullable', 'string', 'max:131072'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->id/grader")->withErrors($validator);
+            return redirect("/task/$task->task_id/grader")->withErrors($validator);
         }
         if($request->option){
             $task->grader = $request["grader"] ?: '';
@@ -365,6 +353,37 @@ class TasksController extends Controller
             $task->grader_status = "";
             $task->save();
         }
-        return redirect("/task/$task->id/grader")->with('success', 'Saved');
+        return redirect("/task/$task->task_id/grader")->with('success', 'Saved');
+    }
+    
+    public function submit(Task $task)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($myLevel < $task->submit_level){
+            return abort(404);
+        }
+        return view('tasks.submit')->with('task', $task)->with('myLevel', $myLevel);
+    }
+
+    public function saveSubmit(Request $request, Task $task)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($myLevel < $task->submit_level){
+            return abort(404);
+        }
+        $validator = Validator::make($request->all(), [
+            "language" => ['required', 'string', "in:cpp,py"],
+            "code" => ['nullable', 'string', 'max:131072'],
+        ]);
+        if ($validator->fails()) {
+            return redirect("/task/$task->task_id/submit")->withErrors($validator);
+        }
+        return redirect("/task/$task->task_id/submit")->with('error', 'Haven\'t implemented this yet');
     }
 }

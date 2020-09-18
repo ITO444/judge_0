@@ -20,14 +20,14 @@
                 @if($myLevel >= $task->view_level)
                 <tr>
                     <td>{{$task->task_id}}</td>
-                    <td><a href="/task/{{$task->id}}">{{$task->title}}</a></td>
+                    <td><a href="/task/{{$task->task_id}}">{{$task->title}}</a></td>
                     <td>
-                        <a href="/task/{{$task->id}}" class="btn btn-primary btn-sm">View</a>
+                        <a href="/task/{{$task->task_id}}" class="btn btn-primary btn-sm">View</a>
                         @if($myLevel >= $task->submit_level)
-                            <a href="/task/{{$task->id}}/submit" class="btn btn-primary btn-sm">Submit</a>
+                            <a href="/task/{{$task->task_id}}/submit" class="btn btn-primary btn-sm">Submit</a>
                             @if($myLevel >= $task->edit_level)
-                                <a href="/task/{{$task->id}}/edit" class="btn btn-primary btn-sm">Edit</a>
-                                <a href="/task/{{$task->id}}/solution" class="btn btn-primary btn-sm">Solution</a>
+                                <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="/task/{{$task->task_id}}/solution" class="btn btn-primary btn-sm">Solution</a>
                             @endif
                         @endif
                     </td>

@@ -3,9 +3,9 @@
 @section('content')
     @include("tasks.top")
     <div class="row justify-content-center"><div class="col-md-10"><div class="card">
-        <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Task</a><a href="/task/{{$task->id}}/tests" class="btn btn-secondary float-right">Manage test data</a></div>
+        <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Task</a><a href="/task/{{$task->task_id}}/tests" class="btn btn-secondary float-right">Manage test data</a></div>
         
-        <div class="card-body">{{Form::open(['action' => ['TasksController@update', $task->id], 'method' => 'POST'])}}
+        <div class="card-body">{{Form::open(['action' => ['TasksController@update', $task->task_id], 'method' => 'POST'])}}
             <div class="row form-group">
                 {{Form::label('task_id', 'Task ID', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
@@ -126,7 +126,7 @@
             <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
                     {{Form::submit('Save', ['class' => 'btn btn-primary'])}}
-                    <a href="/task/{{$task->id}}/tests" class="btn btn-secondary">Manage test data</a>
+                    <a href="/task/{{$task->task_id}}/tests" class="btn btn-secondary">Manage test data</a>
                 </div>
             </div>
         {{Form::close()}}</div>

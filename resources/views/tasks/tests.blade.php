@@ -2,7 +2,7 @@
 
 @section('content')
     @include("tasks.top")
-    <h3>Manage Test Data <a href="/task/{{$task->id}}/grader" class="btn btn-primary float-right">Edit Grader</a></h3>
+    <h3>Manage Test Data <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a></h3>
     <br/>
     @if(count($task->tests) > 0)
     <div class="table-responsive">
@@ -17,11 +17,11 @@
         @foreach($task->tests as $test)
             <tr>
                 <td><div class="col-form-label">{{$loop->iteration}}</div></td>
-                <td><div class="col-form-label"><a href="/task/{{$task->id}}/test/{{$test->id}}/download/in" class="">Download</a> ({{$test->size('in')}}B)</div></td>
-                <td><div class="col-form-label"><a href="/task/{{$task->id}}/test/{{$test->id}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$test->id}}/download/in" class="">Download</a> ({{$test->size('in')}}B)</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$test->id}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
-                    <a href="/task/{{$task->id}}/tests/{{$test->id}}" class="btn btn-primary btn">Edit</a>
+                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary btn">Edit</a>
                     <a class="btn btn-primary btn" onclick="del({{$test->id}})">Delete</a>
                 </td>
             </tr>
@@ -32,7 +32,7 @@
                     Change Test {{$loop->iteration}} <span class="dropdown-toggle float-right"></span>
                 </h3>
                 <div class="collapse {{session('success')?'':'show'}}" id="collapse"><div class="card-body">
-                    {{Form::open(['action' => ['TasksController@saveTest', $task->id, $test->id], 'files' => 'true'])}}
+                    {{Form::open(['action' => ['TasksController@saveTest', $task->rask_id, $test->id], 'files' => 'true'])}}
                     <div class="row">
                         <div class="col">
                             <div class="row">
@@ -92,7 +92,7 @@
     @endif
     <div class="card">
         <h3 class="card-header text-center">Add Test</h3><div class="card-body">
-        {{Form::open(['action' => ['TasksController@saveTest', $task->id], 'files' => 'true'])}}
+        {{Form::open(['action' => ['TasksController@saveTest', $task->task_id], 'files' => 'true'])}}
         <div class="row">
             <div class="col">
                 <div class="row">
@@ -139,7 +139,7 @@
         function del(id){
             var delForm = $('#delete');
             if(confirm('Are you sure you want to delete this test case?')) {
-                delForm.attr("action", "/task/{{$task->id}}/tests/"+id);
+                delForm.attr("action", "/task/{{$task->task_id}}/tests/"+id);
                 delForm.submit();
             }
         }

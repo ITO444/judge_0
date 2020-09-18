@@ -5,7 +5,7 @@
 <div class="row justify-content-center"><div class="col-md-8"><div class="card">
     <div class="card-header">Edit grader</div>
     <div class="card-body">
-        {{Form::open(['action' => ['TasksController@saveGrader', $task->id], 'method' => 'POST'])}}
+        {{Form::open(['action' => ['TasksController@saveGrader', $task->task_id], 'method' => 'POST'])}}
         <div class='form-group'>
             {{Form::label('option', 'Grader Options')}}
             {{Form::select('option', [0 => 'Use default grader', 1 => 'Custom grader'], $task->grader_status?1:0, ['class' => 'form-control'])}}

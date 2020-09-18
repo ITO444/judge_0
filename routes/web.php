@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', 'PagesController@index');
 
-Route::get('user/{user}', 'PagesController@user');
+Route::get('user/{user:name}', 'PagesController@user');
 Route::get('settings', 'PagesController@settings');
 Route::post('settings/save', 'PagesController@saveSettings');
 
@@ -34,14 +34,14 @@ Route::group(['prefix' => 'runner'], function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::get('', 'AdminController@index')->middleware('admin:4');
     Route::get('users', 'AdminController@viewUsers')->middleware('admin:5');
-    Route::post('users/save/{user}', 'AdminController@saveUser')->middleware('admin:5');
+    Route::post('users/save/{user:name}', 'AdminController@saveUser')->middleware('admin:5');
     Route::get('task', 'TasksController@create')->middleware('admin:4');
     Route::post('task/save', 'TasksController@store')->middleware('admin:4');
 });
 
 Route::get('tasks', 'TasksController@index')->middleware('admin:2');
 
-Route::group(['prefix' => 'task/{task}'], function () {
+Route::group(['prefix' => 'task/{task:task_id}'], function () {
     Route::get('', 'TasksController@show')->middleware('admin:2');
     Route::get('solution', 'TasksController@solution')->middleware('admin:4');
     Route::get('edit', 'TasksController@edit')->middleware('admin:4');
