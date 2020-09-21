@@ -22,6 +22,11 @@
                     <a class="nav-link" href="/tasks">Tasks</a>
                 </li>
                 @endif
+                @if(auth()->user()->level >= 3)
+                <li class="nav-item">
+                    <a class="nav-link" href="/lesson">Lesson</a>
+                </li>
+                @endif
                 @if(auth()->user()->level >= 4)
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Admin</a>

@@ -16,9 +16,9 @@
                 Login as Others
             </a>
         <?php else: ?>
-            <p>Welcome <?php echo e(Auth::user()->name); ?>, what would you like to do today?</p>
+            <p>Welcome <?php echo e(auth()->user()->display); ?>, what would you like to do today?</p>
             <a href="/runner" class="btn btn-primary">Runner</a>
-            <a href="/user/<?php echo e(Auth::user()->id); ?>" class="btn btn-primary">User</a>
+            <a href="/user/<?php echo e(auth()->user()->name); ?>" class="btn btn-primary">User</a>
             <a href="/home" class="btn btn-primary">Home</a>
         <?php endif; ?>
     </div>

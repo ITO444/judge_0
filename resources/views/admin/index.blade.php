@@ -16,5 +16,8 @@
         <a href="/admin/contest" class="list-group-item list-group-item-action {{$level>=8?:'disabled'}}">
             Create Contest
         </a>
+        <a href="/admin/lesson/cpp" class="list-group-item list-group-item-action {{$level>=6?:'disabled'}}">
+            Lesson
+        </a>
     </div>
 @endsection

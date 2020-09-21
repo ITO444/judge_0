@@ -34,38 +34,38 @@
                 <div class="collapse {{session('success')?'':'show'}}" id="collapse"><div class="card-body">
                     {{Form::open(['action' => ['TasksController@saveTest', $task->rask_id, $test->id], 'files' => 'true'])}}
                     <div class="row">
-                        <div class="col">
+                        <div class="col-lg">
                             <div class="row">
-                                <h3 class="col-md-4 text-md-right">Input</h3>
+                                <h3 class="col-lg-4 text-lg-right">Input</h3>
                             </div><br/>
                             <div class="row form-group">
-                                {{Form::label('inputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                                <div class="col-md-6 col-form-label">
+                                {{Form::label('inputFile', 'Upload', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                                <div class="col-lg-6 col-form-label">
                                     {{Form::file("inputFile", ['class' => 'form-control-file'])}}
                                 </div>
                             </div>
                             <p class="text-center">OR</p>
                             <div class="row form-group">
-                                {{Form::label('inputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                                <div class="col-md-6">
+                                {{Form::label('inputText', 'Text', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                                <div class="col-lg-6">
                                     {{Form::textarea("inputText", $input, ['class' => 'form-control text-monospace'])}}
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-lg">
                             <div class="row">
-                                <h3 class="col-md-4 text-md-right">Output</h3>
+                                <h3 class="col-lg-4 text-lg-right">Output</h3>
                             </div><br/>
                             <div class="row form-group">
-                                {{Form::label('outputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                                <div class="col-md-6 col-form-label">
+                                {{Form::label('outputFile', 'Upload', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                                <div class="col-lg-6 col-form-label">
                                     {{Form::file("outputFile", ['class' => 'form-control-file'])}}
                                 </div>
                             </div>
                             <p class="text-center">OR</p>
                             <div class="row form-group">
-                                {{Form::label('outputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                                <div class="col-md-6">
+                                {{Form::label('outputText', 'Text', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                                <div class="col-lg-6">
                                     {{Form::textarea("outputText", $output, ['class' => 'form-control text-monospace'])}}
                                 </div>
                             </div>
@@ -94,38 +94,38 @@
         <h3 class="card-header text-center">Add Test</h3><div class="card-body">
         {{Form::open(['action' => ['TasksController@saveTest', $task->task_id], 'files' => 'true'])}}
         <div class="row">
-            <div class="col">
+            <div class="col-lg">
                 <div class="row">
-                    <h3 class="col-md-4 text-md-right">Input</h3>
+                    <h3 class="col-lg-4 text-lg-right">Input</h3>
                 </div><br/>
                 <div class="row form-group">
-                    {{Form::label('inputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                    <div class="col-md-6 col-form-label">
+                    {{Form::label('inputFile', 'Upload', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                    <div class="col-lg-6 col-form-label">
                         {{Form::file("inputFile", ['class' => 'form-control-file'])}}
                     </div>
                 </div>
                 <p class="text-center">OR</p>
                 <div class="row form-group">
-                    {{Form::label('inputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                    <div class="col-md-6">
+                    {{Form::label('inputText', 'Text', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                    <div class="col-lg-6">
                         {{Form::textarea("inputText", '', ['class' => 'form-control text-monospace'])}}
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-lg">
                 <div class="row">
-                    <h3 class="col-md-4 text-md-right">Output</h3>
+                    <h3 class="col-lg-4 text-lg-right">Output</h3>
                 </div><br/>
                 <div class="row form-group">
-                    {{Form::label('outputFile', 'Upload', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                    <div class="col-md-6 col-form-label">
+                    {{Form::label('outputFile', 'Upload', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                    <div class="col-lg-6 col-form-label">
                         {{Form::file("outputFile", ['class' => 'form-control-file'])}}
                     </div>
                 </div>
                 <p class="text-center">OR</p>
                 <div class="row form-group">
-                    {{Form::label('outputText', 'Text', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                    <div class="col-md-6">
+                    {{Form::label('outputText', 'Text', ['class' => 'col-lg-4 col-form-label text-lg-right'])}}
+                    <div class="col-lg-6">
                         {{Form::textarea("outputText", '', ['class' => 'form-control text-monospace'])}}
                     </div>
                 </div>
