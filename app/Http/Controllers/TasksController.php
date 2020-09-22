@@ -63,7 +63,6 @@ class TasksController extends Controller
         $task->compile_time = 30;
         $task->runtime_limit = 1000;
         $task->memory_limit = 262144;
-        $task->output_limit = 32768;
         $task->view_level = $myLevel;
         $task->edit_level = $myLevel;
         $task->submit_level = $myLevel;
@@ -138,7 +137,6 @@ class TasksController extends Controller
             "compile_time" => ['nullable', 'integer', "between:0, 30"],
             "runtime_limit" => ['nullable', 'numeric', "between:0, 10"],
             "memory_limit" => ['nullable', 'integer', "between:0, 1048576"],
-            "output_limit" => ['nullable', 'integer', "between:0, 65536"],
             "view_level" => ['nullable', 'integer', "between:1, $myLevel"],
             "submit_level" => ['nullable', 'integer', "between:1, $myLevel"],
             "edit_level" => ['nullable', 'integer', "between:4, $myLevel"],
@@ -159,7 +157,6 @@ class TasksController extends Controller
         $task->compile_time = $request["compile_time"] ?: 30;
         $task->runtime_limit = $request["runtime_limit"] ? (int)($request["runtime_limit"] * 1000) : 1000;
         $task->memory_limit = $request["memory_limit"] ?: 262144;
-        $task->output_limit = $request["output_limit"] ?: 32768;
         $task->view_level = $request["view_level"] ?: $myLevel;
         $task->submit_level = $request["submit_level"] ?: $myLevel;
         if($task->submit_level < $task->view_level) $task->submit_level = $task->view_level;

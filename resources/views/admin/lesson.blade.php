@@ -46,8 +46,8 @@
             @foreach($users as $user)
                 <div class="row">
                     <div class="col">{{$user->name}} - {{$user->real_name}} - {{$user->display}}</div>
-                    <div class="col"><pre>{{$user->answer}}</pre></div>
-                    <div class="col"><pre>{{Storage::get("/usercode/$user->id/program.$language")}}</pre></div>
+                    <div class="col overflow-auto" style="max-height:400px"><pre>{{$user->answer}}</pre></div>
+                    <div class="col overflow-auto" style="max-height:400px"><pre>{{Storage::get("/usercode/$user->id/program.$language")}}</pre></div>
                 </div>
                 <hr/>
             @endforeach

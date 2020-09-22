@@ -88,6 +88,7 @@ class LoginController extends Controller
             $newUser->avatar          = $user->avatar;
             $newUser->avatar_original = $user->avatar_original;
             $newUser->email_verified_at = $newUser->freshTimestamp();
+            $newUser->answer          = '';
             $newUser->save();
             auth()->login($newUser, true);
         }

@@ -40,7 +40,7 @@ class RunnerController extends Controller
         $userId = auth()->user()->id;
         $user = User::find($userId);
         if($user->runner_status != ''){
-            return;
+            //return;
         }
         $validator = Validator::make($request->all(), [
             "code" => ['nullable', 'string', 'max:131072'],
@@ -49,7 +49,7 @@ class RunnerController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'status' => "Cannot run"
+                'status' => "ITO doesn\'t let you run"
             ]);
         }
         $user->runner_status = 'On Queue';
@@ -74,7 +74,7 @@ class RunnerController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'Cannot save'
+                'status' => 'ITO doesn\'t let you save'
             ]);
         }
         $code = $request['code'];
@@ -92,7 +92,7 @@ class RunnerController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'Cannot switch'
+                'status' => 'ITO doesn\'t let you switch'
             ]);
         }
         $language = $request['language'];

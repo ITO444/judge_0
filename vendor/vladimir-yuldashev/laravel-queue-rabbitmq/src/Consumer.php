@@ -107,7 +107,7 @@ class Consumer extends Worker
                 if ($this->supportsAsyncSignals()) {
                     $this->registerTimeoutHandler($job, $options);
                 }
-                
+
                 $this->runJob($job, $connectionName, $options);
             }
         );

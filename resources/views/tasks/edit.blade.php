@@ -49,13 +49,6 @@
             </div>
 
             <div class="row form-group">
-                {{Form::label('output_limit', 'Output Size Limit (K)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
-                <div class="col-md-6">
-                    {{Form::number("output_limit", $task->output_limit, ['class' => 'form-control'])}}
-                </div>
-            </div>
-
-            <div class="row form-group">
                 {{Form::label('view_level', 'View Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
                     {{Form::selectRange("view_level", 1, $myLevel, $task->view_level, ['class' => 'form-control'])}}

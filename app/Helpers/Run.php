@@ -23,112 +23,120 @@ class Run
         Storage::put("$directory/program.$language", $code);
         Storage::put("$directory/input.txt", $input);
     }
-
+    
     /**
-     * Compiles the user's code for runner
+     * Runs isolate
      *
      * @param int $boxId
-     * @param string $language
-     * @param string $dir
-     * @return int
+     * @param Process $runCommand
+     * @return array
      */
-    public static function compileRunner($boxId, $language, $dir)
+    public static function isolate(int $boxId, Process $runCommand)
     {
+        $boxHere = base_path()."/storage/app/run/$boxId";
+        $boxThere = "/var/local/lib/isolate/$boxId/box";
+        
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--cleanup']);
         $process->run();
         $process = new Process(['isolate', '--cg', '-b', $boxId, '--init']);
         $process->run();
-        $boxHereS = "/run/$boxId";
-        $boxHere = base_path()."/storage/app$boxHereS";
-        $boxThere = rtrim($process->getOutput()).'/box';
-        $dirFull = base_path()."/storage/app".$dir;
-        Storage::delete(Storage::allFiles($boxHereS));
-        Storage::copy("$dir/program.$language", "$boxHereS/program.$language");
+
         $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
         $process->run();
 
-        if($language == 'cpp'){
-            putenv("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
-            $process = new Process([
-                'isolate', '--cg', '-b', $boxId,
-                '-t', '10', '-m', '262144', '-e', '-p',
-                '-M', "$boxHere/compile.txt", '--run', '--',
-                '/usr/bin/g++', '-static', '-Wno-unused-result',
-                '-DONLINE_JUDGE', '-s', '-O2', '-o', 'program.exe', 'program.cpp'
-            ]);
-            $compile = $process->run();
-            $error = $process->getErrorOutput();
-            if($compile == 0){
-                $process = new Process(['mv', "$boxThere/program.exe", "$dirFull"]);
-                $process->run();
-            }
-        }else{
-            $process = new Process([
-                'isolate', '--cg', '-b', $boxId,
-                '-t', '10', '-m', '262144', '-e', '-p',
-                '-M', "$boxHere/compile.txt", '--run', '--',
-                '/usr/bin/python3', '-S', '-m', 'py_compile', 'program.py'
-            ]);
-            $compile = $process->run();
-            $error = $process->getErrorOutput();
-        }
-        Storage::put("$dir/output.txt", "Compile:\n$error\n");
-        return $compile;
+        $exitCode = $runCommand->run();
+        $error = $runCommand->getErrorOutput();
+        return ['error' => $error];
     }
 
     /**
-     * Executes the user's code for runner
+     * Compiles code
      *
      * @param int $boxId
+     * @param int $compileTime
+     * @param int $compileMemory
      * @param string $language
-     * @param string $dir
-     * @return int
+     * @return array
      */
-    public static function executeRunner($boxId, $language, $dir)
+    public static function compile(int $boxId, int $compileTime, int $compileMemory, string $language)
     {
-        $process = new Process(['isolate', '--cg', '-b', $boxId, '--cleanup']);
-        $process->run();
-        $process = new Process(['isolate', '--cg', '-b', $boxId, '--init']);
-        $process->run();
-        $boxHereS = "/run/$boxId";
-        $boxHere = base_path()."/storage/app$boxHereS";
-        $boxThere = "/var/local/lib/isolate/$boxId/box";//rtrim($process->getOutput()).'/box';
-        $dirFull = base_path()."/storage/app".$dir;
-        if($language == 'py'){$ext = 'py';}else{$ext = 'exe';}
-        Storage::delete(Storage::allFiles($boxHereS));
-        Storage::copy("$dir/program.$ext", "$boxHereS/program.$ext");
-        Storage::copy("$dir/input.txt", "$boxHereS/input.txt");
-        $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
-        $process->run();
-
-        if($language == 'cpp'){
-            $process = new Process(["chmod", "744", "$boxThere/program.exe"]);
-            $process->run();
-            $process = new Process([
-                'isolate', '--cg', '-b', $boxId,
-                '-t', '2', '-m', '262144', '-e', '-p',
-                '-i', 'input.txt', '-o', 'output.txt',
-                '-M', "$boxHere/execute.txt", '--run', '--', 'program.exe'
+        $boxHere = base_path()."/storage/app/run/$boxId";
+        $boxThere = "/var/local/lib/isolate/$boxId/box";
+        if($language == "cpp"){
+            $runCommand = new Process([
+                'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime",
+                "--cg-mem=$compileMemory", '--processes',
+                "--env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "--meta=$boxHere/meta.txt", '--run', '--',
+                '/usr/bin/g++', '-static', '-Wno-unused-result',
+                '-DONLINE_JUDGE', '-s', '-O2', '-o', 'program.exe', 'program.cpp'
             ]);
-            $execute = $process->run();
-            $error = $process->getErrorOutput();
-        }else{
-            $process = new Process([
-                'isolate', '--cg', '-b', $boxId,
-                '-t', '2', '-m', '262144', '-e', '-p',
-                '-i', 'input.txt', '-o', 'output.txt',
-                '-M', "$boxHere/execute.txt", '--run', '--',
+        }else if($language == "py"){
+            $runCommand = new Process([
+                'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime",
+                "--cg-mem=$compileMemory", '--processes',
+                "--meta=$boxHere/meta.txt", '--run', '--',
+                '/usr/bin/python3', '-S', '-m', 'py_compile', 'program.py'
+            ]);
+        }
+        $data = Run::isolate($boxId, $runCommand);
+        if($language == "cpp"){
+            $process = new Process(['mv', "$boxThere/program.exe", "$boxHere/program.exe"]);
+            $process->run();
+        }
+        $lines = explode("\n", Storage::get("/run/$boxId/meta.txt"));
+        foreach ($lines as $line) {
+            if($line){
+                list($key, $value) = explode(":", $line);
+                $data[$key] = $value;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Executes code
+     *
+     * @param int $boxId
+     * @param int $runtimeLimit
+     * @param int $memoryLimit
+     * @param int $outputLimit
+     * @param string $language
+     * @return array
+     */
+    public static function execute(int $boxId, int $runtimeLimit, int $memoryLimit, int $outputLimit, string $language)
+    {
+        $boxHere = base_path()."/storage/app/run/$boxId";
+        $boxThere = "/var/local/lib/isolate/$boxId/box";
+        if($language == "cpp"){
+            $process = new Process(["chmod", "764", "$boxHere/program.exe"]);
+            $process->run();
+            $runCommand = new Process([
+                'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit",
+                "--cg-mem=$memoryLimit", "--fsize=$outputLimit", '--processes',
+                "--stdin=input.txt", "--stdout=output.txt",
+                "--meta=$boxHere/meta.txt", '--run', '--',
+                'program.exe'
+            ]);
+        }else if($language == "py"){
+            $runCommand = new Process([
+                'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit",
+                "--cg-mem=$memoryLimit", "--fsize=$outputLimit", '--processes',
+                "--stdin=input.txt", "--stdout=output.txt",
+                "--meta=$boxHere/meta.txt", '--run', '--',
                 '/usr/bin/python3', '-O', '-S', 'program.py'
             ]);
-            $execute = $process->run();
-            $error = $process->getErrorOutput();
         }
-        $process = new Process(['truncate', '-s', "1024K", "$boxThere/output.txt"]);
+        $data = Run::isolate($boxId, $runCommand);
+        $process = new Process(['mv', "$boxThere/output.txt", "$boxHere/output.txt"]);
         $process->run();
-        $process = new Process(['mv', "$boxThere/output.txt", "$boxHere"]);
-        $process->run();
-        $output = Storage::get("$boxHereS/output.txt");
-        Storage::append("$dir/output.txt", "Execute:\n$error\nOutput:\n$output");
-        return $execute;
+        $lines = explode("\n", Storage::get("/run/$boxId/meta.txt"));
+        foreach ($lines as $line) {
+            if($line){
+                list($key, $value) = explode(":", $line);
+                $data[$key] = $value;
+            }
+        }
+        return $data;
     }
 }

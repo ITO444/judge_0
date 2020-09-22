@@ -33,11 +33,7 @@ class ProcessSubmission implements ShouldQueue
     public function handle()
     {
         $data = $this->data;
-        $f = fopen(env('APP_PATH').'resources/testing/queue.txt', 'a');
-        fwrite($f, 'hi '.$data['in'].' box '.$data['boxId'].'\n');
-        sleep($data['sleep']);
-        fwrite($f, 'bye '.$data['in'].' sleep '.$data['sleep'].'\n');
-        fclose($f);
+        echo($data['hi']);
     }
 
     /**

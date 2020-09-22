@@ -35,29 +35,53 @@ class ProcessRunner implements ShouldQueue
     public function handle()
     {
         $data = $this->data;
-        
+
         $userId = $data["userId"];
+        $boxId = $data["boxId"];
+        $language = $data["language"];
+        $userDir = "/usercode/$userId";
+        $boxHereS = "/run/$boxId";
+
         $user = User::find($userId);
         $user->runner_status = 'Compiling';
         $user->save();
         Storage::delete("/usercode/$userId/program.exe");
         Storage::put("/usercode/$userId/output.txt", '');
 
-        $boxId = $data["boxId"];
-        $language = $data["language"];
-        $dir = "/usercode/$userId";
-        $compile = Run::compileRunner($boxId, $language, $dir);
+        Storage::delete(Storage::allFiles($boxHereS));
+        Storage::copy("$userDir/program.$language", "$boxHereS/program.$language");
+
+        $compileData = Run::compile($boxId, 10, 262144, $language);
         
+        $error = $compileData['error'];
+        Storage::put("$userDir/output.txt", "Box: $boxId\nCompile:\n$error\n");
+
+        $compile = intval($compileData['exitcode']);
         if($compile){
             $user->runner_status = 'Compilation Error';
             $user->save();
             return;
         }
+        if($language == "cpp"){
+            Storage::copy("$boxHereS/program.exe", "$userDir/program.exe");
+        }
 
         $user->runner_status = 'Running';
         $user->save();
-        $execute = Run::executeRunner($boxId, $language, $dir);
-        if($execute){
+
+        if($language == 'py'){$ext = 'py';}else{$ext = 'exe';}
+        Storage::delete(Storage::allFiles($boxHereS));
+        Storage::copy("$userDir/program.$ext", "$boxHereS/program.$ext");
+        Storage::copy("$userDir/input.txt", "$boxHereS/input.txt");
+
+        $executeData = Run::execute($boxId, 2, 262144, 1024, $language);
+
+        $error = var_export($executeData, True);//$executeData['error'];
+        $output = Storage::get("$boxHereS/output.txt");
+        Storage::append("$userDir/output.txt", "Execute:\n$error\nOutput:\n$output");
+
+        $execute = 1;//intval($executeData['exitcode']);
+        if(isset($executeData['status'])){
             $user->runner_status = 'Runtime Error';
             $user->save();
             return;
@@ -71,6 +95,8 @@ class ProcessRunner implements ShouldQueue
      * Set boxId
      * Edited files:
      * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Console\ConsumeCommand.php
+     * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Consumer.php
+     * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Queue\Jobs\RabbitMQJob.php
      * @return $this
      */
     public function setBoxId($boxId)
