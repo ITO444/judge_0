@@ -24,11 +24,11 @@ Route::get('settings', 'PagesController@settings');
 Route::post('settings', 'PagesController@saveSettings');
 
 Route::group(['prefix' => 'runner'], function () {
-    Route::get('', 'RunnerController@index');
-    Route::post('run', 'RunnerController@run');
-    Route::post('save', 'RunnerController@save');
-    Route::post('language', 'RunnerController@language');
-    Route::post('check', 'RunnerController@check');
+    Route::get('', 'RunnerController@index')->middleware('admin:2');
+    Route::post('run', 'RunnerController@run')->middleware('admin:2');
+    Route::post('save', 'RunnerController@save')->middleware('admin:2');
+    Route::post('language', 'RunnerController@language')->middleware('admin:2');
+    Route::post('check', 'RunnerController@check')->middleware('admin:2');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -86,3 +86,6 @@ Route::get('/redirect', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

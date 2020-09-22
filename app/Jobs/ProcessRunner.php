@@ -35,7 +35,7 @@ class ProcessRunner implements ShouldQueue
     public function handle()
     {
         $data = $this->data;
-
+        //event(new UpdateRunner('ok'));
         $userId = $data["userId"];
         $boxId = $data["boxId"];
         $language = $data["language"];
@@ -86,6 +86,7 @@ class ProcessRunner implements ShouldQueue
             $user->save();
             return;
         }
+        //event(new UpdateRunner('Done'));
         $user->runner_status = 'Done';
         $user->save();
         return;

@@ -40,7 +40,7 @@ class RunnerController extends Controller
         $userId = auth()->user()->id;
         $user = User::find($userId);
         if($user->runner_status != ''){
-            //return;
+            return;
         }
         $validator = Validator::make($request->all(), [
             "code" => ['nullable', 'string', 'max:131072'],

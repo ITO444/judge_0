@@ -27,7 +27,7 @@
     {!! Form::close() !!}
     <pre id='result' class='text-monospace'></pre>
 <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
+<script type="application/javascript">
     var language = "cpp";
     var ace_modes = {"cpp": "c_cpp", "py": "python"};
     var editor = ace.edit("editor");
@@ -38,6 +38,11 @@
     var waiting;
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/" + ace_modes[language]);
+
+    /*Echo.private('update.runner')
+    .listen('UpdateRunner', (e) => {
+        console.log(e.data);
+    });*/
 
     function ajaxsave(){
         $.ajax({
