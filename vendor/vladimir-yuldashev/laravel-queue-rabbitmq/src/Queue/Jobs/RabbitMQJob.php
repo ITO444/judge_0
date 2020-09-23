@@ -44,14 +44,18 @@ class RabbitMQJob extends Job implements JobContract
         string $queue,
         
         // ITO
-        int $boxId
+        $boxId = null
     ) {
         $this->container = $container;
         $this->rabbitmq = $rabbitmq;
         // ITO $this->message = $message;
-        $decoded = json_decode($message->getBody(), true);
-        $decoded['data']['command'] = serialize(unserialize($decoded["data"]["command"])->setBoxId($boxId));
-        $this->message = $message->setBody(json_encode($decoded));
+        if($boxId === null){
+            $this->message = $message;
+        }else{
+            $decoded = json_decode($message->getBody(), true);
+            $decoded['data']['command'] = serialize(unserialize($decoded["data"]["command"])->setBoxId($boxId));
+            $this->message = $message->setBody(json_encode($decoded));
+        }
 
         $this->connectionName = $connectionName;
         $this->queue = $queue;

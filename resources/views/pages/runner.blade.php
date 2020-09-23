@@ -23,11 +23,11 @@
     </div>
     {{Form::submit('Run', ['class' => 'btn btn-success'])}}
     <a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
-    <div id='runstatus' class="d-inline text-muted"></div>
+    <div id='runstatus' class="d-inline text-muted">{{auth()->user()->runner_status/*?'Loading...':''*/}}</div>
     {!! Form::close() !!}
-    <pre id='result' class='text-monospace'></pre>
+<pre id='result' class='text-monospace'>{{$output}}</pre>
 <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script type="application/javascript">
+<script>
     var language = "cpp";
     var ace_modes = {"cpp": "c_cpp", "py": "python"};
     var editor = ace.edit("editor");
@@ -39,10 +39,14 @@
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/" + ace_modes[language]);
 
-    /*Echo.private('update.runner')
-    .listen('UpdateRunner', (e) => {
-        console.log(e.data);
-    });*/
+    $( document ).ready(function() {
+        Echo.private('update.runner.{{auth()->user()->id}}')
+        .listen('UpdateRunner', (e) => {
+            console.log(e.status);
+            $("#runstatus").html(e.status);
+            $("#result").html(e.output);
+        });
+    });
 
     function ajaxsave(){
         $.ajax({
@@ -72,42 +76,21 @@
             ajaxsave();
         }, 750);
     }
-        
-    function ajaxcheck(){
-        waiting = setInterval(function() {
-            $.ajax({
-                type: 'POST',
-                url: '/runner/check',
-                data: $('form').serialize(),
-                success:function(data) {
-                    $("#runstatus").html(data.status);
-                    $("#result").html(data.result);
-                    if(data.done){
-                        clearInterval(waiting);
-                    }
-                },
-                error: function(xhr){
-                    alert("An error occured: " + xhr.status + " " + xhr.statusText);
-                    $("#runstatus").html('Error');
-                    clearInterval(waiting);
-                }
-            });
-        }, 200);
-    }
-
-    ajaxcheck();
 
     $('form').on('submit', function(e){
         e.preventDefault();
+        $("#runstatus").html("Waiting...");
         $.ajax({
             type: 'POST',
             url: '/runner/run',
             data: $('form').serialize(),
             success:function(data) {
                 if(data.status){
+                    $("#runstatus").html("Loading...");
                     alert(data.status);
                 }else{
-                    ajaxcheck();
+                    $("#runstatus").html("Loading...");
+                    $("#result").html('');
                 }
             },
             error: function(xhr){

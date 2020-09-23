@@ -17,6 +17,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('update.runner', function ($user) {
-    return Auth::check() && $user->level >= 2;
+Broadcast::channel('update.runner.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
 });

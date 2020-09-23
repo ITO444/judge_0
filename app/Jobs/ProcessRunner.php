@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Helpers\Run;
 use App\User;
 use Illuminate\Support\Facades\Storage;
+use App\Events\UpdateRunner;
 
 class ProcessRunner implements ShouldQueue
 {
@@ -35,45 +36,44 @@ class ProcessRunner implements ShouldQueue
     public function handle()
     {
         $data = $this->data;
-        //event(new UpdateRunner('ok'));
         $userId = $data["userId"];
         $boxId = $data["boxId"];
         $language = $data["language"];
         $userDir = "/usercode/$userId";
         $boxHereS = "/run/$boxId";
-
         $user = User::find($userId);
-        $user->runner_status = 'Compiling';
-        $user->save();
+        
         Storage::delete("/usercode/$userId/program.exe");
         Storage::put("/usercode/$userId/output.txt", '');
 
         Storage::delete(Storage::allFiles($boxHereS));
         Storage::copy("$userDir/program.$language", "$boxHereS/program.$language");
 
+        $user->runner_status = 'Compiling';
+        $user->save();
         $compileData = Run::compile($boxId, 10, 262144, $language);
         
         $error = $compileData['error'];
         Storage::put("$userDir/output.txt", "Box: $boxId\nCompile:\n$error\n");
 
-        $compile = intval($compileData['exitcode']);
-        if($compile){
-            $user->runner_status = 'Compilation Error';
+        $compile = 1;//intval($compileData['exitcode']);
+        if(isset($executeData['status'])){
+            $user->runner_status = '';
             $user->save();
+            event(new UpdateRunner('Compilation Error', $userId));
             return;
         }
         if($language == "cpp"){
             Storage::copy("$boxHereS/program.exe", "$userDir/program.exe");
         }
 
-        $user->runner_status = 'Running';
-        $user->save();
-
         if($language == 'py'){$ext = 'py';}else{$ext = 'exe';}
         Storage::delete(Storage::allFiles($boxHereS));
         Storage::copy("$userDir/program.$ext", "$boxHereS/program.$ext");
         Storage::copy("$userDir/input.txt", "$boxHereS/input.txt");
 
+        $user->runner_status = 'Running';
+        $user->save();
         $executeData = Run::execute($boxId, 2, 262144, 1024, $language);
 
         $error = var_export($executeData, True);//$executeData['error'];
@@ -82,13 +82,14 @@ class ProcessRunner implements ShouldQueue
 
         $execute = 1;//intval($executeData['exitcode']);
         if(isset($executeData['status'])){
-            $user->runner_status = 'Runtime Error';
+            $user->runner_status = '';
             $user->save();
+            event(new UpdateRunner('Runtime Error', $userId));
             return;
         }
-        //event(new UpdateRunner('Done'));
-        $user->runner_status = 'Done';
+        $user->runner_status = '';
         $user->save();
+        event(new UpdateRunner('Done', $userId));
         return;
     }
 

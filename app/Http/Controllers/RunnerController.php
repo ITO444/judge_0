@@ -9,6 +9,7 @@ use App\Jobs\ProcessRunner;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Run;
 use Illuminate\Support\Facades\Validator;
+use App\Events\UpdateRunner;
 
 class RunnerController extends Controller
 {
@@ -33,14 +34,16 @@ class RunnerController extends Controller
         }
         $code = Storage::get("$directory/program.cpp");
         $input = Storage::get("$directory/input.txt");
-        return view('pages.runner')->with('code', $code)->with('input', $input);
+        return view('pages.runner')->with('code', $code)->with('input', $input)->with('output', Storage::get("$directory/output.txt"));
     }
 
     public function run(Request $request){
         $userId = auth()->user()->id;
         $user = User::find($userId);
         if($user->runner_status != ''){
-            return;
+            /*return response()->json([
+                'status' => "You can only run 1 program at a time"
+            ]);*/
         }
         $validator = Validator::make($request->all(), [
             "code" => ['nullable', 'string', 'max:131072'],
@@ -52,8 +55,6 @@ class RunnerController extends Controller
                 'status' => "ITO doesn\'t let you run"
             ]);
         }
-        $user->runner_status = 'On Queue';
-        $user->save();
         $data = [
             'userId' => $userId,
             'code' => $request['code'],
@@ -61,6 +62,8 @@ class RunnerController extends Controller
             'language' => $request['language'],
         ];
         ProcessRunner::dispatch($data)->onQueue('code');
+        $user->runner_status = 'On Queue';
+        $user->save();
         return response()->json([
             'status' => 0
         ]);
@@ -101,29 +104,6 @@ class RunnerController extends Controller
         return response()->json([
             'code' => $code,
             'status' => 'Switched'
-        ]);
-    }
-
-    public function check(){
-        $userId = auth()->user()->id;
-        $user = User::find($userId);
-        $status = $user->runner_status;
-        $result = Storage::get("/usercode/$userId/output.txt");
-        if($status == 'Compilation Error' or $status == 'Runtime Error' or $status == 'Done'){
-            $user->runner_status = '';
-            $user->save();
-            $done = true;
-        }else{
-            if($status == ''){
-                $done = true;
-            }else{
-                $done = false;
-            }
-        }
-        return response()->json([
-            'status' => $status,
-            'result' => htmlspecialchars($result),
-            'done' => $done
         ]);
     }
 }

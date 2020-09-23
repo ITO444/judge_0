@@ -28,7 +28,6 @@ Route::group(['prefix' => 'runner'], function () {
     Route::post('run', 'RunnerController@run')->middleware('admin:2');
     Route::post('save', 'RunnerController@save')->middleware('admin:2');
     Route::post('language', 'RunnerController@language')->middleware('admin:2');
-    Route::post('check', 'RunnerController@check')->middleware('admin:2');
 });
 
 Route::group(['prefix' => 'admin'], function () {
