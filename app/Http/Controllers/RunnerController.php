@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Jobs\ProcessSubmission;
 use App\Jobs\ProcessRunner;
 use Illuminate\Support\Facades\Storage;
-use App\Helpers\Run;
 use Illuminate\Support\Facades\Validator;
 use App\Events\UpdateRunner;
 
@@ -38,30 +36,20 @@ class RunnerController extends Controller
     }
 
     public function run(Request $request){
-        $userId = auth()->user()->id;
-        $user = User::find($userId);
+        $user = auth()->user();
+        $userId = $user->id;
         if($user->runner_status != ''){
-            /*return response()->json([
-                'status' => "You can only run 1 program at a time"
-            ]);*/
+            return response()->json([
+                'status' => "Please be patient"
+            ]);
         }
-        $validator = Validator::make($request->all(), [
-            "code" => ['nullable', 'string', 'max:131072'],
-            "input" => ['nullable', 'string', 'max:67108864'],
-            "language" => ['required', 'string', 'in:cpp,py'],
-        ]);
-        if ($validator->fails()) {
+        $saved = $this->validateAndSave($request);
+        if (!$saved) {
             return response()->json([
                 'status' => "ITO doesn\'t let you run"
             ]);
         }
-        $data = [
-            'userId' => $userId,
-            'code' => $request['code'],
-            'input' => $request['input'],
-            'language' => $request['language'],
-        ];
-        ProcessRunner::dispatch($data)->onQueue('code');
+        ProcessRunner::dispatch($userId, $request['language'])->onQueue('code');
         $user->runner_status = 'On Queue';
         $user->save();
         return response()->json([
@@ -70,30 +58,20 @@ class RunnerController extends Controller
     }
 
     public function save(Request $request){
-        $validator = Validator::make($request->all(), [
-            "code" => ['nullable', 'string', 'max:131072'],
-            "input" => ['nullable', 'string', 'max:67108864'],
-            "language" => ['required', 'string', 'in:cpp,py'],
-        ]);
-        if ($validator->fails()) {
+        $saved = $this->validateAndSave($request);
+        if (!$saved) {
             return response()->json([
                 'status' => 'ITO doesn\'t let you save'
             ]);
         }
-        $code = $request['code'];
-        $input = $request['input'];
-        $language = $request['language'];
-        Run::saveRunner($language, $code, $input);
         return response()->json([
             'status' => 'Saved'
         ]);
     }
 
     public function language(Request $request){
-        $validator = Validator::make($request->all(), [
-            "language" => ['required', 'string', 'in:cpp,py'],
-        ]);
-        if ($validator->fails()) {
+        $saved = $this->validateAndSave($request);
+        if (!$saved) {
             return response()->json([
                 'status' => 'ITO doesn\'t let you switch'
             ]);
@@ -105,5 +83,31 @@ class RunnerController extends Controller
             'code' => $code,
             'status' => 'Switched'
         ]);
+    }
+
+    /**
+     * Saves the user's code for runner
+     *
+     * @param Request $request
+     * @return bool
+     */
+    public static function validateAndSave($request)
+    {
+        $validator = Validator::make($request->all(), [
+            "code" => ['nullable', 'string', 'max:131072'],
+            "input" => ['nullable', 'string', 'max:67108864'],
+            "language" => ['required', 'string', 'in:cpp,py'],
+        ]);
+        if ($validator->fails()) {
+            return False;
+        }
+        $code = $request['code'];
+        $input = $request['input'];
+        $language = $request['language'];
+        $directory = '/usercode/'.auth()->user()->id;
+
+        Storage::put("$directory/program.$language", $code);
+        Storage::put("$directory/input.txt", $input);
+        return True;
     }
 }

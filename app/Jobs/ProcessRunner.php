@@ -16,16 +16,19 @@ class ProcessRunner implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data = [];
+    protected $boxId;
+    protected $userId;
+    protected $language;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($userId, $language)
     {
-        $this->data = $data;
+        $this->userId = $userId;
+        $this->language = $language;
     }
 
     /**
@@ -35,10 +38,9 @@ class ProcessRunner implements ShouldQueue
      */
     public function handle()
     {
-        $data = $this->data;
-        $userId = $data["userId"];
-        $boxId = $data["boxId"];
-        $language = $data["language"];
+        $userId = $this->userId;
+        $boxId = $this->boxId;
+        $language = $this->language;
         $userDir = "/usercode/$userId";
         $boxHereS = "/run/$boxId";
         $user = User::find($userId);
@@ -57,7 +59,7 @@ class ProcessRunner implements ShouldQueue
         Storage::put("$userDir/output.txt", "Box: $boxId\nCompile:\n$error\n");
 
         $compile = 1;//intval($compileData['exitcode']);
-        if(isset($executeData['status'])){
+        if(isset($compileData['status'])){
             $user->runner_status = '';
             $user->save();
             event(new UpdateRunner('Compilation Error', $userId));
@@ -103,7 +105,7 @@ class ProcessRunner implements ShouldQueue
      */
     public function setBoxId($boxId)
     {
-        $this->data["boxId"] = $boxId;
+        $this->boxId = $boxId;
         return $this;
     }
 }

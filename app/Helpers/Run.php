@@ -10,21 +10,6 @@ use Symfony\Component\Process\Process;
 class Run
 {
     /**
-     * Saves the user's code for runner
-     *
-     * @param string $language
-     * @param string $code
-     * @param string $input
-     * @return void
-     */
-    public static function saveRunner($language, $code, $input)
-    {
-        $directory = '/usercode/'.auth()->user()->id;
-        Storage::put("$directory/program.$language", $code);
-        Storage::put("$directory/input.txt", $input);
-    }
-    
-    /**
      * Runs isolate
      *
      * @param int $boxId
@@ -44,7 +29,7 @@ class Run
         $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
         $process->run();
 
-        $exitCode = $runCommand->run();
+        // $exitCode = $runCommand->run();
         $error = $runCommand->getErrorOutput();
         return ['error' => $error];
     }

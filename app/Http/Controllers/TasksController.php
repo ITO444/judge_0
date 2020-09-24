@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Task;
 use App\Test;
+use App\Submission;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ProcessSubmission;
 
 class TasksController extends Controller
 {
@@ -59,7 +61,7 @@ class TasksController extends Controller
         $task = new Task;
         $task->task_id = $request['task_id'];
         $task->title = $request['title'];
-        $task->source_size = 4096;
+        $task->source_size = 128;
         $task->compile_time = 30;
         $task->runtime_limit = 1000;
         $task->memory_limit = 262144;
@@ -153,7 +155,7 @@ class TasksController extends Controller
         }
         $task->task_id = $request["task_id"];
         $task->title = $request["title"];
-        $task->source_size = $request["source_size"] ?: 4096;
+        $task->source_size = $request["source_size"] ?: 128;
         $task->compile_time = $request["compile_time"] ?: 30;
         $task->runtime_limit = $request["runtime_limit"] ? (int)($request["runtime_limit"] * 1000) : 1000;
         $task->memory_limit = $request["memory_limit"] ?: 262144;
@@ -374,13 +376,24 @@ class TasksController extends Controller
         if($myLevel < $task->submit_level){
             return abort(404);
         }
+        $sourceSize = $task->source_size * 1024;
         $validator = Validator::make($request->all(), [
             "language" => ['required', 'string', "in:cpp,py"],
-            "code" => ['nullable', 'string', 'max:131072'],
+            "code" => ['nullable', 'string', "max:$sourceSize"],
         ]);
         if ($validator->fails()) {
             return redirect("/task/$task->task_id/submit")->withErrors($validator);
         }
-        return redirect("/task/$task->task_id/submit")->with('error', 'Haven\'t implemented this yet');
+        $submission = new Submission;
+        $submission->user_id = auth()->user()->id;
+        $submission->task_id = $task->id;
+        $submission->language = $request['language'];
+        $submission->result = '';
+        $submission->score = 0;
+        $submission->source_code = $request['code'];
+        $submission->compiler_warning = '';
+        $submission->save();
+        ProcessSubmission::dispatch($submission->id)->onQueue('code');
+        return redirect("/task/$task->task_id/submit")->with('success', 'Submitted');
     }
 }

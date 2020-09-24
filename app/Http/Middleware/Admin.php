@@ -15,7 +15,11 @@ class Admin
      */
     public function handle($request, Closure $next, $level, $special = 10, $to = 10)
     {
-        $userLevel = $request->user()->level;
+        $user = $request->user();
+        if(!$user){
+            return abort(404);
+        }
+        $userLevel = $user->level;
         if($userLevel == $special){
             $userLevel = $to;
         }
