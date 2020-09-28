@@ -9,8 +9,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Helpers\Run;
 use App\Submission;
+use App\Test;
+use App\Run as ARun;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessSubmission implements ShouldQueue
 {
@@ -54,6 +57,10 @@ class ProcessSubmission implements ShouldQueue
             $submission->compiler_warning = $compileData['error'];
             $submission->save();
             return;
+        }else{
+            $submission->result = 'Running';
+            $submission->compiler_warning = $compileData['error'];
+            $submission->save();
         }
         $dir = "/judging/$submission->id";
         Storage::makeDirectory($dir);
@@ -63,12 +70,21 @@ class ProcessSubmission implements ShouldQueue
             Storage::put("$dir/program.py", $submission->source_code);
         }
         $tests = $submission->task->tests;
-        $batchArr = $tests->map(function ($test) {
-            return new ProcessTest($test->id);
+        $batchArr = $tests->map(function (Test $test) use ($submission) {
+            $run = new ARun;
+            $run->submission_id = $submission->id;
+            $run->test_id = $test->id;
+            $run->result = '';
+            $run->runtime = 0;
+            $run->memory = 0;
+            $run->score = 0;
+            $run->grader_feedback = '';
+            $run->save();
+            return new ProcessTest($run->id);
         });
-        $batch = Bus::batch($batchArr)->then(function (Batch $batch) {
-            // dosomething
-        })->allowFailures()->dispatch();
+        $batch = Bus::batch($batchArr)->then(function (Batch $batch) use ($submission) {
+            echo('x'.$submission->id.'x');
+        })->allowFailures()->onQueue('code')->dispatch();
     }
 
     /**
@@ -79,7 +95,7 @@ class ProcessSubmission implements ShouldQueue
      */
     public function setBoxId($boxId)
     {
-        $this->$boxId = $boxId;
+        $this->boxId = $boxId;
         return $this;
     }
 }

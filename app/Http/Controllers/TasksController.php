@@ -390,7 +390,7 @@ class TasksController extends Controller
         $submission->language = $request['language'];
         $submission->result = '';
         $submission->score = 0;
-        $submission->source_code = $request['code'];
+        $submission->source_code = $request['code'] ?: '';
         $submission->compiler_warning = '';
         $submission->save();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');

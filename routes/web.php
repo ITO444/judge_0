@@ -75,6 +75,10 @@ Route::group(['prefix' => 'task/{task:task_id}'], function () {
     Route::post('submit', 'TasksController@saveSubmit')->middleware('admin:2');
 });
 
+
+Route::get('submissions', 'SubmissionsController@index')->middleware('admin:2');
+Route::get('submission/{submission}', 'SubmissionsController@show')->middleware('admin:2');
+
 Auth::routes([
     //'register' => false, // Registration Routes...
     //'reset' => false, // Password Reset Routes...

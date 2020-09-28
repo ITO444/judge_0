@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Task;
+use App\Test;
+use App\Submission;
 
 class SubmissionsController extends Controller
 {
@@ -13,7 +17,12 @@ class SubmissionsController extends Controller
      */
     public function index()
     {
-        //
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        $submissions = Submission::orderBy('id', 'desc')->paginate(50);
+        return view('submissions.index')->with('submissions', $submissions)->with('myLevel', $myLevel);
     }
 
     /**
@@ -43,9 +52,16 @@ class SubmissionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Submission $submission)
     {
-        //
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($myLevel < $submission->task->view_level){
+            return abort(404);
+        }
+        return view('submissions.show')->with('submission', $submission)->with('myLevel', $myLevel);
     }
 
     /**

@@ -78,7 +78,7 @@ class ProcessRunner implements ShouldQueue
         $user->save();
         $executeData = Run::execute($boxId, 2, 262144, 1024, $language);
 
-        $error = var_export($executeData, True);//$executeData['error'];
+        $error = $executeData['error'];//var_export($executeData, True);
         $output = Storage::get("$boxHereS/output.txt");
         Storage::append("$userDir/output.txt", "Execute:\n$error\nOutput:\n$output");
 

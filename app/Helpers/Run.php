@@ -29,7 +29,7 @@ class Run
         $process = Process::fromShellCommandline("mv $boxHere/* $boxThere");
         $process->run();
 
-        // $exitCode = $runCommand->run();
+        $exitCode = $runCommand->run();
         $error = $runCommand->getErrorOutput();
         return ['error' => $error];
     }
