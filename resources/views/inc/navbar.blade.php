@@ -32,6 +32,11 @@
                     <a class="nav-link" href="/admin">Admin</a>
                 </li>
                 @endif
+                @if(auth()->user()->level >= 2)
+                <li class="nav-item">
+                    <a class="nav-link" href="/submissions">Submissions</a>
+                </li>
+                @endif
                 @endauth
             </ul>
 

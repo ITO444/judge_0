@@ -68,6 +68,8 @@ class Run
         if($language == "cpp"){
             $process = new Process(['mv', "$boxThere/program.exe", "$boxHere/program.exe"]);
             $process->run();
+            $process = new Process(["chmod", "764", "$boxHere/program.exe"]);
+            $process->run();
         }
         $lines = explode("\n", Storage::get("/run/$boxId/meta.txt"));
         foreach ($lines as $line) {
@@ -94,8 +96,6 @@ class Run
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
         if($language == "cpp"){
-            $process = new Process(["chmod", "764", "$boxHere/program.exe"]);
-            $process->run();
             $runCommand = new Process([
                 'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit",
                 "--cg-mem=$memoryLimit", "--fsize=$outputLimit", '--processes',
@@ -114,6 +114,35 @@ class Run
         }
         $data = Run::isolate($boxId, $runCommand);
         $process = new Process(['mv', "$boxThere/output.txt", "$boxHere/output.txt"]);
+        $process->run();
+        $lines = explode("\n", Storage::get("/run/$boxId/meta.txt"));
+        foreach ($lines as $line) {
+            if($line){
+                list($key, $value) = explode(":", $line);
+                $data[$key] = $value;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Grades code
+     *
+     * @param int $boxId
+     * @return array
+     */
+    public static function grade(int $boxId)
+    {
+        $boxHere = base_path()."/storage/app/run/$boxId";
+        $boxThere = "/var/local/lib/isolate/$boxId/box";
+        $runCommand = new Process([
+            'isolate', '--cg', "--box-id=$boxId", "--time=10",
+            "--cg-mem=1048576", "--fsize=65536", '--processes',
+            "--meta=$boxHere/meta.txt", '--run', '--',
+            'grader.exe', 'input.txt', 'output.txt', 'answer.txt', 'result.txt'
+        ]);
+        $data = Run::isolate($boxId, $runCommand);
+        $process = new Process(['mv', "$boxThere/result.txt", "$boxHere/result.txt"]);
         $process->run();
         $lines = explode("\n", Storage::get("/run/$boxId/meta.txt"));
         foreach ($lines as $line) {

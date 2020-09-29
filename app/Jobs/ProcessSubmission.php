@@ -91,6 +91,8 @@ class ProcessSubmission implements ShouldQueue
      * Set boxId
      * Edited files:
      * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Console\ConsumeCommand.php
+     * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Consumer.php
+     * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Queue\Jobs\RabbitMQJob.php
      * @return $this
      */
     public function setBoxId($boxId)

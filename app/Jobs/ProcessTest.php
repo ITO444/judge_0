@@ -53,19 +53,42 @@ class ProcessTest implements ShouldQueue
         $run->result = 'Running';
         $run->save();
         $executeData = Run::execute($boxId, $task->runtime_limit, $task->memory_limit, 65536, $language);
-
+        $run->runtime = $executeData['time'];
+        $run->memory = $executeData['cg-mem'];
+        $run->save();
         if(isset($executeData['status'])){
+            if($executeData['status'] == 'TO'){
+                $run->result = 'Time Limit Exceed';
+                $run->grader_feedback = $executeData['error'];
+                $submission->save();
+                return;
+            }
             $run->result = 'Runtime Error';
             $run->grader_feedback = $executeData['error'];
             $submission->save();
             return;
         }
+        Storage::copy("tests/$test->id.in", "$boxHereS/input.txt");
+        Storage::copy("tests/$test->id.out", "$boxHereS/answer.txt");
+        if($task->grader_status != 'Compiled'){
+            Storage::copy("graders/wcmp.exe", "$boxHereS/grader.exe");
+        }
+        $gradeData = Run::grade($boxId);
+        if(!isset($gradeData['exitcode'])){
+            $run->result = 'Failed';
+            $run->grader_feedback = $executeData['error'];
+            $submission->save();
+            return;
+        }
+        $exitCode = intval($gradeData['exitcode']);
     }
 
     /**
      * Set boxId
      * Edited files:
      * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Console\ConsumeCommand.php
+     * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Consumer.php
+     * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Queue\Jobs\RabbitMQJob.php
      * @return $this
      */
     public function setBoxId($boxId)
