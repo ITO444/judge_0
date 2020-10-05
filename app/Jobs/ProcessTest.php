@@ -58,7 +58,7 @@ class ProcessTest implements ShouldQueue
         $run->save();
         if(isset($executeData['status'])){
             if($executeData['status'] == 'TO'){
-                $run->result = 'Time Limit Exceed';
+                $run->result = 'Time Limit Exceeded';
                 $run->grader_feedback = $executeData['error'];
                 $submission->save();
                 return;
@@ -81,6 +81,18 @@ class ProcessTest implements ShouldQueue
             return;
         }
         $exitCode = intval($gradeData['exitcode']);
+        if($exitCode === 0){
+            $run->result = 'Accepted';
+            $run->score = 100000;
+            $run->grader_feedback = $executeData['error'];
+            $submission->save();
+            return;
+        }else{
+            $run->result = 'Wrong Answer';
+            $run->grader_feedback = $executeData['error'];
+            $submission->save();
+            return;
+        }
     }
 
     /**

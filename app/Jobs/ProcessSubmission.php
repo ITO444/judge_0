@@ -83,7 +83,23 @@ class ProcessSubmission implements ShouldQueue
             return new ProcessTest($run->id);
         });
         $batch = Bus::batch($batchArr)->then(function (Batch $batch) use ($submission) {
-            echo('x'.$submission->id.'x');
+            $runs = $submission->runs;
+            $count = $runs->count();
+            if($count == $runs->where('result', 'Accepted')->count()){
+                $submission->result = 'Accepted';
+                $submission->score = 100000;
+            }else{
+                $submission->result = $submission->runs->avg('score');
+                if($runs->where('result', 'Failed')->exists()){
+                    $submission->result = 'Failed';
+                }else if($runs->where('result', 'Wrong Answer')->exists()){
+                    $submission->result = 'Wrong Answer';
+                }else if($runs->where('result', 'Time Limit Exceeded')->exists()){
+                    $submission->result = 'Time Limit Exceeded';
+                }else if($runs->where('result', 'Runtime Error')->exists()){
+                    $submission->result = 'Runtime Error';
+                }
+            }
         })->allowFailures()->onQueue('code')->dispatch();
     }
 
