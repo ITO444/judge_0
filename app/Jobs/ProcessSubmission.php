@@ -102,6 +102,7 @@ class ProcessSubmission implements ShouldQueue
                 }
             }
             $submission->save();
+            Storage::makeDirectory("/judging/$submission->id");
         })->allowFailures()->onQueue('code')->dispatch();
     }
 

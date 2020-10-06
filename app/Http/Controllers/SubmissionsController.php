@@ -21,7 +21,9 @@ class SubmissionsController extends Controller
         if($myLevel == 4){
             $myLevel = 7;
         }
-        $submissions = Submission::orderBy('id', 'desc')->paginate(50);
+        $submissions = Submission::whereHas('task', function($query)use($myLevel){
+            $query->where('view_level', '<=', $myLevel);
+        })->orderBy('id', 'desc')->paginate(50);
         return view('submissions.index')->with('submissions', $submissions)->with('myLevel', $myLevel);
     }
 

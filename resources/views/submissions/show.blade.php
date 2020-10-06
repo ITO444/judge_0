@@ -19,19 +19,25 @@
             <th>Runtime</th>
             <th>Memory</th>
             <th>Score</th>
+            @if($myLevel >= $submission->task->edit_level)
             <th>Grader Feedback</th>
+            @endif
         </tr></thead><tbody>
     @foreach($submission->runs as $run)
         <tr>
             <td>{{$loop->iteration}}</td>
             <td>{{$run->result}}</td>
             <td>{{$run->runtime / 1000}}</td>
-            <td>{{$run->memory}}</td>
+            <td>{{number_format($run->memory / 1024, 3)}}</td>
             <td>{{$run->score / 100}}</td>
+            @if($myLevel >= $submission->task->edit_level)
             <td>{{$run->grader_feedback}}</td>
+            @endif
         </tr>
     @endforeach
     </tbody></table></div>
+    @if($myLevel >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
     <pre>{{$submission->compiler_warning}}</pre><br/>
     <pre>{{$submission->source_code}}</pre>
+    @endif
 @endsection

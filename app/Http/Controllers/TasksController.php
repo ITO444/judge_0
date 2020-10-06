@@ -394,6 +394,6 @@ class TasksController extends Controller
         $submission->compiler_warning = '';
         $submission->save();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');
-        return redirect("/task/$task->task_id/submit")->with('success', 'Submitted');
+        return redirect("/submissions/$submission->id")->with('success', 'Submitted');
     }
 }
