@@ -6,7 +6,7 @@
     <hr/>
     <div class="card"><div class="card-body"><div class="row text-center">
         <div class="col"><a href="/submission/{{$submission->id}}">{{$submission->id}}</a></div>
-        <div class="col"><a href="/user/{{$submission->user->name}}">{{$submission->user->name}}</a></div>
+        <div class="col"><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></div>
         <div class="col"><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></div>
         <div class="col">{{$submission->language}}</div>
         <div class="col">{{$submission->result}}</div>

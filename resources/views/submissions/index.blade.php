@@ -19,7 +19,7 @@
             @foreach($submissions as $submission)
                 <tr>
                     <td><a href="/submission/{{$submission->id}}">{{$submission->id}}</a></td>
-                    <td><a href="/user/{{$submission->user->name}}">{{$submission->user->name}}</a></td>
+                    <td><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></td>
                     <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></td>
                     <td>{{$submission->language}}</td>
                     <td>{{$submission->result}}</td>

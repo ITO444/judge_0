@@ -11,9 +11,11 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @auth
+                @if(auth()->user()->level >= 2)
                 <li class="nav-item">
                     <a class="nav-link" href="/runner">Code Runner</a>
                 </li>
+                @endif
                 <li class="nav-item">
                     <a href="/user/{{auth()->user()->name}}" class="nav-link">My Page</a>
                 </li>
