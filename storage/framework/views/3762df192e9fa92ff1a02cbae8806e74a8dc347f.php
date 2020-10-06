@@ -33,6 +33,11 @@
                     <a class="nav-link" href="/admin">Admin</a>
                 </li>
                 <?php endif; ?>
+                <?php if(auth()->user()->level >= 2): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="/submissions">Submissions</a>
+                </li>
+                <?php endif; ?>
                 <?php endif; ?>
             </ul>
 

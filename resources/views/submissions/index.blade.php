@@ -13,6 +13,7 @@
                 <th>Task</th>
                 <th>Language</th>
                 <th>Result</th>
+                <th>Time</th>
             </tr></thead>
             <tbody>
             @foreach($submissions as $submission)
@@ -22,6 +23,7 @@
                     <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></td>
                     <td>{{$submission->language}}</td>
                     <td>{{$submission->result}}</td>
+                    <td>{{$submission->runs->max('runtime') / 1000}}</td>
                 </tr>
             @endforeach
             </tbody>

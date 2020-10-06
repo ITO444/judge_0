@@ -83,6 +83,7 @@ class ProcessSubmission implements ShouldQueue
             return new ProcessTest($run->id);
         });
         $batch = Bus::batch($batchArr)->then(function (Batch $batch) use ($submission) {
+            $submission->refresh();
             $runs = $submission->runs;
             $count = $runs->count();
             if($count == $runs->where('result', 'Accepted')->count()){
@@ -90,16 +91,17 @@ class ProcessSubmission implements ShouldQueue
                 $submission->score = 100000;
             }else{
                 $submission->result = $submission->runs->avg('score');
-                if($runs->where('result', 'Failed')->exists()){
+                if($runs->where('result', 'Failed')->first()){
                     $submission->result = 'Failed';
-                }else if($runs->where('result', 'Wrong Answer')->exists()){
+                }else if($runs->where('result', 'Wrong Answer')->first()){
                     $submission->result = 'Wrong Answer';
-                }else if($runs->where('result', 'Time Limit Exceeded')->exists()){
+                }else if($runs->where('result', 'Time Limit Exceeded')->first()){
                     $submission->result = 'Time Limit Exceeded';
-                }else if($runs->where('result', 'Runtime Error')->exists()){
+                }else if($runs->where('result', 'Runtime Error')->first()){
                     $submission->result = 'Runtime Error';
                 }
             }
+            $submission->save();
         })->allowFailures()->onQueue('code')->dispatch();
     }
 

@@ -53,7 +53,7 @@ class ProcessTest implements ShouldQueue
         $run->result = 'Running';
         $run->save();
         $executeData = Run::execute($boxId, $task->runtime_limit, $task->memory_limit, 65536, $language);
-        $run->runtime = $executeData['time'];
+        $run->runtime = $executeData['time'] * 1000;
         $run->memory = $executeData['cg-mem'];
         $run->save();
         if(isset($executeData['status'])){
@@ -73,24 +73,23 @@ class ProcessTest implements ShouldQueue
         if($task->grader_status != 'Compiled'){
             Storage::copy("graders/wcmp.exe", "$boxHereS/grader.exe");
         }
-        $gradeData = Run::grade($boxId);
+        $gradeData = Run::grade($boxId);var_dump($gradeData);
         if(!isset($gradeData['exitcode'])){
             $run->result = 'Failed';
-            $run->grader_feedback = $executeData['error'];
-            $submission->save();
+            $run->grader_feedback = $gradeData['error'];
+            $run->save();
             return;
         }
         $exitCode = intval($gradeData['exitcode']);
-        if($exitCode === 0){
+        $run->grader_feedback = Storage::get("$boxHereS/result.txt");
+        if($exitCode === 0){echo'ok';
             $run->result = 'Accepted';
             $run->score = 100000;
-            $run->grader_feedback = $executeData['error'];
-            $submission->save();
+            $run->save();echo'er';
             return;
-        }else{
+        }else{echo'nu';
             $run->result = 'Wrong Answer';
-            $run->grader_feedback = $executeData['error'];
-            $submission->save();
+            $run->save();echo'qw';
             return;
         }
     }

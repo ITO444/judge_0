@@ -32,7 +32,7 @@
                     Change Test {{$loop->iteration}} <span class="dropdown-toggle float-right"></span>
                 </h3>
                 <div class="collapse {{session('success')?'':'show'}}" id="collapse"><div class="card-body">
-                    {{Form::open(['action' => ['TasksController@saveTest', $task->rask_id, $test->id], 'files' => 'true'])}}
+                    {{Form::open(['action' => ['TasksController@saveTest', $task->task_id, $test->id], 'files' => 'true'])}}
                     <div class="row">
                         <div class="col-lg">
                             <div class="row">
