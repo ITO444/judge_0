@@ -388,12 +388,12 @@ class TasksController extends Controller
         $submission->user_id = auth()->user()->id;
         $submission->task_id = $task->id;
         $submission->language = $request['language'];
-        $submission->result = '';
+        $submission->result = 'On Queue';
         $submission->score = 0;
         $submission->source_code = $request['code'] ?: '';
         $submission->compiler_warning = '';
         $submission->save();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');
-        return redirect("/submissions/$submission->id")->with('success', 'Submitted');
+        return redirect("/submission/$submission->id")->with('success', 'Submitted');
     }
 }

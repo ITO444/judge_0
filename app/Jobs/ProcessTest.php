@@ -73,7 +73,7 @@ class ProcessTest implements ShouldQueue
         if($task->grader_status != 'Compiled'){
             Storage::copy("graders/wcmp.exe", "$boxHereS/grader.exe");
         }
-        $gradeData = Run::grade($boxId);var_dump($gradeData);
+        $gradeData = Run::grade($boxId);var_dump($gradeData);var_dump($gradeData);
         if(!isset($gradeData['exitcode'])){
             $run->result = 'Failed';
             $run->grader_feedback = $gradeData['error'];

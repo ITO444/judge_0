@@ -74,7 +74,7 @@ class ProcessSubmission implements ShouldQueue
             $run = new ARun;
             $run->submission_id = $submission->id;
             $run->test_id = $test->id;
-            $run->result = '';
+            $run->result = 'On Queue';
             $run->runtime = 0;
             $run->memory = 0;
             $run->score = 0;

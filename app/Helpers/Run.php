@@ -68,8 +68,6 @@ class Run
         if($language == "cpp"){
             $process = new Process(['mv', "$boxThere/program.exe", "$boxHere/program.exe"]);
             $process->run();
-            $process = new Process(["chmod", "764", "$boxHere/program.exe"]);
-            $process->run();
         }
         $lines = explode("\n", Storage::get("/run/$boxId/meta.txt"));
         foreach ($lines as $line) {
@@ -96,6 +94,8 @@ class Run
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
         if($language == "cpp"){
+            $process = new Process(["chmod", "764", "$boxHere/program.exe"]);
+            $process->run();
             $runCommand = new Process([
                 'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit",
                 "--cg-mem=$memoryLimit", "--fsize=$outputLimit", '--processes',
@@ -135,6 +135,8 @@ class Run
     {
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
+        $process = new Process(["chmod", "764", "$boxHere/grader.exe"]);
+        $process->run();
         $runCommand = new Process([
             'isolate', '--cg', "--box-id=$boxId", "--time=10",
             "--cg-mem=1048576", "--fsize=65536", '--processes',
