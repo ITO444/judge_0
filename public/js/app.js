@@ -55812,6 +55812,19 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
     el: '#app',
 });*/
 
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+$('.io').on("click", function () {
+  var selection = window.getSelection();
+  var range = document.createRange();
+  range.selectNodeContents(this);
+  selection.removeAllRanges();
+  selection.addRange(range);
+});
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

@@ -12,9 +12,11 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 <?php if(auth()->guard()->check()): ?>
+                <?php if(auth()->user()->level >= 2): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="/runner">Code Runner</a>
                 </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a href="/user/<?php echo e(auth()->user()->name); ?>" class="nav-link">My Page</a>
                 </li>

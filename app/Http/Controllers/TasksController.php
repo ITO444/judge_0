@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessSubmission;
+use App\Helpers\BB;
 
 class TasksController extends Controller
 {
@@ -95,6 +96,7 @@ class TasksController extends Controller
         if($myLevel < $task->view_level){
             return abort(404);
         }
+        $task->statement = BB::convertToHtml($task->statement);
         return view('tasks.show')->with('task', $task)->with('myLevel', $myLevel);
     }
 
@@ -184,6 +186,7 @@ class TasksController extends Controller
         if($myLevel < $task->edit_level){
             return abort(404);
         }
+        $task->solution = BB::convertToHtml($task->solution);
         return view('tasks.solution')->with('task', $task)->with('myLevel', $myLevel);
     }
     

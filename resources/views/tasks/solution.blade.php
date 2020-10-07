@@ -2,6 +2,7 @@
 
 @section('content')
     @include("tasks.top")
-    <h3>Solution</h3>
-    <p>{{$task->solution}}</p>
+    <div class="row justify-content-center"><div class="col-md-10">
+        {!!$task->solution!!}
+    </div></div>
 @endsection

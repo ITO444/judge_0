@@ -82,7 +82,7 @@ class LoginController extends Controller
             $newUser->name            = explode('@', $user->email)[0];
             $newUser->real_name       = $user->name;
             $newUser->display         = $user->name;
-            $newUser->level           = 1;
+            $newUser->level           = 3;
             $newUser->email           = $user->email;
             $newUser->google_id       = $user->id;
             $newUser->avatar          = $user->avatar;
