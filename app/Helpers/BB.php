@@ -48,12 +48,17 @@ class BB
         )->addParser(
             'io',
             '/\[io\](.*?)\[\/io\]/s',
-            '<pre class="col border rounded shadow-sm m-1 io monospace">$1</pre>',
+            '<pre class="col border rounded shadow-sm m-1 py-2 io monospace">$1</pre>',
             '$1'
         )->addParser(
             'monospace',
             '/\[m\](.*?)\[\/m\]/s',
             '<span class="border rounded shadow-sm px-1 monospace">$1</span>',
+            '$1'
+        )->addParser(
+            'center',
+            '/\[center\](.*?)\[\/center\]/s',
+            '<center>$1</center>',
             '$1'
         );
 

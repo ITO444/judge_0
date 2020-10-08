@@ -26,7 +26,7 @@ class TasksController extends Controller
         if($myLevel == 4){
             $myLevel = 7;
         }
-        $tasks = Task::paginate(50);
+        $tasks = Task::orderBy('task_id')->paginate(50);
         return view('tasks.index')->with('tasks', $tasks)->with('myLevel', $myLevel);
     }
 
