@@ -1,4 +1,9 @@
-<h1><a href="/task/{{$task->task_id}}" class="text-body">{{$task->title}}</a></h1>
+<h1>
+    <a href="/task/{{$task->task_id}}" class="text-body">{{$task->title}}</a>
+    @if($task->submissions->where('user_id', auth()->user()->id)->where('result', 'Accepted')->isNotEmpty())
+    <span class="badge badge-success">Done</span>
+    @endif
+</h1>
 <div class="btn-group">
     <div class="btn btn-outline-secondary disabled">
         {{$task->task_id}}
@@ -12,9 +17,11 @@
     <div class="btn btn-outline-secondary disabled">
         Date Created: {{$task->date_created}}
     </div>
+    @if($task->author)
     <div class="btn btn-outline-secondary disabled">
         By: {{$task->author}}
     </div>
+    @endif
     @if($task->origin)
     <div class="btn btn-outline-secondary disabled">
         From: {{$task->origin}}

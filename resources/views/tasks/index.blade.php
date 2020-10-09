@@ -12,16 +12,18 @@
         <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">
             <thead><tr>
                 <th>Task ID</th>
+                <th class="text-center">Solved</th>
                 <th>Title</th>
-                <th>Actions</th>
+                <th class="text-center">Actions</th>
             </tr></thead>
             <tbody>
             @foreach($tasks as $task)
                 @if($myLevel >= $task->view_level)
-                <tr>
+                <tr class="{{$task->submissions->where('user_id', auth()->user()->id)->where('result', 'Accepted')->isNotEmpty() ? 'table-success' : ''}}">
                     <td>{{$task->task_id}}</td>
+                    <td class="text-center">{{$task->submissions->where('result', 'Accepted')->unique('user_id')->count()}}</td>
                     <td><a href="/task/{{$task->task_id}}">{{$task->title}}</a></td>
-                    <td>
+                    <td class="text-center">
                         <a href="/task/{{$task->task_id}}" class="btn btn-primary btn-sm">View</a>
                         @if($myLevel >= $task->submit_level)
                             <a href="/task/{{$task->task_id}}/submit" class="btn btn-primary btn-sm">Submit</a>

@@ -49,3 +49,12 @@
 [07-Oct-2020 10:09:04 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
 [07-Oct-2020 11:47:02 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
 [07-Oct-2020 12:15:06 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 00:16:32 UTC] PHP Fatal error:  Class App\Helpers\BB may not inherit from final class (Genert\BBCode\BBCode) in /media/sf_judge/app/Helpers/BB.php on line 7
+[09-Oct-2020 00:39:09 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 01:37:08 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 01:39:05 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 02:25:33 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 02:39:20 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 03:09:20 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 03:39:20 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0
+[09-Oct-2020 04:09:01 UTC] PHP Warning:  Module 'sockets' already loaded in Unknown on line 0

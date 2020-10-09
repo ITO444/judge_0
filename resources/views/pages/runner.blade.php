@@ -39,6 +39,16 @@
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/" + ace_modes[language]);
 
+    $("#toggle").click(function(){
+        if(!code.is(":hidden")){
+            editor.session.setValue(code.val());
+        }else{
+            code.val(editor.getSession().getValue());
+        }
+        $('#editor').toggle();
+        code.toggle();
+    });
+    
     $( document ).ready(function() {
         Echo.private('update.runner.{{auth()->user()->id}}')
         .listen('UpdateRunner', (e) => {
@@ -128,16 +138,6 @@
                 $("#savestatus").html('Error');
             }
         });
-    });
-
-    $("#toggle").click(function(){
-        if(!code.is(":hidden")){
-            editor.session.setValue(code.val());
-        }else{
-            code.val(editor.getSession().getValue());
-        }
-        $('#editor').toggle();
-        code.toggle();
     });
 </script>
 @endsection

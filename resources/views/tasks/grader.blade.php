@@ -29,10 +29,6 @@
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/c_cpp");
 
-    editor.getSession().on("change", function(){
-        grader.val(editor.getSession().getValue());
-    });
-
     $("#toggle").click(function(){
         if(!grader.is(":hidden")){
             editor.session.setValue(grader.val());
@@ -41,6 +37,12 @@
         }
         $('#editor').toggle();
         grader.toggle();
+    });
+
+    $('form').on('submit', function(e){
+        if(grader.is(":hidden")){
+            grader.val(editor.getSession().getValue());
+        }
     });
 </script>
 @endsection

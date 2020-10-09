@@ -14,7 +14,13 @@ class BB
      */
     public static function convertToHtml(string $text)
     {
-        $bbCode = New BBCode();
+        /*$asd= [
+            'hi' => [
+                'pattern' => '/\[r\](.*?)\[\/r\]/s',
+                'replace' => '<div class="text-right">$1</div>',
+                'content' => '$1'
+            ],];*/
+        $bbCode = New BBCode(null, null);
 
         /*// Add "[link target=http://example.com]Example[/link]" parser.
         $bbCode->addParser(
@@ -59,6 +65,11 @@ class BB
             'center',
             '/\[center\](.*?)\[\/center\]/s',
             '<center>$1</center>',
+            '$1'
+        )->addParser(
+            'table',
+            '/\[table\](.*?)\[\/table\]/s',
+            '<div class="table-responsive"><table class="table table-bordered">$1</table></div>',
             '$1'
         );
 
