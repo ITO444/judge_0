@@ -89,6 +89,14 @@ class ProcessSubmission implements ShouldQueue
             if($count == $runs->where('result', 'Accepted')->count()){
                 $submission->result = 'Accepted';
                 $submission->score = 100000;
+                $submission->save();
+
+                $task = $submission->task;
+                $task->solved = $task->submissions->where('result', 'Accepted')->unique('user_id')->count();
+                $task->save();
+                $user = $submission->user;
+                $user->solved = $user->submissions->where('result', 'Accepted')->unique('task_id')->count();
+                $user->save();
             }else{
                 $submission->result = $submission->runs->avg('score');
                 if($runs->where('result', 'Failed')->first()){
@@ -100,8 +108,8 @@ class ProcessSubmission implements ShouldQueue
                 }else if($runs->where('result', 'Runtime Error')->first()){
                     $submission->result = 'Runtime Error';
                 }
+                $submission->save();
             }
-            $submission->save();
             Storage::makeDirectory("/judging/$submission->id");
         })->allowFailures()->onQueue('code')->dispatch();
     }

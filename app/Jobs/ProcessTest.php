@@ -73,7 +73,7 @@ class ProcessTest implements ShouldQueue
         if($task->grader_status != 'Compiled'){
             Storage::copy("graders/wcmp.exe", "$boxHereS/grader.exe");
         }
-        $gradeData = Run::grade($boxId);var_dump($gradeData);var_dump($gradeData);
+        $gradeData = Run::grade($boxId);
         if(!isset($gradeData['exitcode'])){
             $run->result = 'Failed';
             $run->grader_feedback = $gradeData['error'];
@@ -82,14 +82,14 @@ class ProcessTest implements ShouldQueue
         }
         $exitCode = intval($gradeData['exitcode']);
         $run->grader_feedback = Storage::get("$boxHereS/result.txt");
-        if($exitCode === 0){echo'ok';
+        if($exitCode === 0){
             $run->result = 'Accepted';
             $run->score = 100000;
-            $run->save();echo'er';
+            $run->save();
             return;
-        }else{echo'nu';
+        }else{
             $run->result = 'Wrong Answer';
-            $run->save();echo'qw';
+            $run->save();
             return;
         }
     }

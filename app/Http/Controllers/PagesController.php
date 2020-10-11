@@ -43,4 +43,9 @@ class PagesController extends Controller
         $user->save();
         return redirect('/settings')->with('success', 'Info Saved');
     }
+
+    public function leaderboard(){
+        $users = User::orderBy('solved', 'desc')->paginate(100);
+        return view('pages.leaderboard')->with('users', $users);
+    }
 }

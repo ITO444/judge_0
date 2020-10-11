@@ -22,6 +22,7 @@ Route::get('', 'PagesController@index');
 Route::get('user/{user:name}', 'PagesController@user');
 Route::get('settings', 'PagesController@settings');
 Route::post('settings', 'PagesController@saveSettings');
+Route::get('leaderboard', 'PagesController@leaderboard')->middleware('admin:3');
 
 Route::group(['prefix' => 'runner'], function () {
     Route::get('', 'RunnerController@index')->middleware('admin:2');

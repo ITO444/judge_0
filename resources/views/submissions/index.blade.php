@@ -17,13 +17,13 @@
             </tr></thead>
             <tbody>
             @foreach($submissions as $submission)
-                <tr>
+                <tr class="{{$submission->user->id == auth()->user()->id ? ($loop->iteration % 2 ? 'table-primary' : 'table-info') : ''}}">
                     <td class="text-center"><a href="/submission/{{$submission->id}}">{{$submission->created_at}}</a></td>
                     <td><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></td>
                     <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></td>
                     <td class="text-center">{{$submission->language}}</td>
                     <td class="text-center{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</td>
-                    <td class="text-center">{{$submission->runs->max('runtime') / 1000}}</td>
+                    <td class="text-center">{{number_format($submission->runs->max('runtime') / 1000, 3)}}</td>
                 </tr>
             @endforeach
             </tbody>

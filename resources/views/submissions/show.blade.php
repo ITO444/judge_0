@@ -8,12 +8,15 @@
         <div class="col"><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></div>
         <div class="col">{{$submission->language}}</div>
         <div class="col{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</div>
-        <div class="col">{{$submission->runs->max('runtime') / 1000}}</div>
+        <div class="col">Runtime: {{number_format($submission->runs->max('runtime') / 1000, 3)}} s</div>
+        <div class="col">Memory: {{number_format($submission->runs->max('memory') / 1024, 3)}} MB</div>
+        <div class="col">Score: {{number_format($submission->score / 1000, 3)}}</div>
     </div></div></div><hr/>
     @if($myLevel >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
-        Compiler message:
+        <h6>Compiler message:</h6>
         <pre class="alert alert-info">{{$submission->compiler_warning}}</pre><br/>
     @endif
+    @if(count($submission->runs) > 0)
     <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">
         <thead><tr>
             <th class="text-center">Test</th>
@@ -29,15 +32,16 @@
         <tr>
             <td class="text-center">{{$loop->iteration}}</td>
             <td class="text-center{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</td>
-            <td class="text-center">{{$run->runtime / 1000}}</td>
+            <td class="text-center">{{number_format($run->runtime / 1000, 3)}}</td>
             <td class="text-center">{{number_format($run->memory / 1024, 3)}}</td>
-            <td class="text-center">{{$run->score / 100}}</td>
+            <td class="text-center">{{number_format($run->score / 1000, 3)}}</td>
             @if($myLevel >= $submission->task->edit_level)
             <td><pre class="text-monospace">{{$run->grader_feedback}}</pre></td>
             @endif
         </tr>
     @endforeach
     </tbody></table></div>
+    @endif
     @if($myLevel >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
     <hr/>
     <div id="editor" class="rounded">{{$submission->source_code}}</div>
