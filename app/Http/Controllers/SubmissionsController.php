@@ -7,6 +7,7 @@ use App\User;
 use App\Task;
 use App\Test;
 use App\Submission;
+use App\Jobs\ProcessSubmission;
 
 class SubmissionsController extends Controller
 {
@@ -64,6 +65,24 @@ class SubmissionsController extends Controller
             return abort(404);
         }
         return view('submissions.show')->with('submission', $submission)->with('myLevel', $myLevel);
+    }
+
+    public function rejudge(Submission $submission)
+    {
+        $myLevel = auth()->user()->level;
+        if($myLevel == 4){
+            $myLevel = 7;
+        }
+        if($myLevel < $submission->task->edit_level){
+            return abort(404);
+        }
+        $submission->result = 'On Queue';
+        $submission->score = 0;
+        $submission->compiler_warning = '';
+        $submission->save();
+        $submission->runs()->delete();
+        ProcessSubmission::dispatch($submission->id)->onQueue('code');
+        return redirect("/submission/$submission->id")->with('success', 'Re-judging');;
     }
 
     /**

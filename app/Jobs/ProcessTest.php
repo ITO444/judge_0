@@ -52,7 +52,7 @@ class ProcessTest implements ShouldQueue
 
         $run->result = 'Running';
         $run->save();
-        $executeData = Run::execute($boxId, $task->runtime_limit, $task->memory_limit, 65536, $language);
+        $executeData = Run::execute($boxId, $task->runtime_limit / 1000, $task->memory_limit, 65536, $language);
         $run->runtime = $executeData['time'] * 1000;
         $run->memory = $executeData['cg-mem'];
         $run->save();
@@ -60,12 +60,12 @@ class ProcessTest implements ShouldQueue
             if($executeData['status'] == 'TO'){
                 $run->result = 'Time Limit Exceeded';
                 $run->grader_feedback = $executeData['error'];
-                $submission->save();
+                $run->save();
                 return;
             }
             $run->result = 'Runtime Error';
             $run->grader_feedback = $executeData['error'];
-            $submission->save();
+            $run->save();
             return;
         }
         Storage::copy("tests/$test->id.in", "$boxHereS/input.txt");

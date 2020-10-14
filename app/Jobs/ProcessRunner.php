@@ -84,6 +84,12 @@ class ProcessRunner implements ShouldQueue
 
         $execute = 1;//intval($executeData['exitcode']);
         if(isset($executeData['status'])){
+            if($executeData['status'] == 'TO'){
+                $user->runner_status = '';
+                $user->save();
+                event(new UpdateRunner('Time Limit Exeeded', $userId));
+                return;
+            }
             $user->runner_status = '';
             $user->save();
             event(new UpdateRunner('Runtime Error', $userId));

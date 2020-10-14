@@ -1,16 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Submission {{$submission->id}}</h1>
+    <h1>Submission {{$submission->id}} <a class="btn btn-primary float-right" onclick="rj()">Re-judge</a></h1>
     <div class="card"><div class="card-body"><div class="row text-center">
         <div class="col"><a href="/submission/{{$submission->id}}">{{$submission->created_at}}</a></div>
         <div class="col"><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></div>
         <div class="col"><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></div>
         <div class="col">{{$submission->language}}</div>
         <div class="col{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</div>
-        <div class="col">Runtime: {{number_format($submission->runs->max('runtime') / 1000, 3)}} s</div>
-        <div class="col">Memory: {{number_format($submission->runs->max('memory') / 1024, 3)}} MB</div>
-        <div class="col">Score: {{number_format($submission->score / 1000, 3)}}</div>
+        @if($submission->getAttributes()['result'] >= 0) 
+            <div class="col">Runtime: {{number_format($submission->runs->max('runtime') / 1000, 3)}} s</div>
+            <div class="col">Memory: {{number_format($submission->runs->max('memory') / 1024, 3)}} MB</div>
+            <div class="col">Score: {{number_format($submission->score / 1000, 3)}}</div>
+        @endif
     </div></div></div><hr/>
     @if($myLevel >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
         <h6>Compiler message:</h6>
@@ -31,7 +33,7 @@
     @foreach($submission->runs as $run)
         <tr>
             <td class="text-center">{{$loop->iteration}}</td>
-            <td class="text-center{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</td>
+            <td class="text-center{{$run->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$run->result}}</td>
             <td class="text-center">{{number_format($run->runtime / 1000, 3)}}</td>
             <td class="text-center">{{number_format($run->memory / 1024, 3)}}</td>
             <td class="text-center">{{number_format($run->score / 1000, 3)}}</td>
@@ -47,6 +49,7 @@
     <div id="editor" class="rounded">{{$submission->source_code}}</div>
     <textarea id='code' class="form-control text-monospace" style="display: none; height: 400px">{{$submission->source_code}}</textarea>
     <br/><a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
+    {{Form::open(['action' => ['SubmissionsController@rejudge', $submission->id], 'method' => 'delete', 'id' => "rejudge"])}} {{Form::close()}}
     <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var ace_modes = {"cpp": "c_cpp", "py": "python"};
@@ -64,6 +67,13 @@
             $('#editor').toggle();
             code.toggle();
         });
+
+        function rj(){
+            var rjForm = $('#rejudge');
+            if(confirm('Are you sure you want to re-judge this submission?')) {
+                rjForm.submit();
+            }
+        }
     </script>
     @endif
 @endsection

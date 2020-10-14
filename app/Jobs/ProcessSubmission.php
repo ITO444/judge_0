@@ -98,7 +98,7 @@ class ProcessSubmission implements ShouldQueue
                 $user->solved = $user->submissions->where('result', 'Accepted')->unique('task_id')->count();
                 $user->save();
             }else{
-                $submission->result = $submission->runs->avg('score');
+                $submission->score = $submission->runs->avg('score');
                 if($runs->where('result', 'Failed')->first()){
                     $submission->result = 'Failed';
                 }else if($runs->where('result', 'Wrong Answer')->first()){
@@ -107,10 +107,12 @@ class ProcessSubmission implements ShouldQueue
                     $submission->result = 'Time Limit Exceeded';
                 }else if($runs->where('result', 'Runtime Error')->first()){
                     $submission->result = 'Runtime Error';
+                }else{
+                    $submission->result = '';
                 }
                 $submission->save();
             }
-            Storage::makeDirectory("/judging/$submission->id");
+            Storage::deleteDirectory("/judging/$submission->id");
         })->allowFailures()->onQueue('code')->dispatch();
     }
 

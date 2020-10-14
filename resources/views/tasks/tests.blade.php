@@ -21,8 +21,8 @@
                 <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$test->id}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
-                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary btn">Edit</a>
-                    <a class="btn btn-primary btn" onclick="del({{$test->id}})">Delete</a>
+                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary">Edit</a>
+                    <a class="btn btn-primary" onclick="del({{$test->id}})">Delete</a>
                 </td>
             </tr>
             @if($test->id == $testChange)

@@ -23,7 +23,7 @@
                     <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></td>
                     <td class="text-center">{{$submission->language}}</td>
                     <td class="text-center{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</td>
-                    <td class="text-center">{{number_format($submission->runs->max('runtime') / 1000, 3)}}</td>
+                    <td class="text-center">{{$submission->getAttributes()['result'] < 0 ? '' : number_format($submission->runs->max('runtime') / 1000, 3)}}</td>
                 </tr>
             @endforeach
             </tbody>

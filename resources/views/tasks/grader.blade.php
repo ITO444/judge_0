@@ -12,6 +12,7 @@
         </div>
         <div class="form-group">
             {{Form::label('grader', 'Grader', ['class' => 'form-label'])}}
+            <div class="d-inline text-muted">{{$task->grader_status}}</div>
             <div id="editor" class="rounded">{{$task->grader}}</div>
             {{Form::textarea('grader', $task->grader, ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px'])}}
         </div>
