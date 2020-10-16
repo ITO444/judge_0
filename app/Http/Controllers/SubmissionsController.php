@@ -8,6 +8,7 @@ use App\Task;
 use App\Test;
 use App\Submission;
 use App\Jobs\ProcessSubmission;
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionsController extends Controller
 {

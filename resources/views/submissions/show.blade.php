@@ -6,7 +6,7 @@
         <div class="col"><a href="/submission/{{$submission->id}}">{{$submission->created_at}}</a></div>
         <div class="col"><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></div>
         <div class="col"><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></div>
-        <div class="col">{{$submission->language}}</div>
+        <div class="col">{{$submission->language == 'cpp' ? "C++" : "Python 3"}}</div>
         <div class="col{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</div>
         @if($submission->getAttributes()['result'] >= 0) 
             <div class="col">Runtime: {{number_format($submission->runs->max('runtime') / 1000, 3)}} s</div>

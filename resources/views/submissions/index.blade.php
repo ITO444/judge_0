@@ -21,7 +21,7 @@
                     <td class="text-center"><a href="/submission/{{$submission->id}}">{{$submission->created_at}}</a></td>
                     <td><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></td>
                     <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></td>
-                    <td class="text-center">{{$submission->language}}</td>
+                    <td class="text-center">{{$submission->language == 'cpp' ? "C++" : "Python 3"}}</td>
                     <td class="text-center{{$submission->result == 'Accepted' ? ' text-success font-weight-bold' : ''}}">{{$submission->result}}</td>
                     <td class="text-center">{{$submission->getAttributes()['result'] < 0 ? '' : number_format($submission->runs->max('runtime') / 1000, 3)}}</td>
                 </tr>

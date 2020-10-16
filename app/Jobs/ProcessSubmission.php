@@ -14,6 +14,7 @@ use App\Run as ARun;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class ProcessSubmission implements ShouldQueue
 {
@@ -82,7 +83,7 @@ class ProcessSubmission implements ShouldQueue
             $run->save();
             return new ProcessTest($run->id);
         });
-        $batch = Bus::batch($batchArr)->then(function (Batch $batch) use ($submission) {
+        $batch = Bus::batch($batchArr)->finally(function (Batch $batch) use ($submission) {
             $submission->refresh();
             $runs = $submission->runs;
             $count = $runs->count();
@@ -90,16 +91,9 @@ class ProcessSubmission implements ShouldQueue
                 $submission->result = 'Accepted';
                 $submission->score = 100000;
                 $submission->save();
-
-                $task = $submission->task;
-                $task->solved = $task->submissions->where('result', 'Accepted')->unique('user_id')->count();
-                $task->save();
-                $user = $submission->user;
-                $user->solved = $user->submissions->where('result', 'Accepted')->unique('task_id')->count();
-                $user->save();
             }else{
                 $submission->score = $submission->runs->avg('score');
-                if($runs->where('result', 'Failed')->first()){
+                if($runs->whereIn('result', ['Running', 'On Queue', 'Failed', ''])->first()){
                     $submission->result = 'Failed';
                 }else if($runs->where('result', 'Wrong Answer')->first()){
                     $submission->result = 'Wrong Answer';
@@ -113,6 +107,12 @@ class ProcessSubmission implements ShouldQueue
                 $submission->save();
             }
             Storage::deleteDirectory("/judging/$submission->id");
+            $task = $submission->task;
+            $task->solved = $task->submissions->where('result', 'Accepted')->unique('user_id')->count();
+            $task->save();
+            $user = $submission->user;
+            $user->solved = $user->submissions->where('result', 'Accepted')->unique('task_id')->count();
+            $user->save();
         })->allowFailures()->onQueue('code')->dispatch();
     }
 

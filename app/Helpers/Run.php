@@ -47,9 +47,10 @@ class Run
     {
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
+        $wallTime = $compileTime * 2;
         if($language == "cpp"){
             $runCommand = new Process([
-                'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime",
+                'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime", "--wall-time=$wallTime",
                 "--cg-mem=$compileMemory", '--processes',
                 "--env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
                 "--meta=$boxHere/meta.txt", '--run', '--',
@@ -58,7 +59,7 @@ class Run
             ]);
         }else if($language == "py"){
             $runCommand = new Process([
-                'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime",
+                'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime", "--wall-time=$wallTime",
                 "--cg-mem=$compileMemory", '--processes',
                 "--meta=$boxHere/meta.txt", '--run', '--',
                 '/usr/bin/python3', '-S', '-m', 'py_compile', 'program.py'
@@ -93,11 +94,11 @@ class Run
     {
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
+        $wallTime = $runtimeLimit * 2;
         if($language == "cpp"){
-            $process = new Process(["chmod", "764", "$boxHere/program.exe"]);
-            $process->run();
+            chmod("$boxHere/program.exe", 0764);
             $runCommand = new Process([
-                'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit",
+                'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit", "--wall-time=$wallTime",
                 "--cg-mem=$memoryLimit", "--fsize=$outputLimit", '--processes',
                 "--stdin=input.txt", "--stdout=output.txt",
                 "--meta=$boxHere/meta.txt", '--run', '--',
@@ -105,7 +106,7 @@ class Run
             ]);
         }else if($language == "py"){
             $runCommand = new Process([
-                'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit",
+                'isolate', '--cg', "--box-id=$boxId", "--time=$runtimeLimit", "--wall-time=$wallTime",
                 "--cg-mem=$memoryLimit", "--fsize=$outputLimit", '--processes',
                 "--stdin=input.txt", "--stdout=output.txt",
                 "--meta=$boxHere/meta.txt", '--run', '--',
@@ -135,10 +136,9 @@ class Run
     {
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
-        $process = new Process(["chmod", "764", "$boxHere/grader.exe"]);
-        $process->run();
+        chmod("$boxHere/grader.exe", 0764);
         $runCommand = new Process([
-            'isolate', '--cg', "--box-id=$boxId", "--time=10",
+            'isolate', '--cg', "--box-id=$boxId", "--time=10", "--wall-time=20",
             "--cg-mem=1048576", "--fsize=65536", '--processes',
             "--meta=$boxHere/meta.txt", '--run', '--',
             'grader.exe', 'input.txt', 'output.txt', 'answer.txt', 'result.txt'
