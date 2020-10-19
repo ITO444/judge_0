@@ -22,12 +22,15 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        $tasks = Task::orderBy('task_id')->paginate(50);
-        return view('tasks.index')->with('tasks', $tasks)->with('myLevel', $myLevel);
+        $level = auth()->user()->level;
+        $tasks = Task::where('view_level', '<=', $level)->where(function ($query) use ($level) {
+            $query->where('published', '=', 1)
+                  ->orWhere('edit_level', '<=', $level);
+            if($level == 5){
+                $query->where('edit_level', '<>', 4);
+            }
+        })->orderBy('task_id')->paginate(50);
+        return view('tasks.index')->with('tasks', $tasks)->with('level', $level);
     }
 
     /**
@@ -55,10 +58,7 @@ class TasksController extends Controller
         if ($validator->fails()) {
             return redirect('/admin/task')->withErrors($validator);
         }
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
+        $level = auth()->user()->level;
         $task = new Task;
         $task->task_id = $request['task_id'];
         $task->title = $request['title'];
@@ -66,9 +66,9 @@ class TasksController extends Controller
         $task->compile_time = 30;
         $task->runtime_limit = 1000;
         $task->memory_limit = 262144;
-        $task->view_level = $myLevel;
-        $task->edit_level = $myLevel;
-        $task->submit_level = $myLevel;
+        $task->view_level = $level;
+        $task->edit_level = $level;
+        $task->submit_level = $level;
         $task->task_type = 0;
         $task->date_created = $task->freshTimestamp();
         $task->author = auth()->user()->real_name;
@@ -89,15 +89,12 @@ class TasksController extends Controller
      */
     public function show(Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->view_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->view_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
             return abort(404);
         }
         $task->statement = BB::convertToHtml($task->statement);
-        return view('tasks.show')->with('task', $task)->with('myLevel', $myLevel);
+        return view('tasks.show')->with('task', $task)->with('level', $level);
     }
 
     /**
@@ -108,14 +105,11 @@ class TasksController extends Controller
      */
     public function edit(Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->edit_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
             return abort(404);
         }
-        return view('tasks.edit')->with('task', $task)->with('myLevel', $myLevel);
+        return view('tasks.edit')->with('task', $task)->with('level', $level);
     }
 
     /**
@@ -127,13 +121,11 @@ class TasksController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->edit_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
             return abort(404);
         }
+        $editLevelMin = $level == 5 ? 5 : 4;
         $validator = Validator::make($request->all(), [
             "task_id" => ['required', 'string', "unique:tasks,task_id,$task->id", 'max:10'],
             "title" => ['required', 'string', 'max:255'],
@@ -141,9 +133,9 @@ class TasksController extends Controller
             "compile_time" => ['nullable', 'integer', "between:0, 30"],
             "runtime_limit" => ['nullable', 'numeric', "between:0, 10"],
             "memory_limit" => ['nullable', 'integer', "between:0, 1048576"],
-            "view_level" => ['nullable', 'integer', "between:1, $myLevel"],
-            "submit_level" => ['nullable', 'integer', "between:1, $myLevel"],
-            "edit_level" => ['nullable', 'integer', "between:4, $myLevel"],
+            "view_level" => ['nullable', 'integer', "between:1, $level"],
+            "submit_level" => ['nullable', 'integer', "between:1, $level"],
+            "edit_level" => ['nullable', 'integer', "between:$editLevelMin, $level"],
             "task_type" => ['required', 'integer', "between:0, 1"],
             "date_created" => ['required', 'date'],
             "author" => ['nullable', 'string', 'max:255'],
@@ -161,10 +153,10 @@ class TasksController extends Controller
         $task->compile_time = $request["compile_time"] ?: 30;
         $task->runtime_limit = $request["runtime_limit"] ? (int)($request["runtime_limit"] * 1000) : 1000;
         $task->memory_limit = $request["memory_limit"] ?: 262144;
-        $task->view_level = $request["view_level"] ?: $myLevel;
-        $task->submit_level = $request["submit_level"] ?: $myLevel;
+        $task->view_level = $request["view_level"] ?: $level;
+        $task->submit_level = $request["submit_level"] ?: $level;
         if($task->submit_level < $task->view_level) $task->submit_level = $task->view_level;
-        $task->edit_level = $request["edit_level"] ?: $myLevel;
+        $task->edit_level = $request["edit_level"] ?: $level;
         if($task->edit_level < $task->submit_level) $task->edit_level = $task->submit_level;
         $task->task_type = $request["task_type"];
         $task->date_created = $request["date_created"];
@@ -179,15 +171,12 @@ class TasksController extends Controller
 
     public function solution(Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->edit_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))){
             return abort(404);
         }
         $task->solution = BB::convertToHtml($task->solution);
-        return view('tasks.solution')->with('task', $task)->with('myLevel', $myLevel);
+        return view('tasks.solution')->with('task', $task)->with('level', $level);
     }
     
     /**
@@ -197,14 +186,11 @@ class TasksController extends Controller
      */
     public function tests(Task $task, Test $test = NULL)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
+        $level = auth()->user()->level;
         if($test && $test->task->id != $task->id){
             return abort(404);
         }
-        if($myLevel < $task->edit_level){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || ($task->published && $test)){
             return abort(404);
         }
         $testChange = NULL;
@@ -219,21 +205,19 @@ class TasksController extends Controller
                 $output = Storage::get("tests/$test->id.out");
             }
         }
-        return view('tasks.tests')->with('task', $task)->with('myLevel', $myLevel)->with('testChange', $testChange)->with('input', $input)->with('output', $output);
+        return view('tasks.tests')->with('task', $task)->with('level', $level)->with('testChange', $testChange)->with('input', $input)->with('output', $output);
     }
 
     public function saveTest(Request $request, Task $task, Test $test = NULL)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
+        $level = auth()->user()->level;
         if($test && $test->task->id != $task->id){
             return abort(404);
         }
-        if($myLevel < $task->edit_level){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
             return abort(404);
         }
+        $testChange = $test ? $test->id : NULL;
         $validator = Validator::make($request->all(), [
             "inputFile" => ['required_without:inputText', 'file', 'max:65536', 'mimes:txt'],
             "inputText" => ['nullable', 'string', 'max:67108864'],
@@ -241,43 +225,38 @@ class TasksController extends Controller
             "outputText" => ['nullable', 'string', 'max:67108864'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->task_id/tests")->withErrors($validator);
+            return redirect("/task/$task->task_id/tests/$testChange")->withErrors($validator);
         }
-        $new = false;
         if(!$test){
             $test = new Test;
             $test->task_id = $task->id;
             $test->input_status = '';
             $test->output_status = '';
             $test->save();
-            $new = true;
         }else $test->touch();
-        if($request["inputFile"]){
-            Storage::putFileAs('tests', $request["inputFile"], "$test->id.in");
+        if($request->hasFile("inputFile")){
+            $request->file('inputFile')->storeAs('tests', "$test->id.in");
         }else{
             Storage::put("tests/$test->id.in", $request["inputText"]);
         }
-        if($request["outputFile"]){
-            Storage::putFileAs('tests', $request["outputFile"], "$test->id.out");
+        if($request->hasFile("outputFile")){
+            $request->file('outputFile')->storeAs('tests', "$test->id.out");
         }else{
             Storage::put("tests/$test->id.out", $request["outputText"]);
         }
-        if($new){
-            return redirect("/task/$task->task_id/tests")->with('success', "Test case added");
+        if($testChange){
+            return redirect("/task/$task->task_id/tests/$test->id")->with('success', "Test case changed");
         }
-        return redirect("/task/$task->task_id/tests/$test->id")->with('success', "Test case changed");
+        return redirect("/task/$task->task_id/tests")->with('success', "Test case added");
     }
 
     public function deleteTest(Task $task, Test $test)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
+        $level = auth()->user()->level;
         if($test && $test->task->id != $task->id){
             return abort(404);
         }
-        if($myLevel < $task->edit_level){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
             return abort(404);
         }
         Storage::delete(["$test->id.in", "$test->id.out"]);
@@ -290,11 +269,8 @@ class TasksController extends Controller
         if($ext !== 'in' && $ext !== 'out'){
             return abort(404);
         }
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->edit_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))){
             return abort(404);
         }
         $tests = $task->tests;
@@ -313,14 +289,11 @@ class TasksController extends Controller
      */
     public function grader(Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->edit_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
             return abort(404);
         }
-        return view('tasks.grader')->with('task', $task)->with('myLevel', $myLevel);
+        return view('tasks.grader')->with('task', $task)->with('level', $level);
     }
 
     /**
@@ -332,11 +305,8 @@ class TasksController extends Controller
      */
     public function saveGrader(Request $request, Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->edit_level){
+        $level = auth()->user()->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
             return abort(404);
         }
         $validator = Validator::make($request->all(), [
@@ -360,23 +330,17 @@ class TasksController extends Controller
     
     public function submit(Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->submit_level){
+        $level = auth()->user()->level;
+        if($level < $task->submit_level || !$task->published){
             return abort(404);
         }
-        return view('tasks.submit')->with('task', $task)->with('myLevel', $myLevel);
+        return view('tasks.submit')->with('task', $task)->with('level', $level);
     }
 
     public function saveSubmit(Request $request, Task $task)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $task->submit_level){
+        $level = auth()->user()->level;
+        if($level < $task->submit_level || !$task->published){
             return abort(404);
         }
         $sourceSize = $task->source_size * 1024;
@@ -398,5 +362,28 @@ class TasksController extends Controller
         $submission->save();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');
         return redirect("/submission/$submission->id")->with('success', 'Submitted');
+    }
+
+    public function publish(Task $task)
+    {
+        $level = auth()->user()->level;
+        if($level < $task->edit_level || $task->published){
+            return abort(404);
+        }
+        // implement compile grader
+        $task->published = 1;
+        $task->save();
+        return redirect("/task/$task->task_id")->with('success', 'Published');
+    }
+
+    public function unpublish(Task $task)
+    {
+        $level = auth()->user()->level;
+        if($level < $task->edit_level || !$task->published){
+            return abort(404);
+        }
+        $task->published = 0;
+        $task->save();
+        return redirect("/task/$task->task_id")->with('success', 'Unpublished');
     }
 }

@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Tasks
-    @if($myLevel >= 4)
+    @if($level >= 4)
         <a href="/admin/task" class="btn btn-primary float-right">New Task</a>
     @endif
     </h1>
@@ -18,18 +18,25 @@
             </tr></thead>
             <tbody>
             @foreach($tasks as $task)
-                @if($myLevel >= $task->view_level)
+                @if($level >= $task->view_level)
                 <tr class="{{$task->submissions->where('user_id', auth()->user()->id)->where('result', 'Accepted')->isNotEmpty() ? ($loop->iteration % 2 ? 'table-primary' : 'table-info') : ''}}">
                     <td>{{$task->task_id}}</td>
-                <td class="text-center">{{$task->solved}}</td>
-                    <td><a href="/task/{{$task->task_id}}">{{$task->title}}</a></td>
+                    <td class="text-center">{{($level >= $task->submit_level) ? $task->solved : ''}}</td>
+                    <td>
+                        @if(!$task->published)
+                        <span class="badge badge-danger">WIP</span>
+                        @endif
+                        <a href="/task/{{$task->task_id}}">{{$task->title}}</a>
+                    </td>
                     <td class="text-center">
-                        <a href="/task/{{$task->task_id}}" class="btn btn-primary btn-sm">View{{$myLevel >= $task->edit_level ? ": $task->view_level" : ''}}</a>
-                        @if($myLevel >= $task->submit_level)
-                            <a href="/task/{{$task->task_id}}/submit" class="btn btn-primary btn-sm">Submit{{$myLevel >= $task->edit_level ? ": $task->submit_level" : ''}}</a>
-                            @if($myLevel >= $task->edit_level)
-                                <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary btn-sm">Edit{{": $task->edit_level"}}</a>
-                                <a href="/task/{{$task->task_id}}/solution" class="btn btn-primary btn-sm">Solution</a>
+                        <a href="/task/{{$task->task_id}}" class="btn btn-primary btn-sm">View{{($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) ? ": $task->view_level" : ''}}</a>
+                        <a href="/task/{{$task->task_id}}/submit" class="btn btn-primary btn-sm {{($task->published && $level >= $task->submit_level)?'':'disabled'}}">Submit{{($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) ? ": $task->submit_level" : ''}}</a>
+                        @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))
+                            <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary btn-sm {{$task->published?'disabled':''}}">Edit{{": $task->edit_level"}}</a>
+                            <a href="/task/{{$task->task_id}}/tests" class="btn btn-primary btn-sm">Test Cases</a>
+                            <a href="/task/{{$task->task_id}}/solution" class="btn btn-primary btn-sm">Solution</a>
+                            @if($level >= 6)
+                                <a href="/task/{{$task->task_id}}/{{$task->published?'unpublish':'publish'}}" class="btn btn-primary btn-sm">{{$task->published?'Unpublish':'Publish'}}</a>
                             @endif
                         @endif
                     </td>

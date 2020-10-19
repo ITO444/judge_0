@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Submission {{$submission->id}} <a class="btn btn-primary float-right" onclick="rj()">Re-judge</a></h1>
+    <h1>
+        Submission {{$submission->id}}
+        @if($level >= 6 && $level >= $submission->task->edit_level)
+        <a class="btn btn-primary float-right" onclick="rj()">Re-judge</a>
+        @endif
+    </h1>
     <div class="card"><div class="card-body"><div class="row text-center">
         <div class="col"><a href="/submission/{{$submission->id}}">{{$submission->created_at}}</a></div>
         <div class="col"><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></div>
@@ -14,7 +19,7 @@
             <div class="col">Score: {{number_format($submission->score / 1000, 3)}}</div>
         @endif
     </div></div></div><hr/>
-    @if($myLevel >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
+    @if($level >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
         <h6>Compiler message:</h6>
         <pre class="alert alert-info">{{$submission->compiler_warning}}</pre><br/>
     @endif
@@ -26,7 +31,7 @@
             <th class="text-center">Runtime</th>
             <th class="text-center">Memory</th>
             <th class="text-center">Score</th>
-            @if($myLevel >= $submission->task->edit_level)
+            @if($level >= $submission->task->edit_level)
             <th>Grader Feedback</th>
             @endif
         </tr></thead><tbody>
@@ -37,14 +42,14 @@
             <td class="text-center">{{number_format($run->runtime / 1000, 3)}}</td>
             <td class="text-center">{{number_format($run->memory / 1024, 3)}}</td>
             <td class="text-center">{{number_format($run->score / 1000, 3)}}</td>
-            @if($myLevel >= $submission->task->edit_level)
+            @if($level >= $submission->task->edit_level)
             <td><pre class="text-monospace">{{$run->grader_feedback}}</pre></td>
             @endif
         </tr>
     @endforeach
     </tbody></table></div>
     @endif
-    @if($myLevel >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
+    @if($level >= $submission->task->edit_level || $submission->user->id == auth()->user()->id)
     <hr/>
     <div id="editor" class="rounded">{{$submission->source_code}}</div>
     <textarea id='code' class="form-control text-monospace" style="display: none; height: 400px">{{$submission->source_code}}</textarea>

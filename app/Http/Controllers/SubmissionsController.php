@@ -19,14 +19,17 @@ class SubmissionsController extends Controller
      */
     public function index()
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        $submissions = Submission::whereHas('task', function($query)use($myLevel){
-            $query->where('view_level', '<=', $myLevel);
+        $level = auth()->user()->level;
+        $submissions = Submission::whereHas('task', function($query)use($level){
+            $query->where('submit_level', '<=', $level)->where(function ($query)use($level){
+                $query->where('published', '=', 1)
+                      ->orWhere('edit_level', '<=', $level);
+                if($level == 5){
+                    $query->where('edit_level', '<>', 4);
+                }
+            });
         })->orderBy('id', 'desc')->paginate(50);
-        return view('submissions.index')->with('submissions', $submissions)->with('myLevel', $myLevel);
+        return view('submissions.index')->with('submissions', $submissions);
     }
 
     /**
@@ -58,23 +61,18 @@ class SubmissionsController extends Controller
      */
     public function show(Submission $submission)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $submission->task->view_level){
+        $level = auth()->user()->level;
+        $task = $submission->task;
+        if(!($level >= $task->submit_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
             return abort(404);
         }
-        return view('submissions.show')->with('submission', $submission)->with('myLevel', $myLevel);
+        return view('submissions.show')->with('submission', $submission)->with('level', $level);
     }
 
     public function rejudge(Submission $submission)
     {
-        $myLevel = auth()->user()->level;
-        if($myLevel == 4){
-            $myLevel = 7;
-        }
-        if($myLevel < $submission->task->edit_level){
+        $level = auth()->user()->level;
+        if($level < $submission->task->edit_level){
             return abort(404);
         }
         $submission->result = 'On Queue';

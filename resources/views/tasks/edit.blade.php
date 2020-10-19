@@ -51,21 +51,21 @@
             <div class="row form-group">
                 {{Form::label('view_level', 'View Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::selectRange("view_level", 1, $myLevel, $task->view_level, ['class' => 'form-control'])}}
+                    {{Form::selectRange("view_level", 1, $level, $task->view_level, ['class' => 'form-control'])}}
                 </div>
             </div>
 
             <div class="row form-group">
                 {{Form::label('submit_level', 'Submit Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::selectRange("submit_level", 1, $myLevel, $task->submit_level, ['class' => 'form-control'])}}
+                    {{Form::selectRange("submit_level", 1, $level, $task->submit_level, ['class' => 'form-control'])}}
                 </div>
             </div>
 
             <div class="row form-group">
                 {{Form::label('edit_level', 'Edit Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::selectRange("edit_level", 4, $myLevel, $task->edit_level, ['class' => 'form-control'])}}
+                    {{Form::selectRange("edit_level", $level == 5 ? 5 : 4, $level, $task->edit_level, ['class' => 'form-control'])}}
                 </div>
             </div>
 

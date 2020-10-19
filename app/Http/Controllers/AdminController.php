@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Image;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -105,5 +107,58 @@ class AdminController extends Controller
         }
         $users = User::where("attendance", 1)->paginate(20);
         return view('admin.lesson')->with("users", $users)->with("language", $language);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function images(Image $image = NULL)
+    {
+        $imageChange = $image ? $image->name : NULL;
+        $images = Image::orderBy('id', 'desc')->paginate(20);
+        return view('admin.images')->with('images', $images)->with('imageChange', $imageChange);
+    }
+
+    public function saveImage(Request $request, Image $image = NULL)
+    {
+        $imageChange = $image ? $image->name : NULL;
+        if(!$image){
+            $validator = Validator::make($request->all(), [
+                "name" => ['required', 'unique:images', 'max:255', 'alpha_dash'],
+                "description" => ['nullable', 'max:255'],
+                "image" => ['required', 'image', 'max:1024'],
+            ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                "name" => ['required', "unique:images,name,$image->id", 'max:255', 'alpha_dash'],
+                "description" => ['nullable', 'max:255'],
+                "image" => ['nullable', 'image', 'max:1024'],
+            ]);
+        }
+        if ($validator->fails()) {
+            return redirect("/admin/images/$imageChange")->withErrors($validator);
+        }
+        if(!$image){
+            $image = new Image;
+        }
+        $image->name = $request["name"];
+        $image->description = $request["description"] ?: '';
+        if($request->hasFile("image")){
+            if($imageChange){
+                Storage::delete("public/images/$imageChange.$image->extension");
+            }
+            $image->extension = $request->file('image')->extension();
+            $request->file('image')->storeAs('public/images', "$image->name.$image->extension");
+        }else{
+            Storage::move("public/images/$imageChange.$image->extension", "public/images/$image->name.$image->extension");
+        }
+        $image->save();
+
+        if(!$imageChange){
+            return redirect("/admin/images")->with('success', "Image added");
+        }
+        return redirect("/admin/images/$imageChange")->with('success', "Image changed");
     }
 }

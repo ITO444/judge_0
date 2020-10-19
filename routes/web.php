@@ -37,14 +37,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('users/{user:name}', 'AdminController@saveUser')->middleware('admin:5');
     Route::get('task', 'TasksController@create')->middleware('admin:4');
     Route::post('task', 'TasksController@store')->middleware('admin:4');
-    Route::group(['prefix' => 'lesson'], function () {
-        Route::get('{language}', 'AdminController@adminLesson')->middleware('admin:6');
-        //Route::get('{user:name}', 'AdminController@adminAttendUser')->middleware('admin:6');
-        //Route::post('attend', 'AdminController@adminClearAttend')->middleware('admin:6');
-        //Route::get('answer', 'AdminController@adminAnswer')->middleware('admin:6');
-        //Route::post('answer', 'AdminController@adminClearAnswer')->middleware('admin:6');
-        //Route::get('runner/{language}', 'AdminController@adminRunners')->middleware('admin:6');
-    });
+    Route::get('lesson/{language}', 'AdminController@adminLesson')->middleware('admin:6');
+    Route::get('images/{image:name?}', 'AdminController@images')->middleware('admin:4');
+    Route::post('images/{image:name?}', 'AdminController@saveImage')->middleware('admin:4');
 });
 
 Route::group(['prefix' => 'lesson'], function () {
@@ -74,12 +69,16 @@ Route::group(['prefix' => 'task/{task:task_id}'], function () {
 
     Route::get('submit', 'TasksController@submit')->middleware('admin:2');
     Route::post('submit', 'TasksController@saveSubmit')->middleware('admin:2');
+
+    Route::get('publish', 'TasksController@publish')->middleware('admin:6');
+    Route::get('unpublish', 'TasksController@unpublish')->middleware('admin:6');
+
 });
 
 
 Route::get('submissions', 'SubmissionsController@index')->middleware('admin:2');
 Route::get('submission/{submission}', 'SubmissionsController@show')->middleware('admin:2');
-Route::delete('submission/{submission}/rejudge', 'SubmissionsController@rejudge')->middleware('admin:4');
+Route::delete('submission/{submission}/rejudge', 'SubmissionsController@rejudge')->middleware('admin:6');
 
 Auth::routes([
     //'register' => false, // Registration Routes...

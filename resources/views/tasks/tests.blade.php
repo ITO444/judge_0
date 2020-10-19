@@ -2,8 +2,12 @@
 
 @section('content')
     @include("tasks.top")
-    <h3>Manage Test Data <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a></h3>
-    <br/>
+    <h3>
+        Test Data
+        @if(!$task->published)
+        <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a>
+        @endif
+    </h3><br/>
     @if(count($task->tests) > 0)
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover text-center text-nowrap">
@@ -21,8 +25,8 @@
                 <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$test->id}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
-                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary">Edit</a>
-                    <a class="btn btn-primary" onclick="del({{$test->id}})">Delete</a>
+                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>
+                    <a class="btn btn-primary {{$task->published ? 'disabled' : ''}}" onclick="del({{$test->id}})">Delete</a>
                 </td>
             </tr>
             @if($test->id == $testChange)
@@ -90,6 +94,7 @@
     @else
         <p>No test cases found</p>
     @endif
+    @if(!$task->published)
     <div class="card">
         <h3 class="card-header text-center">Add Test</h3><div class="card-body">
         {{Form::open(['action' => ['TasksController@saveTest', $task->task_id], 'files' => 'true'])}}
@@ -144,4 +149,5 @@
             }
         }
     </script>
+    @endif
 @endsection
