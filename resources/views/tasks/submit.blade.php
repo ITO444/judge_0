@@ -24,6 +24,7 @@
     <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var language = "cpp";
+        var ace_modes = {"cpp": "c_cpp", "py": "python"};
         var editor = ace.edit("editor");
         var code = $('#code');
         editor.setTheme("ace/theme/twilight");
@@ -41,6 +42,11 @@
             }
             $('#editor').toggle();
             code.toggle();
+        });
+
+        $('#language').change(function(){
+            language = $('#language').val();
+            editor.session.setMode("ace/mode/" + ace_modes[language]);
         });
     </script>
 @endsection

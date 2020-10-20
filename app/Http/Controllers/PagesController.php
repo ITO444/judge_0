@@ -44,8 +44,13 @@ class PagesController extends Controller
         return redirect('/settings')->with('success', 'Info Saved');
     }
 
-    public function leaderboard(){
-        $users = User::orderBy('solved', 'desc')->paginate(100);
+    public function leaderboard($page = null){
+        if($page == null){
+            $users = User::whereNotNull('google_id')->orderBy('solved', 'desc');
+        }else if($page == 'all'){
+            $users = User::orderBy('solved', 'desc');
+        }
+        $users = $users->paginate(100);
         return view('pages.leaderboard')->with('users', $users);
     }
 }

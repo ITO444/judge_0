@@ -42,5 +42,6 @@
             <a href="/task/{{$task->task_id}}/{{$task->published?'unpublish':'publish'}}" class="btn btn-outline-primary">{{$task->published?'Unpublish':'Publish'}}</a>
         @endif
     @endif
+    <a href="/submissions/task/{{$task->task_id}}" class="btn btn-outline-primary">Submissions</a>
 </div>
 <hr/>

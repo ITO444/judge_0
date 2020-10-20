@@ -2,8 +2,12 @@
 
 @section('content')
     <h1>Submissions
+    @if(isset($user))
+     - User: <a href="/user/{{$user->name}}" class="text-body">{{$user->name}} - {{$user->display}}</a>
+    @elseif(isset($task))
+     - Task: <a href="/task/{{$task->task_id}}" class="text-body">{{$task->task_id}} - {{$task->title}}</a>
+    @endif
     </h1>
-    <br/>
     @if(count($submissions) > 0)
         {{$submissions->links()}}
         <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">

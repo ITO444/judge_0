@@ -23,6 +23,7 @@ Route::get('user/{user:name}', 'PagesController@user');
 Route::get('settings', 'PagesController@settings');
 Route::post('settings', 'PagesController@saveSettings');
 Route::get('leaderboard', 'PagesController@leaderboard')->middleware('admin:3');
+Route::get('leaderboard/{page?}', 'PagesController@leaderboard')->middleware('admin:3');
 
 Route::group(['prefix' => 'runner'], function () {
     Route::get('', 'RunnerController@index')->middleware('admin:2');
@@ -77,6 +78,8 @@ Route::group(['prefix' => 'task/{task:task_id}'], function () {
 
 
 Route::get('submissions', 'SubmissionsController@index')->middleware('admin:2');
+Route::get('submissions/user/{user:name}', 'SubmissionsController@user')->middleware('admin:2');
+Route::get('submissions/task/{task:task_id}', 'SubmissionsController@task')->middleware('admin:2');
 Route::get('submission/{submission}', 'SubmissionsController@show')->middleware('admin:2');
 Route::delete('submission/{submission}/rejudge', 'SubmissionsController@rejudge')->middleware('admin:6');
 

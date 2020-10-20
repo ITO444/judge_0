@@ -32,25 +32,29 @@ class SubmissionsController extends Controller
         return view('submissions.index')->with('submissions', $submissions);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function user(User $user)
     {
-        //
+        $level = auth()->user()->level;
+        $submissions = Submission::where('user_id', $user->id)->whereHas('task', function($query)use($level){
+            $query->where('submit_level', '<=', $level)->where(function ($query)use($level){
+                $query->where('published', '=', 1)
+                      ->orWhere('edit_level', '<=', $level);
+                if($level == 5){
+                    $query->where('edit_level', '<>', 4);
+                }
+            });
+        })->orderBy('id', 'desc')->paginate(50);
+        return view('submissions.index')->with('submissions', $submissions)->with('user', $user);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function task(Task $task)
     {
-        //
+        $level = auth()->user()->level;
+        if(!($level >= $task->submit_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
+            return abort(404);
+        }
+        $submissions = Submission::where('task_id', $task->id)->orderBy('id', 'desc')->paginate(50);
+        return view('submissions.index')->with('submissions', $submissions)->with('task', $task);
     }
 
     /**
