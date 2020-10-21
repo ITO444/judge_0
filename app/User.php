@@ -49,6 +49,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Participation');
     }
 
+    public function done(Task $task){
+        return $this->submissions->where('task_id', $task->id)->where('result', 'Accepted')->isNotEmpty();
+    }
+
     public function getRunnerStatusAttribute($value){
         $strings = [
             -4 => '',

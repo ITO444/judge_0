@@ -25,10 +25,12 @@ class TasksController extends Controller
         $level = auth()->user()->level;
         $tasks = Task::where('view_level', '<=', $level)->where(function ($query) use ($level) {
             $query->where('published', '=', 1)
-                  ->orWhere('edit_level', '<=', $level);
-            if($level == 5){
-                $query->where('edit_level', '<>', 4);
-            }
+                  ->orWhere(function ($query) use ($level) {
+                        $query->where('edit_level', '<=', $level);
+                        if($level == 5){
+                            $query->where('edit_level', '<>', 4);
+                        }
+                    });
         })->orderBy('task_id')->paginate(50);
         return view('tasks.index')->with('tasks', $tasks)->with('level', $level);
     }
@@ -56,7 +58,7 @@ class TasksController extends Controller
             "title" => ['required', 'string', "max:255"],
         ]);
         if ($validator->fails()) {
-            return redirect('/admin/task')->withErrors($validator);
+            return back()->withErrors($validator);
         }
         $level = auth()->user()->level;
         $task = new Task;
@@ -106,7 +108,7 @@ class TasksController extends Controller
     public function edit(Task $task)
     {
         $level = auth()->user()->level;
-        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))){
             return abort(404);
         }
         return view('tasks.edit')->with('task', $task)->with('level', $level);
@@ -145,7 +147,7 @@ class TasksController extends Controller
             "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->task_id/edit")->withErrors($validator);
+            return back()->withErrors($validator);
         }
         $task->task_id = $request["task_id"];
         $task->title = $request["title"];
@@ -166,13 +168,14 @@ class TasksController extends Controller
         $task->grader = $request["grader"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
-        return redirect("/task/$task->task_id/edit")->with('success', 'Saved');
+        return back()->with('success', 'Saved');
     }
 
     public function solution(Task $task)
     {
-        $level = auth()->user()->level;
-        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))){
+        $user = auth()->user();
+        $level = $user->level;
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))){
             return abort(404);
         }
         $task->solution = BB::convertToHtml($task->solution);
@@ -187,10 +190,10 @@ class TasksController extends Controller
     public function tests(Task $task, Test $test = NULL)
     {
         $level = auth()->user()->level;
-        if($test && $test->task->id != $task->id){
+        if($test && ($task->published || $test->task->id != $task->id)){
             return abort(404);
         }
-        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || ($task->published && $test)){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))){
             return abort(404);
         }
         $testChange = NULL;
@@ -225,7 +228,7 @@ class TasksController extends Controller
             "outputText" => ['nullable', 'string', 'max:67108864'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->task_id/tests/$testChange")->withErrors($validator);
+            return back()->withErrors($validator);
         }
         if(!$test){
             $test = new Test;
@@ -244,10 +247,7 @@ class TasksController extends Controller
         }else{
             Storage::put("tests/$test->id.out", $request["outputText"]);
         }
-        if($testChange){
-            return redirect("/task/$task->task_id/tests/$test->id")->with('success', "Test case changed");
-        }
-        return redirect("/task/$task->task_id/tests")->with('success', "Test case added");
+        return back()->with('success', $testChange ? "Test case changed" : "Test case added");
     }
 
     public function deleteTest(Task $task, Test $test)
@@ -261,7 +261,7 @@ class TasksController extends Controller
         }
         Storage::delete(["$test->id.in", "$test->id.out"]);
         $test->delete();
-        return redirect("/task/$task->task_id/tests")->with('success', 'Should I use green for a successful delete?')->with('error', 'Or should I use red since it\'s a delete?');
+        return back()->with('success', 'Should I use green for a successful delete?')->with('error', 'Or should I use red since it\'s a delete?');
     }
 
     public function downloadTest(Task $task, int $testNumber, $ext)
@@ -270,7 +270,7 @@ class TasksController extends Controller
             return abort(404);
         }
         $level = auth()->user()->level;
-        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))){
             return abort(404);
         }
         $tests = $task->tests;
@@ -290,7 +290,7 @@ class TasksController extends Controller
     public function grader(Task $task)
     {
         $level = auth()->user()->level;
-        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) || $task->published){
+        if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))){
             return abort(404);
         }
         return view('tasks.grader')->with('task', $task)->with('level', $level);
@@ -314,7 +314,7 @@ class TasksController extends Controller
             "grader" => ['nullable', 'string', 'max:131072'],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->task_id/grader")->withErrors($validator);
+            return back()->withErrors($validator);
         }
         if($request->option){
             $task->grader = $request["grader"] ?: '';
@@ -325,7 +325,7 @@ class TasksController extends Controller
             $task->grader_status = "";
             $task->save();
         }
-        return redirect("/task/$task->task_id/grader")->with('success', 'Saved');
+        return back()->with('success', 'Saved');
     }
     
     public function submit(Task $task)
@@ -349,7 +349,7 @@ class TasksController extends Controller
             "code" => ['nullable', 'string', "max:$sourceSize"],
         ]);
         if ($validator->fails()) {
-            return redirect("/task/$task->task_id/submit")->withErrors($validator);
+            return back()->withErrors($validator);
         }
         $submission = new Submission;
         $submission->user_id = auth()->user()->id;
@@ -373,7 +373,7 @@ class TasksController extends Controller
         // implement compile grader
         $task->published = 1;
         $task->save();
-        return redirect("/task/$task->task_id")->with('success', 'Published');
+        return back()->with('success', 'Published');
     }
 
     public function unpublish(Task $task)
@@ -384,6 +384,6 @@ class TasksController extends Controller
         }
         $task->published = 0;
         $task->save();
-        return redirect("/task/$task->task_id")->with('success', 'Unpublished');
+        return back()->with('success', 'Unpublished');
     }
 }

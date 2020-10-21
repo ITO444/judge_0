@@ -23,10 +23,12 @@ class SubmissionsController extends Controller
         $submissions = Submission::whereHas('task', function($query)use($level){
             $query->where('submit_level', '<=', $level)->where(function ($query)use($level){
                 $query->where('published', '=', 1)
-                      ->orWhere('edit_level', '<=', $level);
-                if($level == 5){
-                    $query->where('edit_level', '<>', 4);
-                }
+                      ->orWhere(function ($query) use ($level) {
+                            $query->where('edit_level', '<=', $level);
+                            if($level == 5){
+                                $query->where('edit_level', '<>', 4);
+                            }
+                        });
             });
         })->orderBy('id', 'desc')->paginate(50);
         return view('submissions.index')->with('submissions', $submissions);
@@ -38,10 +40,12 @@ class SubmissionsController extends Controller
         $submissions = Submission::where('user_id', $user->id)->whereHas('task', function($query)use($level){
             $query->where('submit_level', '<=', $level)->where(function ($query)use($level){
                 $query->where('published', '=', 1)
-                      ->orWhere('edit_level', '<=', $level);
-                if($level == 5){
-                    $query->where('edit_level', '<>', 4);
-                }
+                      ->orWhere(function ($query) use ($level) {
+                            $query->where('edit_level', '<=', $level);
+                            if($level == 5){
+                                $query->where('edit_level', '<>', 4);
+                            }
+                        });
             });
         })->orderBy('id', 'desc')->paginate(50);
         return view('submissions.index')->with('submissions', $submissions)->with('user', $user);
@@ -70,13 +74,14 @@ class SubmissionsController extends Controller
         if(!($level >= $task->submit_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
             return abort(404);
         }
-        return view('submissions.show')->with('submission', $submission)->with('level', $level);
+        return view('submissions.show')->with('task', $task)->with('submission', $submission)->with('level', $level);
     }
 
     public function rejudge(Submission $submission)
     {
         $level = auth()->user()->level;
-        if($level < $submission->task->edit_level){
+        $task = $submission->task;
+        if($level < $task->edit_level || $task->published){
             return abort(404);
         }
         $submission->result = 'On Queue';

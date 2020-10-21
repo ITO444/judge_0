@@ -2,6 +2,11 @@
 
 @section('content')
 @include("tasks.top")
+@if($task->published)
+    <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
+@elseif($level >= 6)
+    <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
+@endif
 <div class="row justify-content-center"><div class="col-md-8"><div class="card">
     <div class="card-header">Edit grader</div>
     <div class="card-body">
@@ -17,7 +22,12 @@
             {{Form::textarea('grader', $task->grader, ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px'])}}
         </div>
         <div class="form-group mb-0">
-            {{Form::submit('Save', ['class' => 'btn btn-primary'])}} <a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
+            @if($task->published)
+            {{Form::submit('Save', ['class' => 'btn btn-primary disabled', 'disabled'])}}
+            @else
+            {{Form::submit('Save', ['class' => 'btn btn-primary'])}}
+            @endif
+            <a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
         </div>
         {{Form::close()}}
     </div>

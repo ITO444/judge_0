@@ -4,10 +4,13 @@
     @include("tasks.top")
     <h3>
         Test Data
-        @if(!$task->published)
         <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a>
-        @endif
     </h3><br/>
+    @if($task->published)
+        <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
+    @elseif($level >= 6)
+        <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
+    @endif
     @if(count($task->tests) > 0)
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover text-center text-nowrap">
@@ -21,8 +24,8 @@
         @foreach($task->tests as $test)
             <tr>
                 <td><div class="col-form-label">{{$loop->iteration}}</div></td>
-                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$test->id}}/download/in" class="">Download</a> ({{$test->size('in')}}B)</div></td>
-                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$test->id}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/in" class="">Download</a> ({{$test->size('in')}}B)</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/out" class="">Download</a> ({{$test->size('out')}}B)</div></td>
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
                     <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>

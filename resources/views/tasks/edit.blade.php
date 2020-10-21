@@ -2,9 +2,13 @@
 
 @section('content')
     @include("tasks.top")
+    @if($task->published)
+        <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
+    @elseif($level >= 6)
+        <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
+    @endif
     <div class="row justify-content-center"><div class="col-md-10"><div class="card">
         <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Task</a><a href="/task/{{$task->task_id}}/tests" class="btn btn-secondary float-right">Manage test data</a></div>
-        
         <div class="card-body">{{Form::open(['action' => ['TasksController@update', $task->task_id], 'method' => 'POST'])}}
             <div class="row form-group">
                 {{Form::label('task_id', 'Task ID', ['class' => 'col-md-4 col-form-label text-md-right'])}}
@@ -118,7 +122,11 @@
 
             <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
+                    @if($task->published)
+                    {{Form::submit('Save', ['class' => 'btn btn-primary disabled', 'disabled'])}}
+                    @else
                     {{Form::submit('Save', ['class' => 'btn btn-primary'])}}
+                    @endif
                     <a href="/task/{{$task->task_id}}/tests" class="btn btn-secondary">Manage test data</a>
                 </div>
             </div>

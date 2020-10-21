@@ -32,16 +32,11 @@
     @endif
 </div>
 <div class="btn-group">
-    <a href="/task/{{$task->task_id}}" class="btn btn-outline-primary">View{{($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) ? ": $task->view_level" : ''}}</a>
-    <a href="/task/{{$task->task_id}}/submit" class="btn btn-outline-primary {{($task->published && $level >= $task->submit_level)?'':'disabled'}}">Submit{{($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)) ? ": $task->submit_level" : ''}}</a>
-    @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))
-        <a href="/task/{{$task->task_id}}/edit" class="btn btn-outline-primary {{$task->published?'disabled':''}}">Edit{{": $task->edit_level"}}</a>
-        <a href="/task/{{$task->task_id}}/tests" class="btn btn-outline-primary">Test Cases</a>
-        <a href="/task/{{$task->task_id}}/solution" class="btn btn-outline-primary">Solution</a>
-        @if($level >= 6)
-            <a href="/task/{{$task->task_id}}/{{$task->published?'unpublish':'publish'}}" class="btn btn-outline-primary">{{$task->published?'Unpublish':'Publish'}}</a>
-        @endif
+    <a href="/task/{{$task->task_id}}/submit" class="btn btn-success {{($task->published && $level >= $task->submit_level)?'':'disabled'}}">Submit</a>
+    @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))
+        <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary">Edit</a>
+        <a href="/task/{{$task->task_id}}/solution" class="btn btn-secondary">Solution</a>
     @endif
-    <a href="/submissions/task/{{$task->task_id}}" class="btn btn-outline-primary">Submissions</a>
+    <a href="/submissions/task/{{$task->task_id}}" class="btn btn-info">Submissions</a>
 </div>
 <hr/>
