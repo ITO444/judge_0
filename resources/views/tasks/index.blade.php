@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Tasks
+    <h1>Tasks (Number of tasks: {{$tasks->count()}})
     @if($level >= 4)
         <a href="/admin/task" class="btn btn-primary float-right">New Task</a>
     @endif

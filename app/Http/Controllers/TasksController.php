@@ -168,7 +168,7 @@ class TasksController extends Controller
         $task->grader = $request["grader"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
-        return back()->with('success', 'Saved');
+        return redirect("/task/$task->task_id/edit")->with('success', 'Saved');
     }
 
     public function solution(Task $task)
