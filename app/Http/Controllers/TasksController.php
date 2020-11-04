@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessSubmission;
+use App\Jobs\PublishGrader;
 use App\Helpers\BB;
 
 class TasksController extends Controller
@@ -31,8 +32,8 @@ class TasksController extends Controller
                             $query->where('edit_level', '<>', 4);
                         }
                     });
-        })->orderBy('task_id')->paginate(50);
-        return view('tasks.index')->with('tasks', $tasks)->with('level', $level);
+        })->orderBy('task_id');
+        return view('tasks.index')->with('taskCount', $tasks->count())->with('tasks', $tasks->paginate(50))->with('level', $level);
     }
 
     /**
@@ -247,7 +248,10 @@ class TasksController extends Controller
         }else{
             Storage::put("tests/$test->id.out", $request["outputText"]);
         }
-        return back()->with('success', $testChange ? "Test case changed" : "Test case added");
+        if($new){
+            return redirect("/task/$task->task_id/tests")->with('success', "Test case added");
+        }
+        return back()->with('success', "Test case changed");
     }
 
     public function deleteTest(Task $task, Test $test)
@@ -371,9 +375,16 @@ class TasksController extends Controller
             return abort(404);
         }
         // implement compile grader
-        $task->published = 1;
-        $task->save();
-        return back()->with('success', 'Published');
+        if($task->grader_status == ''){
+            $task->published = 1;
+            $task->save();
+            return back()->with('success', 'Published');
+        }
+        if($task->grader_status != 'Compiling' && $task->grader_status != 'On Queue'){
+            $task->grader_status = 'On Queue';
+            PublishGrader::dispatch($task->id)->onQueue('code');
+        }
+        return view('tasks.publish')->with('task', $task)->with('level', $level);
     }
 
     public function unpublish(Task $task)
@@ -383,6 +394,9 @@ class TasksController extends Controller
             return abort(404);
         }
         $task->published = 0;
+        if($task->grader_status != ''){
+            $task->grader_status = 'Saved';
+        }
         $task->save();
         return back()->with('success', 'Unpublished');
     }
