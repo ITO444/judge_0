@@ -21,7 +21,7 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($order = null)
     {
         $level = auth()->user()->level;
         $tasks = Task::where('view_level', '<=', $level)->where(function ($query) use ($level) {
@@ -32,8 +32,15 @@ class TasksController extends Controller
                             $query->where('edit_level', '<>', 4);
                         }
                     });
-        })->orderBy('task_id');
-        return view('tasks.index')->with('taskCount', $tasks->count())->with('tasks', $tasks->paginate(50))->with('level', $level);
+        });
+        if($order === null){
+            $tasks = $tasks->orderBy('task_id');
+        }else if($order === 'solved'){
+            $tasks = $tasks->orderBy('solved', 'desc');
+        }else{
+            abort(404);
+        }
+        return view('tasks.index')->with('taskCount', $tasks->count())->with('tasks', $tasks->paginate(50))->with('level', $level)->with('order', $order);
     }
 
     /**
@@ -144,7 +151,6 @@ class TasksController extends Controller
             "author" => ['nullable', 'string', 'max:255'],
             "origin" => ['nullable', 'string', 'max:255'],
             "statement" => ['nullable', 'string', 'max:65535'],
-            "grader" => ['nullable', 'string', 'max:131072'],
             "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
@@ -166,7 +172,6 @@ class TasksController extends Controller
         $task->author = $request["author"] ?: '';
         $task->origin = $request["origin"] ?: '';
         $task->statement = $request["statement"] ?: '';
-        $task->grader = $request["grader"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
         return redirect("/task/$task->task_id/edit")->with('success', 'Saved');
@@ -248,10 +253,10 @@ class TasksController extends Controller
         }else{
             Storage::put("tests/$test->id.out", $request["outputText"]);
         }
-        if($new){
-            return redirect("/task/$task->task_id/tests")->with('success', "Test case added");
+        if($testChange){
+            return back()->with('success', "Test case changed");
         }
-        return back()->with('success', "Test case changed");
+        return redirect("/task/$task->task_id/tests")->with('success', "Test case added");        
     }
 
     public function deleteTest(Task $task, Test $test)
