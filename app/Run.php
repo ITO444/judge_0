@@ -18,6 +18,7 @@ class Run extends Model
 
     public function getResultAttribute($value){
         $strings = [
+            -5 => 'Saved',
             -4 => '',
             -3 => 'Running',
             -2 => 'Compiling',

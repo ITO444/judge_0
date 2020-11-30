@@ -43,11 +43,18 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "VladimirYuldashev\\LaravelQueueRabbitMQ\\": "app/Overrides/laravel-queue-rabbitmq/src",
+            "Symfony\\Component\\Process\\": "app/Overrides/process"
         },
         "classmap": [
             "database/seeds",
             "database/factories"
+        ],
+        "exclude-from-classmap": [
+            "vendor/vladimir-yuldashev/laravel-queue-rabbitmq/src/Console/ConsumeCommand.php",
+            "vendor/vladimir-yuldashev/laravel-queue-rabbitmq/src/Consumer.php",
+            "vendor/vladimir-yuldashev/laravel-queue-rabbitmq/src/Queue/Jobs/RabbitMQJob.php"
         ]
     },
     "autoload-dev": {

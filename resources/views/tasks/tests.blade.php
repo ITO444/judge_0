@@ -2,15 +2,15 @@
 
 @section('content')
     @include("tasks.top")
-    <h3>
-        Test Data
-        <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a>
-    </h3><br/>
     @if($task->published)
         <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
     @elseif($level >= 6)
         <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
     @endif
+    <h3>
+        Test Data
+        <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a>
+    </h3><br/>
     @if(count($task->tests) > 0)
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover text-center text-nowrap">

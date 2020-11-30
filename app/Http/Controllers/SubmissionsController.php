@@ -81,7 +81,7 @@ class SubmissionsController extends Controller
     {
         $level = auth()->user()->level;
         $task = $submission->task;
-        if($level < $task->edit_level || $task->published){
+        if($level < $task->edit_level || !$task->published){
             return abort(404);
         }
         $submission->result = 'On Queue';

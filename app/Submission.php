@@ -21,6 +21,7 @@ class Submission extends Model
 
     public function getResultAttribute($value){
         $strings = [
+            -5 => 'Saved',
             -4 => '',
             -3 => 'Running',
             -2 => 'Compiling',
@@ -38,6 +39,7 @@ class Submission extends Model
 
     public function setResultAttribute($value){
         $IDs = [
+            'Saved' => -5,
             '' => -4,
             'Running' => -3,
             'Compiling' => -2,

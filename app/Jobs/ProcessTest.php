@@ -74,8 +74,10 @@ class ProcessTest implements ShouldQueue
 
         Storage::copy("tests/$test->id.in", "$boxHereS/input.txt");
         Storage::copy("tests/$test->id.out", "$boxHereS/answer.txt");
-        if($task->grader_status != 'Compiled'){
-            Storage::copy("graders/wcmp.exe", "$boxHereS/grader.exe");
+        if($task->grader_status == 'Accepted'){
+            Storage::copy("/graders/$task->id.exe", "$boxHereS/grader.exe");
+        }else{
+            Storage::copy("/graders/wcmp.exe", "$boxHereS/grader.exe");
         }
         $gradeData = Run::grade($boxId);
         if(!isset($gradeData['exitcode'])){

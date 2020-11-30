@@ -117,6 +117,20 @@ class ProcessSubmission implements ShouldQueue
     }
 
     /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(Throwable $exception)
+    {
+        $submission = Submission::find($this->submissionId);
+        $submission->result = '';
+        $submission->save();
+        return;
+    }
+
+    /**
      * Set boxId
      * Edited files:
      * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Console\ConsumeCommand.php

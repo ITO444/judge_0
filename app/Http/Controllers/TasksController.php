@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessSubmission;
+use App\Jobs\PublishGrader;
 use App\Helpers\BB;
 
 class TasksController extends Controller
@@ -20,7 +21,7 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($order = null)
     {
         $level = auth()->user()->level;
         $tasks = Task::where('view_level', '<=', $level)->where(function ($query) use ($level) {
@@ -31,8 +32,15 @@ class TasksController extends Controller
                             $query->where('edit_level', '<>', 4);
                         }
                     });
-        })->orderBy('task_id')->paginate(50);
-        return view('tasks.index')->with('tasks', $tasks)->with('level', $level);
+        });
+        if($order === null){
+            $tasks = $tasks->orderBy('task_id');
+        }else if($order === 'solved'){
+            $tasks = $tasks->orderBy('solved', 'desc');
+        }else{
+            abort(404);
+        }
+        return view('tasks.index')->with('taskCount', $tasks->count())->with('tasks', $tasks->paginate(50))->with('level', $level)->with('order', $order);
     }
 
     /**
@@ -143,7 +151,6 @@ class TasksController extends Controller
             "author" => ['nullable', 'string', 'max:255'],
             "origin" => ['nullable', 'string', 'max:255'],
             "statement" => ['nullable', 'string', 'max:65535'],
-            "grader" => ['nullable', 'string', 'max:131072'],
             "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
@@ -165,7 +172,6 @@ class TasksController extends Controller
         $task->author = $request["author"] ?: '';
         $task->origin = $request["origin"] ?: '';
         $task->statement = $request["statement"] ?: '';
-        $task->grader = $request["grader"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
         return redirect("/task/$task->task_id/edit")->with('success', 'Saved');
@@ -247,7 +253,10 @@ class TasksController extends Controller
         }else{
             Storage::put("tests/$test->id.out", $request["outputText"]);
         }
-        return back()->with('success', $testChange ? "Test case changed" : "Test case added");
+        if($testChange){
+            return back()->with('success', "Test case changed");
+        }
+        return redirect("/task/$task->task_id/tests")->with('success', "Test case added");        
     }
 
     public function deleteTest(Task $task, Test $test)
@@ -371,9 +380,16 @@ class TasksController extends Controller
             return abort(404);
         }
         // implement compile grader
-        $task->published = 1;
-        $task->save();
-        return back()->with('success', 'Published');
+        if($task->grader_status == ''){
+            $task->published = 1;
+            $task->save();
+            return back()->with('success', 'Published');
+        }
+        if($task->grader_status != 'Compiling' && $task->grader_status != 'On Queue'){
+            $task->grader_status = 'On Queue';
+            PublishGrader::dispatch($task->id)->onQueue('code');
+        }
+        return view('tasks.publish')->with('task', $task)->with('level', $level);
     }
 
     public function unpublish(Task $task)
@@ -383,6 +399,9 @@ class TasksController extends Controller
             return abort(404);
         }
         $task->published = 0;
+        if($task->grader_status != ''){
+            $task->grader_status = 'Saved';
+        }
         $task->save();
         return back()->with('success', 'Unpublished');
     }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Tasks (Number of tasks: {{$tasks->count()}})
+    <h1>Tasks (Number of tasks: {{$taskCount}})
     @if($level >= 4)
         <a href="/admin/task" class="btn btn-primary float-right">New Task</a>
     @endif
@@ -12,7 +12,13 @@
         <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">
             <thead><tr>
                 <th>Task ID</th>
-                <th class="text-center">Solved</th>
+                <th class="text-center">
+                    @if($order == 'solved')
+                        <a href="/tasks">Solved <span class="dropdown-toggle"></span></a>
+                    @else
+                        <a href="/tasks/solved">Solved</span></a>
+                    @endif
+                </th>
                 <th>Title</th>
                 <th class="text-center">Actions</th>
             </tr></thead>

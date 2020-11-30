@@ -24,6 +24,7 @@ class Task extends Model
 
     public function getGraderStatusAttribute($value){
         $strings = [
+            -5 => 'Saved',
             -4 => '',
             -3 => 'Running',
             -2 => 'Compiling',
@@ -41,6 +42,7 @@ class Task extends Model
 
     public function setGraderStatusAttribute($value){
         $IDs = [
+            'Saved' => -5,
             '' => -4,
             'Running' => -3,
             'Compiling' => -2,

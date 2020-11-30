@@ -109,6 +109,15 @@
                     {{$task->tests()->count()}}
                 </div>
             </div>
+
+            <div class="row form-group">
+                <div class="col-md-4 col-form-label text-md-right">
+                    Grader
+                </div>
+                <div class="col-md-6 col-form-label">
+                    {{$task->grader_status?'Custom':'Default'}} <a href="/task/{{$task->task_id}}/grader" class="btn btn-sm btn-primary">Edit Grader</a>
+                </div>
+            </div>
             <hr/>
             <div class="form-group">
                 {{Form::label('statement', 'Statement', ['class' => 'form-label'])}}

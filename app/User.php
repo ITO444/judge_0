@@ -55,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getRunnerStatusAttribute($value){
         $strings = [
+            -5 => 'Saved',
             -4 => '',
             -3 => 'Running',
             -2 => 'Compiling',
@@ -72,6 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function setRunnerStatusAttribute($value){
         $IDs = [
+            'Saved' => -5,
             '' => -4,
             'Running' => -3,
             'Compiling' => -2,
