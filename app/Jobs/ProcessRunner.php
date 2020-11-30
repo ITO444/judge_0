@@ -102,6 +102,20 @@ class ProcessRunner implements ShouldQueue
     }
 
     /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(Throwable $exception)
+    {
+        $user = User::find($userId);
+        $user->runner_status = '';
+        $user->save();
+        return;
+    }
+
+    /**
      * Set boxId
      * Edited files:
      * vendor\vladimir-yuldashev\laravel-queue-rabbitmq\src\Console\ConsumeCommand.php
