@@ -2,11 +2,7 @@
 
 @section('content')
 @include("tasks.top")
-@if($task->published)
-    <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
-@elseif($level >= 6)
-    <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
-@endif
+@include("tasks.publish_warning")
 <div class="row justify-content-center"><div class="col-md-8"><div class="card">
     <div class="card-header">Edit grader</div>
     <div class="card-body">
@@ -18,8 +14,8 @@
         <div class="form-group">
             {{Form::label('grader', 'Grader', ['class' => 'form-label'])}}
             <div class="d-inline text-muted">{{$task->grader_status}}</div>
-            <div id="editor" class="rounded">{{$task->grader}}</div>
-            {{Form::textarea('grader', $task->grader, ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px'])}}
+            <div id="editor" class="rounded editor">{{$task->grader}}</div>
+            {{Form::textarea('grader', $task->grader, ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px', 'id' => 'code'])}}
         </div>
         <div class="form-group mb-0">
             @if($task->published)
@@ -32,28 +28,13 @@
         {{Form::close()}}
     </div>
 </div></div></div>
-<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
-    var language = "cpp";
-    var editor = ace.edit("editor");
-    var grader = $('#grader');
-    editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/c_cpp");
-
-    $("#toggle").click(function(){
-        if(!grader.is(":hidden")){
-            editor.session.setValue(grader.val());
-        }else{
-            grader.val(editor.getSession().getValue());
-        }
-        $('#editor').toggle();
-        grader.toggle();
-    });
-
-    $('form').on('submit', function(e){
-        if(grader.is(":hidden")){
-            grader.val(editor.getSession().getValue());
-        }
-    });
-</script>
 @endsection
+
+@push('scripts')
+<script>
+    var ace_language = "cpp";
+    var ace_theme = "twilight";
+</script>
+<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/dptj/editor.js" type="text/javascript" charset="utf-8"></script>
+@endpush

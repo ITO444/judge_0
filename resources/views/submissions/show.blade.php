@@ -4,7 +4,7 @@
     <h1>
         Submission {{$submission->id}}
         @if($level >= 6 && $level >= $task->edit_level && $task->published)
-        <a class="btn btn-primary float-right" onclick="rj()">Re-judge</a>
+        <a class="btn btn-primary float-right" id="rejudge-button">Re-judge</a>
         @endif
     </h1>
     <div class="card"><div class="card-body"><div class="row text-center">
@@ -51,34 +51,19 @@
     @endif
     @if($submission->user->id == auth()->user()->id || $task->doneBy(auth()->user()) || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6)))
     <hr/>
-    <div id="editor" class="rounded">{{$submission->source_code}}</div>
+    <div id="editor" class="rounded editor">{{$submission->source_code}}</div>
     <textarea id='code' class="form-control text-monospace" style="display: none; height: 400px">{{$submission->source_code}}</textarea>
     <br/><a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
-    {{Form::open(['action' => ['SubmissionsController@rejudge', $submission->id], 'method' => 'delete', 'id' => "rejudge"])}} {{Form::close()}}
-    <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var ace_modes = {"cpp": "c_cpp", "py": "python"};
-        var editor = ace.edit("editor");
-        var code = $('#code');
-        editor.setTheme("ace/theme/twilight");
-        editor.session.setMode("ace/mode/" + ace_modes["{{$submission->language}}"]);
-
-        $("#toggle").click(function(){
-            if(!code.is(":hidden")){
-                editor.session.setValue(code.val());
-            }else{
-                //code.val(editor.getSession().getValue());
-            }
-            $('#editor').toggle();
-            code.toggle();
-        });
-
-        function rj(){
-            var rjForm = $('#rejudge');
-            if(confirm('Are you sure you want to re-judge this submission?')) {
-                rjForm.submit();
-            }
-        }
-    </script>
+    {{Form::open(['action' => ['SubmissionsController@rejudge', $submission->id], 'method' => 'delete', 'id' => "rejudge-form"])}} {{Form::close()}}
     @endif
 @endsection
+
+@push('scripts')
+<script>
+    var ace_language = "{{$submission->language}}";
+    var ace_theme = "twilight";
+</script>
+<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/ace/keybinding-vscode.js"></script>
+<script src="/js/dptj/editor.js" type="text/javascript" charset="utf-8"></script>
+@endpush

@@ -12,7 +12,7 @@
             </div>
             <div class="form-group">
                 {{Form::label('code', 'Source code', ['class' => 'form-label'])}}
-                <div id="editor" class="rounded"></div>
+                <div id="editor" class="rounded editor"></div>
                 {{Form::textarea('code', '', ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px'])}}
             </div>
             <div class="form-group mb-0">
@@ -21,32 +21,13 @@
             {{Form::close()}}
         </div>
     </div></div></div>
-    <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var language = "cpp";
-        var ace_modes = {"cpp": "c_cpp", "py": "python"};
-        var editor = ace.edit("editor");
-        var code = $('#code');
-        editor.setTheme("ace/theme/twilight");
-        editor.session.setMode("ace/mode/c_cpp");
-    
-        editor.getSession().on("change", function(){
-            code.val(editor.getSession().getValue());
-        });
-    
-        $("#toggle").click(function(){
-            if(!code.is(":hidden")){
-                editor.session.setValue(code.val());
-            }else{
-                code.val(editor.getSession().getValue());
-            }
-            $('#editor').toggle();
-            code.toggle();
-        });
-
-        $('#language').change(function(){
-            language = $('#language').val();
-            editor.session.setMode("ace/mode/" + ace_modes[language]);
-        });
-    </script>
 @endsection
+
+@push('scripts')
+<script>
+    var ace_language = "cpp";
+    var ace_theme = "twilight";
+</script>
+<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/dptj/editor.js" type="text/javascript" charset="utf-8"></script>
+@endpush

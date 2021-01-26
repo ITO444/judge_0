@@ -2,11 +2,7 @@
 
 @section('content')
     @include("tasks.top")
-    @if($task->published)
-        <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
-    @elseif($level >= 6)
-        <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
-    @endif
+    @include("tasks.publish_warning")
     <div class="row justify-content-center"><div class="col-md-10"><div class="card">
         <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Task</a><a href="/task/{{$task->task_id}}/tests" class="btn btn-secondary float-right">Manage test data</a></div>
         <div class="card-body">{{Form::open(['action' => ['TasksController@update', $task->task_id], 'method' => 'POST'])}}
@@ -106,7 +102,7 @@
                     Test Cases
                 </div>
                 <div class="col-md-6 col-form-label">
-                    {{$task->tests()->count()}}
+                    {{$task->tests()->count()}} <a href="/task/{{$task->task_id}}/tests" class="btn btn-sm btn-primary">Manage test data</a>
                 </div>
             </div>
 
@@ -121,7 +117,9 @@
             <hr/>
             <div class="form-group">
                 {{Form::label('statement', 'Statement', ['class' => 'form-label'])}}
-                {{Form::textarea("statement", $task->statement, ['class' => 'form-control'])}}
+                <div id="editor" class="rounded editor">{{$task->statement}}</div>
+                {{Form::textarea("statement", $task->statement, ['class' => 'form-control text-monospace', 'style' => 'display: none; height: 400px', 'id' => 'code'])}}
+                <br/><a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
             </div>
             
             <div class="form-group">
@@ -142,3 +140,12 @@
         {{Form::close()}}</div>
     </div></div></div>
 @endsection
+
+@push('scripts')
+<script>
+    var ace_language = "latex";
+    var ace_theme = "textmate";
+</script>
+<script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/dptj/editor.js" type="text/javascript" charset="utf-8"></script>
+@endpush

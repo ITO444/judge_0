@@ -17,11 +17,11 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
-Route::get('', 'PagesController@index');
+Route::get('', 'PagesController@index')->middleware('admin:1');
 
-Route::get('user/{user:name}', 'PagesController@user');
-Route::get('settings', 'PagesController@settings');
-Route::post('settings', 'PagesController@saveSettings');
+Route::get('user/{user:name}', 'PagesController@user')->middleware('admin:1');
+Route::get('settings', 'PagesController@settings')->middleware('admin:1');
+Route::post('settings', 'PagesController@saveSettings')->middleware('admin:1');
 Route::get('leaderboard', 'PagesController@leaderboard')->middleware('admin:3');
 Route::get('leaderboard/{page?}', 'PagesController@leaderboard')->middleware('admin:3');
 

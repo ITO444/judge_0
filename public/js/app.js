@@ -55815,6 +55815,10 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
 window.MathJax = {
   tex: {
     inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  options: {
+    ignoreHtmlClass: 'editor' // the class editor should not be rendered
+
   }
 };
 $('.io').on("click", function () {
@@ -55963,8 +55967,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\code\judge\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\code\judge\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /media/sf_judge/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /media/sf_judge/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

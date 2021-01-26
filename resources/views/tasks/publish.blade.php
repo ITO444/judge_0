@@ -9,16 +9,12 @@
         <div id="message">
         </div>
     </div></div>
-    <script>
-        $( document ).ready(function() {
-            Echo.private('update.publish.{{$task->id}}')
-            .listen('UpdatePublish', (e) => {
-                if(e.result == "Published"){
-                    window.location.replace("/task/{{$task->task_id}}");
-                }
-                $("#result").html(e.result);
-                $("#message").html(e.message);
-            });
-        });
-    </script>
 @endsection
+
+@push('scripts')
+<script>
+    var id = "{{$task->id}}";
+    var task_id = "{{$task->task_id}}";
+</script>
+<script src="/js/dptj/publish-task.js" type="text/javascript" charset="utf-8"></script>
+@endpush

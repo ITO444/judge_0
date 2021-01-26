@@ -2,11 +2,7 @@
 
 @section('content')
     @include("tasks.top")
-    @if($task->published)
-        <div class="alert alert-warning">Please unpublish to edit this task <a href="/task/{{$task->task_id}}/unpublish" class="btn btn-warning btn-sm float-right">Unpublish</a></div>
-    @elseif($level >= 6)
-        <div class="alert alert-info">Please publish this task to enable submissions <a href="/task/{{$task->task_id}}/publish" class="btn btn-info btn-sm float-right">Publish</a></div>
-    @endif
+    @include("tasks.publish_warning")
     <h3>
         Test Data
         <a href="/task/{{$task->task_id}}/grader" class="btn btn-primary float-right">Edit Grader</a>
@@ -29,7 +25,7 @@
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
                     <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>
-                    <a class="btn btn-primary {{$task->published ? 'disabled' : ''}}" onclick="del({{$test->id}})">Delete</a>
+                    <a data-id="{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}} del">Delete</a>
                 </td>
             </tr>
             @if($test->id == $testChange)
@@ -143,14 +139,12 @@
         {{Form::close()}}
     </div></div>
     {{Form::open(['method' => 'delete', 'id' => "delete"])}} {{Form::close()}}
-    <script>
-        function del(id){
-            var delForm = $('#delete');
-            if(confirm('Are you sure you want to delete this test case?')) {
-                delForm.attr("action", "/task/{{$task->task_id}}/tests/"+id);
-                delForm.submit();
-            }
-        }
-    </script>
     @endif
 @endsection
+
+@push('scripts')
+<script>
+    var task_id = "{{$task->task_id}}";
+</script>
+<script src="/js/dptj/delete-test.js" type="text/javascript" charset="utf-8"></script>
+@endpush

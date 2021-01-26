@@ -34,6 +34,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 window.MathJax = {
     tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    options: {
+        ignoreHtmlClass: 'editor', // the class editor should not be rendered
     }
 };
 $('.io').on("click", function() {
