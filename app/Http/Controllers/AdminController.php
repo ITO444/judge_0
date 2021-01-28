@@ -21,7 +21,11 @@ class AdminController extends Controller
     }
 
     public function index(){
-        return view('admin.index')->with('level', auth()->user()->level);
+        $lowerLevel = auth()->user()->level - 1;
+        if($lowerLevel == 4){
+            $lowerLevel = 3;
+        }
+        return view('admin.index')->with('level', auth()->user()->level)->with('lowerLevel', $lowerLevel);
     }
 
     public function viewUsers(){
@@ -45,7 +49,7 @@ class AdminController extends Controller
             return abort(404);
         }
         if($myLevel <= $user->level){
-            return redirect('/admin/users')->with('error', 'The level you set cannot be higher than your level');
+            return back()->with('error', 'The user you edit must be lower than your level');
         }
         $user->name = $request["name"];
         $user->real_name = $request["real_name"];
@@ -53,7 +57,7 @@ class AdminController extends Controller
         $user->email = $request["email"];
         $user->level = $request["level"];
         $user->save();
-        return redirect('/admin/users')->with('success', 'Info Saved');
+        return back()->with('success', 'Info Saved');
     }
 
     public function lesson(){
@@ -69,13 +73,13 @@ class AdminController extends Controller
             "attendance" => ['required', 'integer', 'between:0, 1'],
         ]);
         if ($validator->fails()) {
-            return redirect('/lesson/attend')->withErrors($validator);
+            return back()->withErrors($validator);
         }
         $user = auth()->user();
         $user->attendance = $request["attendance"];
         $user->save();
         $message = $user->attendance ? "Welcome to programming training!" : "Bye, have a nice day!";
-        return redirect('/lesson/attend')->with('success', $message);
+        return back()->with('success', $message);
     }
 
     public function answer(){
@@ -93,12 +97,12 @@ class AdminController extends Controller
             "answer" => ['nullable', 'string', 'max:65535'],
         ]);
         if ($validator->fails()) {
-            return redirect('/lesson/answer')->withErrors($validator);
+            return back()->withErrors($validator);
         }
         $user = auth()->user();
         $user->answer = $request["answer"];
         $user->save();
-        return redirect('/lesson/answer')->with('success', "Thank you for your answer");
+        return back()->with('success', "Thank you for your answer");
     }
 
     public function adminLesson($language){
@@ -160,5 +164,35 @@ class AdminController extends Controller
             return redirect("/admin/images")->with('success', "Image added");
         }
         return redirect("/admin/images/$imageChange")->with('success', "Image changed");
+    }
+
+    public function changeTempLevel(Request $request){
+        $user = auth()->user();
+        $lowerLevel = $user->level - 1;
+        if($lowerLevel == 4){
+            $lowerLevel = 3;
+        }
+        $validator = Validator::make($request->all(), [
+            "level" => ['required', 'integer', "between:0, $lowerLevel"],
+        ]);
+        if ($validator->fails()) {
+            return redirect('/admin')->withErrors($validator);
+        }
+        $level = $user->getRawOriginal("level");
+        $user->temp_level = $request["level"];
+        $user->save();
+        $message = "You are now viewing as user level $user->level, you may revert to user level $level by pressing the button on your navbar.";
+        return redirect('/')->with('success', $message);
+    }
+
+    public function resetTempLevel(){
+        $user = auth()->user();
+        if($user->temp_level >= $user->getRawOriginal("level")){
+            return back();
+        }
+        $user->temp_level = 10;
+        $user->save();
+        $message = "You are now user level $user->level.";
+        return back()->with('success', $message);
     }
 }

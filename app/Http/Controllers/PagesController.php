@@ -49,6 +49,8 @@ class PagesController extends Controller
             $users = User::whereNotNull('google_id')->orderBy('solved', 'desc');
         }else if($page == 'all'){
             $users = User::orderBy('solved', 'desc');
+        }else{
+            abort(404);
         }
         $users = $users->paginate(100);
         return view('pages.leaderboard')->with('users', $users);

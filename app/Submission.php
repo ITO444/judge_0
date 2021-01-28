@@ -18,6 +18,9 @@ class Submission extends Model
     public function runs(){
         return $this->hasMany('App\Run');
     }
+    public function contest(){
+        return $this->belongsTo('App\Contest');
+    }
 
     public function getResultAttribute($value){
         $strings = [

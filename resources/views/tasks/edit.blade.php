@@ -111,7 +111,7 @@
                     Grader
                 </div>
                 <div class="col-md-6 col-form-label">
-                    {{$task->grader_status?'Custom':'Default'}} <a href="/task/{{$task->task_id}}/grader" class="btn btn-sm btn-primary">Edit Grader</a>
+                    {{$task->grader_status?'Custom':'Default'}} <a href="/task/{{$task->task_id}}/grader" class="btn btn-sm btn-secondary">Edit Grader</a>
                 </div>
             </div>
             <hr/>

@@ -18,6 +18,10 @@ class Task extends Model
         return $this->hasMany('App\Test');
     }
 
+    public function contests(){
+        return $this->belongsToMany('App\Contest');
+    }
+
     public function doneBy(User $user){
         return $this->submissions->where('user_id', $user->id)->where('result', 'Accepted')->isNotEmpty();
     }

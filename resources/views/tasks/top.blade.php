@@ -3,11 +3,11 @@
     @if(!$task->published)
     <span class="badge badge-danger">WIP</span>
     @endif
-    @if($task->submissions->where('user_id', auth()->user()->id)->where('result', 'Accepted')->isNotEmpty())
+    @if($task->doneBy(auth()->user()))
     <span class="badge badge-success">Done</span>
     @endif
 </h1>
-<div class="btn-group">
+<div class="btn-group p-1">
     <div class="btn btn-outline-secondary disabled">
         {{$task->task_id}}
     </div>
@@ -31,7 +31,7 @@
     </div>
     @endif
 </div>
-<div class="btn-group">
+<div class="btn-group p-1">
     <a href="/task/{{$task->task_id}}/submit" class="btn btn-success {{($task->published && $level >= $task->submit_level)?'':'disabled'}}">Submit</a>
     @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))
         <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary">Edit</a>

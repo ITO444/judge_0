@@ -17,3 +17,11 @@
         {{session('error')}}
     </div>
 @endif
+
+@if(session('infos'))
+    @foreach(session('infos') as $info)
+        <div class='alert alert-info'>
+            {{$info}}
+        </div>
+    @endforeach
+@endif

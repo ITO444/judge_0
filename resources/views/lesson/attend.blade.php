@@ -9,6 +9,7 @@
             {{Form::label('attendance', $attend)}}
             {{Form::select('attendance', [1 => 'Attend training', 0 => 'Leave training'], auth()->user()->attendance, ['class' => 'form-control'])}}
         </div>
+        <br/>
         <div class="form-group mb-0">
             {{Form::submit('Save', ['class' => 'btn btn-primary'])}}
         </div>

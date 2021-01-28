@@ -50,13 +50,13 @@
             @foreach($users as $user)
                 @if(auth()->user()->level <= $user->level || (auth()->user()->level <= 5 && !$user->google_id))
                     <div class="row form-group">
-                        <div class="col col-form-label">{{$user->name}}</div>
-                        <div class="col col-form-label">{{$user->real_name}}</div>
-                        <div class="col col-form-label">{{$user->display}}</div>
-                        <div class="col col-form-label text-truncate">{{$user->email}}</div>
-                        <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
-                        <div class="col col-form-label">{{$user->level}}</div>
-                        <div class="col"><button type="button" class="btn btn-secondary" disabled>Go</button></div>
+                        <div class="col">{{Form::text("name", $user->name, ['class'=>'form-control', 'readonly'])}}</div>
+                        <div class="col">{{Form::text("real_name", $user->real_name, ['class'=>'form-control', 'readonly'])}}</div>
+                        <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control', 'readonly'])}}</div>
+                        <div class="col">{{Form::email("email", $user->email, ['class'=>'form-control', 'readonly'])}}</div>
+                        <div class="col">{{Form::text("type", $user->google_id ? "DGS" : "Others", ['class'=>'form-control', 'disabled'])}}</div>
+                        <div class="col">{{Form::selectRange("level", 0, auth()->user()->level, $user->level, ['class'=>'form-control', 'readonly'])}}</div>
+                        <div class="col">{{Form::submit('Go', ['class' => 'btn btn-primary disabled', 'disabled'])}}</div>
                     </div>
                 @else
                     {{Form::open(['action' => ['AdminController@saveUser', $user->name], 'method' => 'POST', 'class' => 'row form-group'])}}
@@ -64,7 +64,7 @@
                         <div class="col">{{Form::text("real_name", $user->real_name, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::email("email", $user->email, ['class'=>'form-control'])}}</div>
-                        <div class="col col-form-label">{{$user->google_id?"DGS":"Others"}}</div>
+                        <div class="col">{{Form::text("type", $user->google_id ? "DGS" : "Others", ['class'=>'form-control', 'disabled'])}}</div>
                         <div class="col">{{Form::selectRange("level", 0, auth()->user()->level, $user->level, ['class'=>'form-control'])}}</div>
                         <div class="col">{{Form::submit('Go', ['class' => 'btn btn-primary'])}}</div>
                     {{Form::close()}}

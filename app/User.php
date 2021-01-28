@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -87,5 +88,20 @@ class User extends Authenticatable implements MustVerifyEmail
             'Failed' => 6,
         ];
         $this->attributes['runner_status'] = $IDs[$value];
+    }
+
+    public function getLevelAttribute($value){
+        if(auth()->user() && auth()->user()->id == $this->id){
+            return min($value, $this->attributes['temp_level']);
+        }
+        return $value;
+    }
+
+    public function contestNow(){
+        $now = Carbon::now()->timestamp;
+        $participation = $this->participations->where('start', '<=', $now)->where('end', '>', $now)->firstOr(
+            function(){return NULL;}
+        );
+        return $participation;
     }
 }

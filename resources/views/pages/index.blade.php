@@ -3,11 +3,6 @@
 @section('content')
     <div class="jumbotron text-center">
         <h1>{{config('app.name')}}</h1>
-        Testing MathJax
-        <p>
-            When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
-            \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
-        </p>
         @if(Auth::guest())
             <a href="{{ url('redirect') }}" class="btn btn-primary">
                 Login as DGS Student/Staff
@@ -16,10 +11,12 @@
                 Login as Others
             </a>
         @else
-            <p>Welcome {{auth()->user()->display}}, what would you like to do today?</p>
-            <a href="/runner" class="btn btn-primary">Runner</a>
-            <a href="/user/{{auth()->user()->name}}" class="btn btn-primary">User</a>
-            <a href="/home" class="btn btn-primary">Home</a>
+            <p>Hi {{auth()->user()->display}}!</p><hr/>
+            We strongly advise you all to go to HKOI team trainings.<br/>
+            <a href="https://hkoi.org/en/schedule-2021/">Here</a> is the training schedule.<br/>
+            <a href="https://hkoi.org/en/training-team-general-information/#join">Here</a> is some general information for the training team.<br/>
+            Request to join <a href="https://groups.google.com/a/online.hkoi.org/g/training2021">this Google Group</a> to participate in trainings.<br/>
+            Thank you for your attention!
         @endif
     </div>
 @endsection

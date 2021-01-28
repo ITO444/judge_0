@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Task;
 use App\Test;
+use App\Contest;
 use App\Submission;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
@@ -156,6 +157,7 @@ class TasksController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator);
         }
+        $infos = [];
         $task->task_id = $request["task_id"];
         $task->title = $request["title"];
         $task->source_size = $request["source_size"] ?: 128;
@@ -164,9 +166,15 @@ class TasksController extends Controller
         $task->memory_limit = $request["memory_limit"] ?: 262144;
         $task->view_level = $request["view_level"] ?: $level;
         $task->submit_level = $request["submit_level"] ?: $level;
-        if($task->submit_level < $task->view_level) $task->submit_level = $task->view_level;
+        if($task->submit_level < $task->view_level){
+            $infos[] = "We automatically adjusted the submit level from $task->submit_level to $task->view_level so that it is not lower than the view level";
+            $task->submit_level = $task->view_level;
+        }
         $task->edit_level = $request["edit_level"] ?: $level;
-        if($task->edit_level < $task->submit_level) $task->edit_level = $task->submit_level;
+        if($task->edit_level < $task->submit_level){
+            $infos[] = "We automatically adjusted the edit level from $task->edit_level to $task->submit_level so that it is not lower than the submit level";
+            $task->edit_level = $task->submit_level;
+        }
         $task->task_type = $request["task_type"];
         $task->date_created = $request["date_created"];
         $task->author = $request["author"] ?: '';
@@ -174,7 +182,7 @@ class TasksController extends Controller
         $task->statement = $request["statement"] ?: '';
         $task->solution = $request["solution"] ?: '';
         $task->save();
-        return redirect("/task/$task->task_id/edit")->with('success', 'Saved');
+        return redirect("/task/$task->task_id/edit")->with('success', 'Saved')->with('infos', $infos);
     }
 
     public function solution(Task $task)
@@ -397,6 +405,14 @@ class TasksController extends Controller
         $level = auth()->user()->level;
         if($level < $task->edit_level || !$task->published){
             return abort(404);
+        }
+        $contests = Contest::whereNotNull("tasks->$task->id");
+        if($contests->isNotEmpty()){
+            $infos = [];
+            foreach($contests as $contest){
+                $infos[] = "$contest->id - $contest->name";
+            }
+            return back()->with('infos', $infos)->with('error', 'Please remove it from the following contests before unpublishing this task');
         }
         $task->published = 0;
         if($task->grader_status != ''){

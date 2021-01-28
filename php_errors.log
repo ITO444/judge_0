@@ -1,1 +1,2 @@
 [09-Oct-2020 00:16:32 UTC] PHP Fatal error:  Class App\Helpers\BB may not inherit from final class (Genert\BBCode\BBCode) in /media/sf_judge/app/Helpers/BB.php on line 7
+[27-Jan-2021 16:29:31 Asia/Hong_Kong] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 132124672 bytes) in /media/sf_judge/storage/framework/views/58a0d307350f2e7af6b4a84f5a9ef1c2d0eaa263.php on line 13

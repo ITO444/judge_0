@@ -25,6 +25,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/lesson">Lesson</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contests">Contests</a>
+                </li>
                 @endif
                 @if(auth()->user()->level >= 4)
                 <li class="nav-item">
@@ -59,6 +62,13 @@
                         </div>
                     </li>
                 @else
+                    @if(auth()->user()->temp_level < auth()->user()->getRawOriginal('level'))
+                        <li class="nav-item">
+                            <a class="nav-link text-danger text-small" href="/admin/reset_temp_level">
+                                <small>(Revert to user level {{auth()->user()->getRawOriginal("level")}})</small>
+                            </a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <li>
                             <a class="nav-link" href="/user/{{Auth::user()->name}}">
