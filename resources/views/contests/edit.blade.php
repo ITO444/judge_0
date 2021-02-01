@@ -1,4 +1,6 @@
-<?php use Carbon\Carbon; ?>
+@php
+use Carbon\Carbon;
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -52,14 +54,14 @@
             <div class="row form-group">
                 {{Form::label('start', 'Start Time', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::input('dateTime-local', "start", Carbon::parse($contest->start)->format("Y-m-d\Th:m:s"), ['class' => 'form-control', 'step' => '1'])}}
+                    {{Form::input('dateTime-local', "start", Carbon::parse($contest->start)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
                 </div>
             </div>
 
             <div class="row form-group">
                 {{Form::label('end', 'End Time', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::input('dateTime-local', "end", Carbon::parse($contest->end)->format("Y-m-d\Th:m:s"), ['class' => 'form-control', 'step' => '1'])}}
+                    {{Form::input('dateTime-local', "end", Carbon::parse($contest->end)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
                 </div>
             </div>
             
@@ -73,7 +75,7 @@
             <div class="row form-group">
                 {{Form::label('results', 'Results Reveal Time', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::input('dateTime-local', "results", Carbon::parse($contest->results)->format("Y-m-d\Th:m:s"), ['class' => 'form-control', 'step' => '1'])}}
+                    {{Form::input('dateTime-local', "results", Carbon::parse($contest->results)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
                 </div>
             </div>
 

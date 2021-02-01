@@ -42,6 +42,18 @@ class Contest extends Model
         return $user->participations->where('start', '<', $end)->where('end', '>', $start)->isNotEmpty();
     }
 
+    public function canSeeCon(User $user){
+        $participation = $this->participationOf($user);
+        $contestNow = $user->contestNow();
+        if($contestNow !== null){
+            if($participation === $contestNow){
+                return true;
+            }
+            return false;
+        }
+        return $this->hasEnded();
+    }
+
     public function isOngoing(){
         $now = Carbon::now();
         return $this->published && $this->start <= $now && $this->end > $now;

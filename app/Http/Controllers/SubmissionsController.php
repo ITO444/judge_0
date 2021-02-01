@@ -51,6 +51,26 @@ class SubmissionsController extends Controller
         return view('submissions.index')->with('submissions', $submissions)->with('user', $user);
     }
 
+    public function contest(Contest $contest)
+    {
+        $level = auth()->user()->level;
+        if($level < $contest->view_level){
+            //
+        }
+        $submissions = Submission::where('user_id', $user->id)->whereHas('task', function($query)use($level){
+            $query->where('submit_level', '<=', $level)->where(function ($query)use($level){
+                $query->where('published', '=', 1)
+                      ->orWhere(function ($query) use ($level) {
+                            $query->where('edit_level', '<=', $level);
+                            if($level == 5){
+                                $query->where('edit_level', '<>', 4);
+                            }
+                        });
+            });
+        })->orderBy('id', 'desc')->paginate(50);
+        return view('submissions.index')->with('submissions', $submissions)->with('user', $user);
+    }
+
     public function task(Task $task)
     {
         $level = auth()->user()->level;

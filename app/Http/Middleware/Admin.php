@@ -25,13 +25,7 @@ class Admin
         }
         $contest = $user->contestNow();
         if($contest != null){
-            if($page == 'index'){
-                //
-            }elseif($page == 'task'){
-                //
-            }elseif($page == 'submissions'){
-                //
-            }else{
+            if($page == null){
                 return redirect("/contest/$contest_id");
             }
         }elseif($userLevel < $level) {

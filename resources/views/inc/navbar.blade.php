@@ -62,7 +62,7 @@
                         </div>
                     </li>
                 @else
-                    @if(auth()->user()->temp_level < auth()->user()->getRawOriginal('level'))
+                    @if(Auth::user()->temp_level < Auth::user()->getRawOriginal('level') && Auth::user()->contestNow == null)
                         <li class="nav-item">
                             <a class="nav-link text-danger text-small" href="/admin/reset_temp_level">
                                 <small>(Revert to user level {{auth()->user()->getRawOriginal("level")}})</small>

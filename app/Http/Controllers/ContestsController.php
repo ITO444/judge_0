@@ -161,11 +161,13 @@ class ContestsController extends Controller
         $infos = [];
         $contest->contest_id = $request["contest_id"];
         $contest->name = $request["name"];
-        
-        $contest->start = $request["start"];
-        $contest->end = $request["end"];
+        $start = Carbon::parse($request["start"]);
+        $contest->start = $start->format('Y-m-d H:i:s');
+        $end = Carbon::parse($request["end"]);
+        $contest->end = $end->format('Y-m-d H:i:s');
+        $contest->results = Carbon::parse($request["results"])->format('Y-m-d H:i:s');
         $contest->duration = Carbon::parse($request["duration"])->secondsSinceMidnight();
-        $diffInSeconds = Carbon::parse($contest->end)->diffInSeconds(Carbon::parse($contest->start));
+        $diffInSeconds = $end->diffInSeconds($start);
         if($contest->duration != $diffInSeconds){
             $infos[] = "Note that the contest duration is not the same as the time between the start and end of the contest (You may ignore this if it is intended)";
         }
@@ -192,7 +194,6 @@ class ContestsController extends Controller
         $configuration["cumulative"] = $request["cumulative"] ? true : false;
         $contest->configuration = $configuration;
 
-        $contest->results = $request["results"];
         $contest->description = $request["description"] ?: '';
         $contest->editorial = $request["editorial"] ?: '';
         $contest->save();
