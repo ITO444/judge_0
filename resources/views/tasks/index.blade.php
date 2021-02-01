@@ -34,12 +34,12 @@
                         <a href="/task/{{$task->task_id}}">{{$task->title}}</a>
                     </td>
                     <td class="text-center">
-                        <a href="/task/{{$task->task_id}}/submit" class="btn btn-success btn-sm {{($task->published && $level >= $task->submit_level)?'':'disabled'}}">Submit</a>
+                        <a href="/task/{{$task->task_id}}/submit" class="btn btn-success btn-sm{{($task->published && $level >= $task->submit_level)?'':' disabled'}}">Submit</a>
                         @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))
                             <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary btn-sm">Edit</a>
                             <a href="/task/{{$task->task_id}}/solution" class="btn btn-secondary btn-sm">Solution</a>
                         @endif
-                        <a href="/submissions/task/{{$task->task_id}}" class="btn btn-info btn-sm">Submissions</a>
+                        <a href="/submissions/task/{{$task->task_id}}" class="btn btn-info btn-sm{{($task->published && $level >= $task->submit_level)?'':' disabled'}}">Submissions</a>
                     </td>
                 </tr>
             @endforeach

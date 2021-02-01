@@ -1,4 +1,3 @@
-
 @if($contest->published)
     @if($contest->isOngoing())
         <div class="alert alert-warning">You may not unpublish an ongoing contest</div>

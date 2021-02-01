@@ -36,7 +36,7 @@ class PagesController extends Controller
             "display" => ['required', 'string', 'max:32'],
         ]);
         if ($validator->fails()) {
-            return redirect('/settings')->withErrors($validator);
+            return redirect('/settings')->withErrors($validator)->withInput();
         }
         $user = auth()->user();
         $user->display = $request["display"];

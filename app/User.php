@@ -99,9 +99,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function contestNow(){
         $now = Carbon::now()->timestamp;
-        $participation = $this->participations->where('start', '<=', $now)->where('end', '>', $now)->firstOr(
-            function(){return NULL;}
-        );
+        $participation = $this->participations->where('start', '<=', $now)->where('end', '>', $now)->first();
         return $participation;
     }
 }

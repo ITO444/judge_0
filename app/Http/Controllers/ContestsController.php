@@ -72,7 +72,7 @@ class ContestsController extends Controller
             "name" => ['required', 'string', "max:255"],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $level = auth()->user()->level;
         $contest = new Contest;
@@ -101,12 +101,13 @@ class ContestsController extends Controller
      */
     public function show(Contest $contest)
     {
-        $level = auth()->user()->level;
+        $user = auth()->user();
+        $level = $user->level;
         if(!($level >= $contest->view_level && ($contest->published || ($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4))))){
             return abort(404);
         }
         $contest->description = BB::convertToHtml($contest->description);
-        return view('contests.show')->with('contest', $contest)->with('level', $level);
+        return view('contests.show')->with('contest', $contest)->with('level', $level)->with('user', $user);
     }
 
     /**
@@ -155,7 +156,7 @@ class ContestsController extends Controller
             "editorial" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $infos = [];
         $contest->contest_id = $request["contest_id"];
@@ -200,9 +201,8 @@ class ContestsController extends Controller
 
     public function editorial(Contest $contest)
     {
-        $user = auth()->user();
-        $level = $user->level;
-        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))){
+        $level = auth()->user()->level;
+        if(($level < $contest->edit_level || ($level == 5 && $contest->edit_level == 4)) && (!$contest->hasEnded() || $level < $contest->view_level)){
             return abort(404);
         }
         $contest->editorial = BB::convertToHtml($contest->editorial);
@@ -210,35 +210,189 @@ class ContestsController extends Controller
     }
     
     public function editTasks(Contest $contest){
-        return view('contests.tasks');
+        $level = auth()->user()->level;
+        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))){
+            return abort(404);
+        }
+        return view('contests.tasks')->with('contest', $contest)->with('level', $level);
     }
     
     public function updateTasks(Request $request, Contest $contest){
-        return view('contests.tasks');
+        $level = auth()->user()->level;
+        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && !$contest->published)){
+            return abort(404);
+        }
+        $validator = Validator::make($request->all(), [
+            "task_id" => ['required', 'string', 'exists:tasks,task_id'],
+            "subtasks" => ['required', 'integer', 'between:1, 20'],
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+        $configuration = $contest->configuration;
+        $task = Task::where('task_id', $request["task_id"])->first();
+        /*
+        if(!$task->published){
+            return back()->with('error', 'Please publish the task before adding it')->withInput();
+        }
+        */
+        if(isset($configuration[$task->id])){
+            return back()->with('error', 'Task already added')->withInput();
+        }
+        $subtasks = [];
+        for($i = 1; $i <= $request['subtasks']; $i++){
+            $subtasks[$i] = 0;
+        }
+        $tests = [];
+        foreach($task->tests as $test){
+            $tests[$test->id] = [];
+        }
+        ksort($tests);
+        $configuration['tasks'][$task->id] = [];
+        $configuration['tasks'][$task->id]['subtasks'] = $subtasks;
+        $configuration['tasks'][$task->id]['tests'] = $tests;
+        $contest->configuration = $configuration;
+        $contest->save();
+        return redirect("/contest/$contest->contest_id/edit/task/$task->task_id")->with('success', 'Task added');
     }
 
-    public function editTask(Contest $contest){
-        return view('contests.tasks');
+    public function editTask(Contest $contest, Task $task){
+        $level = auth()->user()->level;
+        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))){
+            return abort(404);
+        }
+        $taskConfig = $contest->configuration['tasks'][$task->id];
+        return view('contests.task')->with('taskConfig', $taskConfig)->with('task', $task)->with('contest', $contest)->with('level', $level);
     }
     
-    public function updateTask(Request $request, Contest $contest){
-        return view('contests.tasks');
+    public function updateTask(Request $request, Contest $contest, Task $task){
+        $level = auth()->user()->level;
+        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))){
+            return abort(404);
+        }
+        $configuration = $contest->configuration;
+        if(!isset($configuration['tasks'][$task->id])){
+            return back()->with('error', 'Task not in contest')->withInput();
+        }
+        $taskConfig = $configuration['tasks'][$task->id];
+        $sC = count($taskConfig['subtasks']);
+        $tC = count($task->tests);
+        $validator = Validator::make($request->all(), [
+            "subtasks" => ['required', 'array', "between:$sC, $sC"],
+            "subtasks.*" => ['required', 'integer', "between:0, 1000"],
+            "tests" => ['array', "between:0, $tC"],
+            "tests.*" => ['required', 'array', "between:0, $sC"],
+            "tests.*.*" => ['boolean'],
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+        foreach($request['subtasks'] as $subtask => $score){
+            if(!isset($taskConfig['subtasks'][$subtask])){
+                abort(404);
+            }
+            $taskConfig['subtasks'][$subtask] = $score;
+        }
+        foreach($task->tests as $test){
+            $taskConfig['tests'][$test->id] = [];
+            for($i = 1; $i <= $sC; $i++){
+                if(isset($request['tests'][$test->id][$i])){
+                    $taskConfig['tests'][$test->id][$i] = true;
+                }
+            }
+        }
+        $configuration['tasks'][$task->id] = $taskConfig;
+        $contest->configuration = $configuration;
+        $contest->save();
+        return back()->with('success', 'Subtask settings updated');
     }
 
-    public function deleteTask(Request $request, Contest $contest){
-        return view('contests.tasks');
+    public function deleteTask(Request $request, Contest $contest, Task $task){
+        $level = auth()->user()->level;
+        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && !$contest->published)){
+            return abort(404);
+        }
+        $configuration = $contest->configuration;
+        if(!isset($configuration['tasks'][$task->id])){
+            return back()->with('error', 'Task not in contest');
+        }
+        unset($configuration['tasks'][$task->id]);
+        $contest->configuration = $configuration;
+        $contest->save();
+        return back()->with('success', 'Task successfully removed');
     }
     
     public function editContestants(Contest $contest){
-        return view('contests.tasks');
+        $level = auth()->user()->level;
+        if($level < $contest->add_level || ($level == 5 && $contest->add_level == 4) || !$contest->published){
+            return abort(404);
+        }
+        return view('contests.add')->with('contest', $contest)->with('level', $level);
     }
     
     public function addContestant(Request $request, Contest $contest){
-        return view('contests.tasks');
+        $level = auth()->user()->level;
+        if($level < $contest->add_level || ($level == 5 && $contest->add_level == 4) || !$contest->published){
+            return abort(404);
+        }
+        $validator = Validator::make($request->all(), [
+            "name" => ['required', 'string', 'exists:users,name'],
+            "start" => ['required', 'date'],
+            "type" => ['boolean'],
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $addUser = User::where('name', $request['name'])->first();
+        $time = Carbon::parse($request["start"]);
+        $start = $time;
+        $end = $time->addSeconds($contest->duration);
+        $type = $request['type'] == true ? 0 : 1;
+
+        if($contest->doneBy($addUser)){
+            return back()->with("error", "$addUser->name is already in this contest")->withInput();
+        }
+        if($contest->hasOverlap($addUser, $start)){
+            return back()->with("error", "$addUser->name is in another contest in the chosen time period")->withInput();
+        }
+        if($type && ($end > $contest->end || $start < $contest->start)){
+            return back()->with("error", "You may not add official participants outside of the official time range of the contest")->withInput();
+        }
+
+        $participation = new Participation;
+        $participation->user_id = $addUser->id;
+        $participation->contest_id = $contest->id;
+        $participation->type = $type;
+        $participation->start = $start;
+        $participation->end = $end;
+        $participation->score = 0;
+
+        $information = ['tasks' => [], 'extra' => 0];
+        $configuration = $contest->configuration;
+        foreach($configuration['tasks'] as $taskId => $taskConfig){
+            $information['tasks'][$taskId]['solve_time'] = null;
+            $information['tasks'][$taskId]['subtasks'] = [];
+            foreach($taskConfig['subtasks'] as $subtask => $score){
+                $information['tasks'][$taskId]['subtasks'][$subtask] = 0;
+            }
+        }
+        $participation->information = $information;
+        $participation->save();
+        return back()->with("success", "Registered")->withInput();
     }
     
-    public function deleteContestant(Request $request, Contest $contest){
-        return view('contests.tasks');
+    public function deleteContestant(Request $request, Contest $contest, Participation $participation){
+        $addUser = $participation->user;
+        $level = $auth()->user()->level;
+        if($level < $contest->add_level || ($level == 5 && $contest->add_level == 4) || !$contest->published){
+            abort(404);
+        }
+        if(!$contest->doneBy($addUser)){
+            abort(404);
+        }
+        $participation->delete();
+        return back()->with('success', "$addUser->name is successfully removed from this contest");
     }
 
     public function register(Request $request, Contest $contest){
@@ -251,7 +405,7 @@ class ContestsController extends Controller
             "type" => ['boolean'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
 
         $time = Carbon::parse($request["start"]);
@@ -260,16 +414,16 @@ class ContestsController extends Controller
         $type = $request['type'] == true ? 0 : 1;
 
         if($start < $contest->start){
-            return back()->with("error", "You may not start the contest before the official start of the contest");
+            return back()->with("error", "You may not start the contest before the official start of the contest")->withInput();
         }
         if($contest->doneBy($user)){
-            return back()->with("error", "You are already in this contest");
+            return back()->with("error", "You are already in this contest")->withInput();
         }
         if($contest->hasOverlap($user, $start)){
-            return back()->with("error", "You are in another contest in the chosen time period");
+            return back()->with("error", "You are in another contest in the chosen time period")->withInput();
         }
         if($type && $end > $contest->end){
-            return back()->with("error", "You may not participate officially if you end after the official end of the contest");
+            return back()->with("error", "You may not participate officially if you end after the official end of the contest")->withInput();
         }
 
         $participation = new Participation;
@@ -291,7 +445,7 @@ class ContestsController extends Controller
         }
         $participation->information = $information;
         $participation->save();
-        return back()->with("success", "Registered");
+        return back()->with("success", "You have successfully registered for the contest! Remember to show up from $participation->start to $participation->end");
     }
     
     public function unregister(Request $request, Contest $contest){
@@ -301,9 +455,18 @@ class ContestsController extends Controller
         }
         $participation = $contest->participationOf($user);
         $participation->delete();
-        return back()->with('success', 'Should I use green for a successful unregistration?')->with('error', 'Or should I use red since it\'s sad you unregistered?');
+        return back()->with('success', 'Successful unregistration');
     }
     
+    public function results(Contest $contest){
+        $level = auth()->user()->level;
+        if($contest->isUpcoming() || !$contest->published || $level < $contest->view_level){
+            return abort(404);
+        }
+        $contest->participations = Participation::where('contest_id', $contest->id)->orderBy('start', 'asc')->orderBy('score', 'desc')->orderBy('type', 'desc')->get();
+        return view('contests.results')->with('contest', $contest)->with('level', $level);
+    }
+
     public function publish(Contest $contest)
     {
         $level = auth()->user()->level;

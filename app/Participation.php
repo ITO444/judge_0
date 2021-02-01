@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Participation extends Model
 {
@@ -20,5 +21,15 @@ class Participation extends Model
 
     public function user(){
         return $this->belongsTo('App\User');
+    }
+    
+    public function isOngoing(){
+        $now = Carbon::now();
+        return $this->start <= $now && $this->end > $now;
+    }
+
+    public function isUpcoming(){
+        $now = Carbon::now();
+        return $this->start > $now;
     }
 }

@@ -13,17 +13,28 @@ class Admin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $level)
+    public function handle($request, Closure $next, $level, $page = null)
     {
         $user = $request->user();
         if(!$user) {
-            return abort(404);
+            return redirect('/login');
         }
         $userLevel = min($user->level, $user->temp_level);
         if($userLevel == 0) {
             return abort(418);
         }
-        if($userLevel < $level) {
+        $contest = $user->contestNow();
+        if($contest != null){
+            if($page == 'index'){
+                //
+            }elseif($page == 'task'){
+                //
+            }elseif($page == 'submissions'){
+                //
+            }else{
+                return redirect("/contest/$contest_id");
+            }
+        }elseif($userLevel < $level) {
             return abort(404);
         }
         return $next($request);

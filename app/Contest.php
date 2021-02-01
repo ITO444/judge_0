@@ -43,18 +43,27 @@ class Contest extends Model
     }
 
     public function isOngoing(){
-        $now = Carbon::now()->timestamp;
+        $now = Carbon::now();
         return $this->published && $this->start <= $now && $this->end > $now;
     }
 
     public function isUpcoming(){
-        $now = Carbon::now()->timestamp;
+        $now = Carbon::now();
         return $this->published && $this->start > $now;
     }
 
+    public function hasEnded(){
+        $now = Carbon::now();
+        return $this->published && $this->end <= $now;
+    }
+
     public function tasks(){
-        $taskArr = array_keys($this->configuration["tasks"]);
+        $taskArr = array_keys($this->tasksConfig());
         return Task::whereIn('id', $taskArr)->get();
+    }
+
+    public function tasksConfig(){
+        return $this->configuration["tasks"];
     }
 
     public function feedback(){

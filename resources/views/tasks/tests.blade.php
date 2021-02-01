@@ -25,7 +25,7 @@
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
                     <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>
-                    <a data-id="{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}} del">Delete</a>
+                    <a data-id="{{$test->id}}" class="btn btn-danger {{$task->published ? 'disabled' : ''}} del">Delete</a>
                 </td>
             </tr>
             @if($test->id == $testChange)
@@ -144,7 +144,7 @@
 
 @push('scripts')
 <script>
-    var task_id = "{{$task->task_id}}";
+    var path = "/task/{{$task->task_id}}/tests/";
 </script>
-<script src="/js/dptj/delete-test.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/dptj/delete-id.js" type="text/javascript" charset="utf-8"></script>
 @endpush

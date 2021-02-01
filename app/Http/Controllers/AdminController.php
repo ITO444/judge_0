@@ -43,7 +43,7 @@ class AdminController extends Controller
             "level" => ['required', 'integer', "between:0, $myLevel"],
         ]);
         if ($validator->fails()) {
-            return redirect('/admin/users')->withErrors($validator);
+            return redirect('/admin/users')->withErrors($validator)->withInput();
         }
         if($myLevel <= 5 && !$user->google_id){
             return abort(404);
@@ -73,7 +73,7 @@ class AdminController extends Controller
             "attendance" => ['required', 'integer', 'between:0, 1'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $user = auth()->user();
         $user->attendance = $request["attendance"];
@@ -97,7 +97,7 @@ class AdminController extends Controller
             "answer" => ['nullable', 'string', 'max:65535'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $user = auth()->user();
         $user->answer = $request["answer"];
@@ -142,7 +142,7 @@ class AdminController extends Controller
             ]);
         }
         if ($validator->fails()) {
-            return redirect("/admin/images/$imageChange")->withErrors($validator);
+            return redirect("/admin/images/$imageChange")->withErrors($validator)->withInput();
         }
         if(!$image){
             $image = new Image;
@@ -176,7 +176,7 @@ class AdminController extends Controller
             "level" => ['required', 'integer', "between:0, $lowerLevel"],
         ]);
         if ($validator->fails()) {
-            return redirect('/admin')->withErrors($validator);
+            return redirect('/admin')->withErrors($validator)->withInput();
         }
         $level = $user->getRawOriginal("level");
         $user->temp_level = $request["level"];

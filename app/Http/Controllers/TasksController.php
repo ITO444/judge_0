@@ -67,7 +67,7 @@ class TasksController extends Controller
             "title" => ['required', 'string', "max:255"],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $level = auth()->user()->level;
         $task = new Task;
@@ -155,7 +155,7 @@ class TasksController extends Controller
             "solution" => ['nullable', 'string', 'max: 65535'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $infos = [];
         $task->task_id = $request["task_id"];
@@ -242,7 +242,7 @@ class TasksController extends Controller
             "outputText" => ['nullable', 'string', 'max:67108864'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         if(!$test){
             $test = new Test;
@@ -250,6 +250,13 @@ class TasksController extends Controller
             $test->input_status = '';
             $test->output_status = '';
             $test->save();
+            $contests = Contest::whereNotNull("configuration->tasks->$task->id");
+            foreach($contests as $contest){
+                $configuration = $contest->configuration;
+                $configuration['tasks'][$task->id]['tests'][$test->id] = [];
+                $contest->configuration = $configuration;
+                $contest->save();
+            }
         }else $test->touch();
         if($request->hasFile("inputFile")){
             $request->file('inputFile')->storeAs('tests', "$test->id.in");
@@ -278,7 +285,14 @@ class TasksController extends Controller
         }
         Storage::delete(["$test->id.in", "$test->id.out"]);
         $test->delete();
-        return back()->with('success', 'Should I use green for a successful delete?')->with('error', 'Or should I use red since it\'s a delete?');
+        $contests = Contest::whereNotNull("configuration->tasks->$task->id");
+        foreach($contests as $contest){
+            $configuration = $contest->configuration;
+            unset($configuration['tasks'][$task->id]['tests'][$test->id]);
+            $contest->configuration = $configuration;
+            $contest->save();
+        }
+        return back()->with('success', 'Testcase successfully deleted');
     }
 
     public function downloadTest(Task $task, int $testNumber, $ext)
@@ -331,7 +345,7 @@ class TasksController extends Controller
             "grader" => ['nullable', 'string', 'max:131072'],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         if($request->option){
             $task->grader = $request["grader"] ?: '';
@@ -366,7 +380,7 @@ class TasksController extends Controller
             "code" => ['nullable', 'string', "max:$sourceSize"],
         ]);
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withErrors($validator)->withInput();
         }
         $submission = new Submission;
         $submission->user_id = auth()->user()->id;
@@ -406,7 +420,8 @@ class TasksController extends Controller
         if($level < $task->edit_level || !$task->published){
             return abort(404);
         }
-        $contests = Contest::whereNotNull("tasks->$task->id");
+        /*
+        $contests = Contest::whereNotNull("configuration->tasks->$task->id");
         if($contests->isNotEmpty()){
             $infos = [];
             foreach($contests as $contest){
@@ -414,6 +429,7 @@ class TasksController extends Controller
             }
             return back()->with('infos', $infos)->with('error', 'Please remove it from the following contests before unpublishing this task');
         }
+        */
         $task->published = 0;
         if($task->grader_status != ''){
             $task->grader_status = 'Saved';

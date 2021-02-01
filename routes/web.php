@@ -99,19 +99,23 @@ Route::group(['prefix' => 'contest/{contest:contest_id}'], function () {
 
     Route::get('edit/contestants', 'ContestsController@editContestants')->middleware('admin:4');
     Route::post('edit/contestants', 'ContestsController@addContestant')->middleware('admin:4');
-    Route::delete('edit/contestants/{user:name}', 'ContestsController@deleteContestant')->middleware('admin:4');
+    Route::delete('edit/contestants/{participation}', 'ContestsController@deleteContestant')->middleware('admin:4');
 
     Route::post('register', 'ContestsController@register')->middleware('admin:1');
     Route::delete('register', 'ContestsController@unregister')->middleware('admin:1');
 
+    Route::get('results', 'ContestsController@results')->middleware('admin:1');
+
     Route::get('publish', 'ContestsController@publish')->middleware('admin:7');
     Route::get('unpublish', 'ContestsController@unpublish')->middleware('admin:7');
-
 });
 
-Route::get('submissions', 'SubmissionsController@index')->middleware('admin:2');
-Route::get('submissions/user/{user:name}', 'SubmissionsController@user')->middleware('admin:2');
-Route::get('submissions/task/{task:task_id}', 'SubmissionsController@task')->middleware('admin:2');
+Route::group(['prefix' => 'submissions'], function () {
+    Route::get('', 'SubmissionsController@index')->middleware('admin:2');
+    Route::get('user/{user:name}', 'SubmissionsController@user')->middleware('admin:2');
+    Route::get('task/{task:task_id}', 'SubmissionsController@task')->middleware('admin:2');
+    Route::get('contest/{contest:contest_id}', 'SubmissionsController@contest')->middleware('admin:2');
+});
 Route::get('submission/{submission}', 'SubmissionsController@show')->middleware('admin:2');
 Route::delete('submission/{submission}/rejudge', 'SubmissionsController@rejudge')->middleware('admin:6');
 

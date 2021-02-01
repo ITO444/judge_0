@@ -5,7 +5,7 @@
     @include("contests.top")
     @include("contests.publish_warning")
     <div class="row justify-content-center"><div class="col-md-10"><div class="card">
-        <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Contest</a><a href="/contest/{{$contest->contest_id}}/edit/tasks" class="btn btn-secondary float-right">Manage tasks</a></div>
+        <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Contest</a><a href="/contest/{{$contest->contest_id}}/edit/tasks" class="btn btn-secondary float-right{{($contest->published && $level < 6) ? ' disabled' : ''}}">Manage tasks</a></div>
         <div class="card-body">{{Form::open(['action' => ['ContestsController@update', $contest->contest_id], 'method' => 'POST'])}}
             <div class="row form-group">
                 {{Form::label('contest_id', 'Contest ID', ['class' => 'col-md-4 col-form-label text-md-right'])}}
@@ -78,7 +78,7 @@
             </div>
 
             <div class="row form-group">
-                {{Form::label('feedback', 'Feedback', ['class' => 'col-md-4 col-form-check-label text-md-right'])}}
+                {{Form::label('feedback', 'Instant Feedback', ['class' => 'col-md-4 col-form-check-label text-md-right'])}}
                 <div class="col-md-6">
                     <div class="form-check">
                         {{Form::checkbox('feedback', true, $contest->configuration["feedback"], ['class' => 'form-check-input'])}}
@@ -100,7 +100,7 @@
                     Tasks
                 </div>
                 <div class="col-md-6 col-form-label">
-                    {{count($contest->tasks())}} <a href="/contest/{{$contest->contest_id}}/edit/tasks" class="btn btn-sm btn-secondary">Manage tasks</a>
+                    {{count($contest->tasks())}} <a href="/contest/{{$contest->contest_id}}/edit/tasks" class="btn btn-sm btn-secondary{{($contest->published && $level < 6) ? ' disabled' : ''}}">Manage tasks</a>
                 </div>
             </div>
 
@@ -124,7 +124,7 @@
                     @else
                     {{Form::submit('Save', ['class' => 'btn btn-primary'])}}
                     @endif
-                    <a href="/contest/{{$contest->contest_id}}/edit/tasks" class="btn btn-secondary">Manage tasks</a>
+                    <a href="/contest/{{$contest->contest_id}}/edit/tasks" class="btn btn-secondary{{($contest->published && $level < 6) ? ' disabled' : ''}}">Manage tasks</a>
                 </div>
             </div>
         {{Form::close()}}</div>
