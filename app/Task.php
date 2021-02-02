@@ -23,7 +23,7 @@ class Task extends Model
     }
 
     public function doneBy(User $user){
-        return $this->submissions->where('user_id', $user->id)->where('result', 'Accepted')->isNotEmpty();
+        return $this->submissions->where('participation_id', null)->where('user_id', $user->id)->where('result', 'Accepted')->isNotEmpty();
     }
 
     public function getGraderStatusAttribute($value){

@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Task;
 use App\Test;
+use App\Contest;
+use App\Participation;
 use App\Submission;
+use Carbon\Carbon;
 use App\Jobs\ProcessSubmission;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,7 +34,7 @@ class SubmissionsController extends Controller
                         });
             });
         })->orderBy('id', 'desc')->paginate(50);
-        return view('submissions.index')->with('submissions', $submissions);
+        return view('submissions.index')->with('submissions', $submissions)->with('level', $level);
     }
 
     public function user(User $user)
@@ -48,27 +51,28 @@ class SubmissionsController extends Controller
                         });
             });
         })->orderBy('id', 'desc')->paginate(50);
-        return view('submissions.index')->with('submissions', $submissions)->with('user', $user);
+        return view('submissions.index')->with('submissions', $submissions)->with('level', $level)->with('user', $user);
     }
 
     public function contest(Contest $contest)
     {
-        $level = auth()->user()->level;
-        if($level < $contest->view_level){
-            //
+        $user = auth()->user();
+        $level = $user->level;
+        $contestNow = $user->contestNow();
+        $participation = $contest->participationOf($user);
+        if($participation == null){
+            abort(404);
         }
-        $submissions = Submission::where('user_id', $user->id)->whereHas('task', function($query)use($level){
-            $query->where('submit_level', '<=', $level)->where(function ($query)use($level){
-                $query->where('published', '=', 1)
-                      ->orWhere(function ($query) use ($level) {
-                            $query->where('edit_level', '<=', $level);
-                            if($level == 5){
-                                $query->where('edit_level', '<>', 4);
-                            }
-                        });
-            });
-        })->orderBy('id', 'desc')->paginate(50);
-        return view('submissions.index')->with('submissions', $submissions)->with('user', $user);
+        if($contestNow != null){
+            if($contestNow->id != $participation->id){
+                return redirect('/contest/'.$contestNow->contest->contest_id);
+            }
+        }elseif($level < $contest->view_level || $contest->end > Carbon::now()){
+            abort(404);
+        }
+        $submissions = Submission::where('participation_id', $participation->id)->orderBy('id', 'desc')->paginate(50);
+        $feedback = $contest->feedback() || ($level >= 7 && $level >= $contest->edit_level && $contestNow == null);
+        return view('submissions.index')->with('submissions', $submissions)->with('contest', $contest)->with('user', $user)->with('level', $level)->with('noFeedback', !$feedback);
     }
 
     public function task(Task $task)
@@ -78,7 +82,7 @@ class SubmissionsController extends Controller
             return abort(404);
         }
         $submissions = Submission::where('task_id', $task->id)->orderBy('id', 'desc')->paginate(50);
-        return view('submissions.index')->with('submissions', $submissions)->with('task', $task);
+        return view('submissions.index')->with('submissions', $submissions)->with('task', $task)->with('level', $level);
     }
 
     /**
@@ -89,12 +93,24 @@ class SubmissionsController extends Controller
      */
     public function show(Submission $submission)
     {
-        $level = auth()->user()->level;
+        $user = auth()->user();
+        $level = $user->level;
+        $contestNow = $user->contestNow();
         $task = $submission->task;
-        if(!($level >= $task->submit_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
-            return abort(404);
+        if($contestNow != null){
+            if($contestNow->id != $submission->participation->id){
+                return redirect('/contest/'.$contestNow->contest->contest_id);
+            }
+        }elseif(!($level >= $task->submit_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)))) || ($submission->participation !== null && $submission->participation->user_id != auth()->user()->id && auth()->user()->level < 7)){
+            abort(404);
         }
-        return view('submissions.show')->with('task', $task)->with('submission', $submission)->with('level', $level);
+        $participation = $submission->participation;
+        if($participation != null){
+            $feedback = $participation->contest->feedback() || ($level >= 7 && $level >= $participation->contest->edit_level && $contestNow == null);
+        }else{
+            $feedback = 1;
+        }
+        return view('submissions.show')->with('task', $task)->with('submission', $submission)->with('level', $level)->with('noFeedback', !$feedback);
     }
 
     public function rejudge(Submission $submission)

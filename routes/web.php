@@ -59,7 +59,7 @@ Route::group(['prefix' => 'lesson'], function () {
 Route::get('tasks/{order?}', 'TasksController@index')->middleware('admin:2');
 
 Route::group(['prefix' => 'task/{task:task_id}'], function () {
-    Route::get('', 'TasksController@show')->middleware('admin:2');
+    Route::get('', 'TasksController@show')->middleware('admin:2, 1');
     Route::get('solution', 'TasksController@solution')->middleware('admin:4');
 
     Route::get('edit', 'TasksController@edit')->middleware('admin:4');
@@ -73,8 +73,8 @@ Route::group(['prefix' => 'task/{task:task_id}'], function () {
     Route::get('grader', 'TasksController@grader')->middleware('admin:4');
     Route::post('grader', 'TasksController@saveGrader')->middleware('admin:4');
 
-    Route::get('submit', 'TasksController@submit')->middleware('admin:2');
-    Route::post('submit', 'TasksController@saveSubmit')->middleware('admin:2');
+    Route::get('submit', 'TasksController@submit')->middleware('admin:2, 1');
+    Route::post('submit', 'TasksController@saveSubmit')->middleware('admin:2, 1');
 
     Route::get('publish', 'TasksController@publish')->middleware('admin:6');
     Route::get('unpublish', 'TasksController@unpublish')->middleware('admin:6');
@@ -84,7 +84,7 @@ Route::group(['prefix' => 'task/{task:task_id}'], function () {
 Route::get('contests/{page?}', 'ContestsController@index')->middleware('admin:2');
 
 Route::group(['prefix' => 'contest/{contest:contest_id}'], function () {
-    Route::get('', 'ContestsController@show')->middleware('admin:2');
+    Route::get('', 'ContestsController@show')->middleware('admin:2, 1');
     Route::get('editorial', 'ContestsController@editorial')->middleware('admin:4');
 
     Route::get('edit', 'ContestsController@edit')->middleware('admin:4');
@@ -104,7 +104,7 @@ Route::group(['prefix' => 'contest/{contest:contest_id}'], function () {
     Route::post('register', 'ContestsController@register')->middleware('admin:1');
     Route::delete('register', 'ContestsController@unregister')->middleware('admin:1');
 
-    Route::get('results', 'ContestsController@results')->middleware('admin:1');
+    Route::get('results', 'ContestsController@results')->middleware('admin:1, 1');
 
     Route::get('publish', 'ContestsController@publish')->middleware('admin:7');
     Route::get('unpublish', 'ContestsController@unpublish')->middleware('admin:7');
@@ -114,9 +114,9 @@ Route::group(['prefix' => 'submissions'], function () {
     Route::get('', 'SubmissionsController@index')->middleware('admin:2');
     Route::get('user/{user:name}', 'SubmissionsController@user')->middleware('admin:2');
     Route::get('task/{task:task_id}', 'SubmissionsController@task')->middleware('admin:2');
-    Route::get('contest/{contest:contest_id}', 'SubmissionsController@contest')->middleware('admin:2');
+    Route::get('contest/{contest:contest_id}', 'SubmissionsController@contest')->middleware('admin:2, 1');
 });
-Route::get('submission/{submission}', 'SubmissionsController@show')->middleware('admin:2');
+Route::get('submission/{submission}', 'SubmissionsController@show')->middleware('admin:2, 1');
 Route::delete('submission/{submission}/rejudge', 'SubmissionsController@rejudge')->middleware('admin:6');
 
 Auth::routes([
@@ -128,7 +128,7 @@ Auth::routes([
 Route::get('/redirect', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('admin:1');
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('admin:1');

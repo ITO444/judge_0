@@ -2,6 +2,7 @@
 
 @section('content')
     @include("contests.top")
+    @include("contests.publish_warning")
     <h1>Manage Contestants</h1>
     <hr/>
     <div class="card">
@@ -15,7 +16,7 @@
 
                 <div class="form-group">
                     {{Form::label('start', 'Start Time', ['class' => 'form-label'])}}
-                    {{Form::input('dateTime-local', "start", Carbon\Carbon::parse($contest->start)->format("Y-m-d\Th:m:s"), ['class' => 'form-control', 'step' => '1'])}}
+                    {{Form::input('dateTime-local', "start", Carbon\Carbon::parse($contest->start)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
                 </div>
     
                 <div class="form-group">
@@ -25,7 +26,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {{Form::submit('Register', ['class' => 'btn btn-success'])}}
+                    {{Form::submit('Add', ['class' => 'btn btn-success'])}}
                 </div>
             {{Form::close()}}
         </div>

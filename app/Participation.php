@@ -23,6 +23,10 @@ class Participation extends Model
         return $this->belongsTo('App\User');
     }
     
+    public function submissions(){
+        return $this->hasMany('App\Submission');
+    }
+    
     public function isOngoing(){
         $now = Carbon::now();
         return $this->start <= $now && $this->end > $now;

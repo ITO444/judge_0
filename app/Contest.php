@@ -19,10 +19,6 @@ class Contest extends Model
         return $this->hasMany('App\Participation');
     }
 
-    public function submissions(){
-        return $this->hasMany('App\Submission');
-    }
-
     public function participationOf(User $user){
         return $this->participations->where('user_id', $user->id)->first();
     }
@@ -38,8 +34,42 @@ class Contest extends Model
 
     public function hasOverlap(User $user, Carbon $time){
         $start = $time;
-        $end = $time->addSeconds($this->duration);
+        $end = $time->copy()->addSeconds($this->duration);
         return $user->participations->where('start', '<', $end)->where('end', '>', $start)->isNotEmpty();
+    }
+
+    public function canSeeSubmissions(User $user){
+        $level = $user->level;
+        $participation = $this->participationOf($user);
+        $contestNow = $user->contestNow();
+        if($participation == null){
+            return false;
+        }
+        if($contestNow != null){
+            if($contestNow->id != $participation->id){
+                return false;
+            }
+        }elseif($level < $this->view_level || $this->end > Carbon::now()){
+            return false;
+        }
+        return true;
+    }
+
+    public function canSeeResults(User $user){
+        $user = auth()->user();
+        $level = $user->level;
+        $participation = $user->contestNow();
+        if($participation !== null){
+            if($participation->contest_id != $this->id){
+                return false;
+            }
+        }elseif($this->isUpcoming() || !$this->published || $level < $this->view_level){
+            return false;
+        }
+        if($this->results > Carbon::now() && ($level < $this->edit_level || ($level == 5 && $this->edit_level == 4))){
+            return false;
+        }
+        return true;
     }
 
     public function canSeeCon(User $user){

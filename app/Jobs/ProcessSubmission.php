@@ -85,34 +85,81 @@ class ProcessSubmission implements ShouldQueue
         });
         $batch = Bus::batch($batchArr)->finally(function (Batch $batch) use ($submission) {
             $submission->refresh();
+            $task = $submission->task;
             $runs = $submission->runs;
             $count = $runs->count();
+            $participation = $submission->participation;
             if($count == $runs->where('result', 'Accepted')->count()){
                 $submission->result = 'Accepted';
                 $submission->score = 100000;
                 $submission->save();
             }else{
-                $submission->score = $submission->runs->avg('score');
-                if($runs->whereIn('result', ['Running', 'On Queue', 'Failed', ''])->first()){
-                    $submission->result = 'Failed';
-                }else if($runs->where('result', 'Wrong Answer')->first()){
-                    $submission->result = 'Wrong Answer';
-                }else if($runs->where('result', 'Time Limit Exceeded')->first()){
-                    $submission->result = 'Time Limit Exceeded';
-                }else if($runs->where('result', 'Runtime Error')->first()){
-                    $submission->result = 'Runtime Error';
+                if($participation == null){
+                    $submission->score = $submission->runs->avg('score');
+                    if($runs->whereIn('result', ['Running', 'On Queue', 'Failed', ''])->first()){
+                        $submission->result = 'Failed';
+                    }else if($runs->where('result', 'Wrong Answer')->first()){
+                        $submission->result = 'Wrong Answer';
+                    }else if($runs->where('result', 'Time Limit Exceeded')->first()){
+                        $submission->result = 'Time Limit Exceeded';
+                    }else if($runs->where('result', 'Runtime Error')->first()){
+                        $submission->result = 'Runtime Error';
+                    }else{
+                        $submission->result = '';
+                    }
                 }else{
-                    $submission->result = '';
+                    $submission->result = $runs->where('result', '<>', 'Accepted')->first()->result;
                 }
                 $submission->save();
             }
             Storage::deleteDirectory("/judging/$submission->id");
-            $task = $submission->task;
-            $task->solved = $task->submissions->where('result', 'Accepted')->unique('user_id')->count();
-            $task->save();
             $user = $submission->user;
-            $user->solved = $user->submissions->where('result', 'Accepted')->unique('task_id')->count();
-            $user->save();
+            if($participation !== null){
+                $information = $participation->information;
+                $contest = $participation->contest;
+                $submissions = $task->submissions->where('participation_id', $participation->id);
+                $firstAC = $submissions->where('result', 'Accepted')->first();
+                if($contest->cumulative()){
+                    $scores = $submission->subtaskScores();
+                    $scores['score'] = 0;
+                    if($firstAC != null){
+                        $scores['solve_time'] = $firstAC->created_at;
+                    }else{
+                        $scores['solve_time'] = null;
+                    }
+                    foreach($submissions as $submission2){
+                        $scores2 = $submission2->subtaskScores();
+                        foreach($scores['subtasks'] as $subtask => $score){
+                            $scores['subtasks'][$subtask] = max($scores['subtasks'][$subtask], $scores2['subtasks'][$subtask]);
+                        }
+                    }
+                    foreach($scores['subtasks'] as $subtask => $score){
+                        $scores['score'] += $scores['subtasks'][$subtask];
+                    }
+                    $information['tasks'][$task->id] = $scores;
+                }else{
+                    $information['tasks'][$task->id] = $submission->subtaskScores();
+                    if($firstAC != null){
+                        $information['tasks'][$task->id]['solve_time'] = $firstAC->created_at;
+                    }else{
+                        $information['tasks'][$task->id]['solve_time'] = null;
+                    }
+                }
+                $participation->score = 0;
+                foreach($information['tasks'] as $taskid => $scores){
+                    $participation->score += $scores['score'];
+                }
+                $submission->score = $information['tasks'][$task->id]['score'];
+                $submission->save();
+                $participation->information = $information;
+                $participation->save();
+            }else{
+                $task = $submission->task;
+                $task->solved = $task->submissions->where('participation_id', null)->where('result', 'Accepted')->unique('user_id')->count();
+                $task->save();
+                $user->solved = $user->submissions->where('participation_id', null)->where('result', 'Accepted')->unique('task_id')->count();
+                $user->save();
+            }
         })->allowFailures()->onQueue('code')->dispatch();
     }
 

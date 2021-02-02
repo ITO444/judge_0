@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function done(Task $task){
-        return $this->submissions->where('task_id', $task->id)->where('result', 'Accepted')->isNotEmpty();
+        return $this->submissions->where('participation_id', null)->where('task_id', $task->id)->where('result', 'Accepted')->isNotEmpty();
     }
 
     public function getRunnerStatusAttribute($value){
@@ -98,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function contestNow(){
-        $now = Carbon::now()->timestamp;
+        $now = Carbon::now();
         $participation = $this->participations->where('start', '<=', $now)->where('end', '>', $now)->first();
         return $participation;
     }

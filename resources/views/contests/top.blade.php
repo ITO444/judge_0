@@ -27,15 +27,17 @@
 <br/>
 <div class="btn-group p-1">
     @if(!($level < $contest->add_level || ($level == 5 && $contest->add_level == 4) || !$contest->published))
-        <a href="/contest/{{$contest->contest_id}}/edit/contestants" class="btn btn-success">Add Participants</a>
+        <a href="/contest/{{$contest->contest_id}}/edit/contestants" class="btn btn-success">Manage Contestants</a>
     @endif
     @if($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))
         <a href="/contest/{{$contest->contest_id}}/edit" class="btn btn-primary">Edit</a>
     @endif
-    @if(!($contest->isUpcoming() || !$contest->published || $level < $contest->view_level))
+    @if($contest->canSeeResults(auth()->user()))
         <a href="/contest/{{$contest->contest_id}}/results" class="btn btn-dark">Results</a>
     @endif
+    @if($contest->canSeeSubmissions(auth()->user()))
     <a href="/submissions/contest/{{$contest->contest_id}}" class="btn btn-info">Submissions</a>
+    @endif
     @if(!($level < $contest->edit_level || ($level == 5 && $contest->edit_level == 4)) || !(!$contest->hasEnded() || $level < $contest->view_level))
         <a href="/contest/{{$contest->contest_id}}/editorial" class="btn btn-secondary">Editorial</a>
     @endif

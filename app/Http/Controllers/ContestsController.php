@@ -39,14 +39,14 @@ class ContestsController extends Controller
             });
             return view('contests.all')->with('contests', $contests->paginate(50))->with('level', $level);
         }
-        if($page == null){
-            $now = Carbon::now()->timestamp;
-            $contests = Contest::where('view_level', '<=', $level)->where('published', '=', 1);
-            $ongoing = $contests->where('start', '<=', $now)->where('end', '>', $now)->get();
-            $upcoming = $contests->where('start', '>', $now)->get();
-            return view('contests.index')->with('ongoing', $ongoing)->with('upcoming', $upcoming)->with('level', $level);
+        if($page != null){
+            abort(404);
         }
-        abort(404);
+        $now = Carbon::now()->timestamp;
+        $contests = Contest::where('view_level', '<=', $level)->where('published', '=', 1);
+        $ongoing = $contests->where('start', '<=', $now)->where('end', '>', $now)->get();
+        $upcoming = $contests->where('start', '>', $now)->get();
+        return view('contests.index')->with('ongoing', $ongoing)->with('upcoming', $upcoming)->with('level', $level);
     }
 
     /**
@@ -103,7 +103,12 @@ class ContestsController extends Controller
     {
         $user = auth()->user();
         $level = $user->level;
-        if(!($level >= $contest->view_level && ($contest->published || ($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4))))){
+        $participation = $user->contestNow();
+        if($participation !== null){
+            if($participation->contest_id != $contest->id){
+                return redirect('/contest/'.$participation->contest->contest_id);
+            }
+        }elseif(!($level >= $contest->view_level && ($contest->published || ($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4))))){
             return abort(404);
         }
         $contest->description = BB::convertToHtml($contest->description);
@@ -165,7 +170,7 @@ class ContestsController extends Controller
         $contest->start = $start->format('Y-m-d H:i:s');
         $end = Carbon::parse($request["end"]);
         $contest->end = $end->format('Y-m-d H:i:s');
-        $contest->results = Carbon::parse($request["results"])->format('Y-m-d H:i:s');
+        $contest->results = Carbon::parse($request["results"]);
         $contest->duration = Carbon::parse($request["duration"])->secondsSinceMidnight();
         $diffInSeconds = $end->diffInSeconds($start);
         if($contest->duration != $diffInSeconds){
@@ -346,9 +351,8 @@ class ContestsController extends Controller
         }
 
         $addUser = User::where('name', $request['name'])->first();
-        $time = Carbon::parse($request["start"]);
-        $start = $time;
-        $end = $time->addSeconds($contest->duration);
+        $start = Carbon::parse($request["start"]);
+        $end = $start->copy()->addSeconds($contest->duration);
         $type = $request['type'] == true ? 0 : 1;
 
         if($contest->doneBy($addUser)){
@@ -373,6 +377,7 @@ class ContestsController extends Controller
         $configuration = $contest->configuration;
         foreach($configuration['tasks'] as $taskId => $taskConfig){
             $information['tasks'][$taskId]['solve_time'] = null;
+            $information['tasks'][$taskId]['score'] = 0;
             $information['tasks'][$taskId]['subtasks'] = [];
             foreach($taskConfig['subtasks'] as $subtask => $score){
                 $information['tasks'][$taskId]['subtasks'][$subtask] = 0;
@@ -385,7 +390,7 @@ class ContestsController extends Controller
     
     public function deleteContestant(Request $request, Contest $contest, Participation $participation){
         $addUser = $participation->user;
-        $level = $auth()->user()->level;
+        $level = auth()->user()->level;
         if($level < $contest->add_level || ($level == 5 && $contest->add_level == 4) || !$contest->published){
             abort(404);
         }
@@ -409,9 +414,8 @@ class ContestsController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $time = Carbon::parse($request["start"]);
-        $start = $time;
-        $end = $time->addSeconds($contest->duration);
+        $start = Carbon::parse($request["start"]);
+        $end = $start->copy()->addSeconds($contest->duration);
         $type = $request['type'] == true ? 0 : 1;
 
         if($start < $contest->start){
@@ -434,11 +438,12 @@ class ContestsController extends Controller
         $participation->start = $start;
         $participation->end = $end;
         $participation->score = 0;
-
+        
         $information = ['tasks' => [], 'extra' => 0];
         $configuration = $contest->configuration;
         foreach($configuration['tasks'] as $taskId => $taskConfig){
             $information['tasks'][$taskId]['solve_time'] = null;
+            $information['tasks'][$taskId]['score'] = 0;
             $information['tasks'][$taskId]['subtasks'] = [];
             foreach($taskConfig['subtasks'] as $subtask => $score){
                 $information['tasks'][$taskId]['subtasks'][$subtask] = 0;
@@ -460,9 +465,18 @@ class ContestsController extends Controller
     }
     
     public function results(Contest $contest){
-        $level = auth()->user()->level;
-        if($contest->isUpcoming() || !$contest->published || $level < $contest->view_level){
+        $user = auth()->user();
+        $level = $user->level;
+        $participation = $user->contestNow();
+        if($participation !== null){
+            if($participation->contest_id != $contest->id){
+                return redirect('/contest/'.$participation->contest->contest_id);
+            }
+        }elseif($contest->isUpcoming() || !$contest->published || $level < $contest->view_level){
             return abort(404);
+        }
+        if($contest->results > Carbon::now() && ($level < $contest->edit_level || ($level == 5 && $contest->edit_level == 4))){
+            return redirect("/contest/$contest->contest_id")->with('error', 'Results are not open yet');
         }
         $contest->participations = Participation::where('contest_id', $contest->id)->orderBy('start', 'asc')->orderBy('score', 'desc')->orderBy('type', 'desc')->get();
         return view('contests.results')->with('contest', $contest)->with('level', $level);
@@ -484,7 +498,7 @@ class ContestsController extends Controller
         }*/
         $contest->published = 1;
         $contest->save();
-        return back()->with('success', 'Published');
+        return redirect("/contest/$contest->contest_id")->with('success', 'Published');
     }
 
     public function unpublish(Contest $contest)
@@ -498,6 +512,6 @@ class ContestsController extends Controller
         }
         $contest->published = 0;
         $contest->save();
-        return back()->with('success', 'Unpublished');
+        return redirect("/contest/$contest->contest_id")->with('success', 'Unublished');
     }
 }

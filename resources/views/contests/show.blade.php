@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -11,7 +14,7 @@
                         {{Form::open(['action' => ['ContestsController@register', $contest->contest_id], 'method' => 'POST', 'id' => 'confirm-form'])}}
                             <div class="form-group">
                                 {{Form::label('start', 'Start Time', ['class' => 'form-label'])}}
-                                {{Form::input('dateTime-local', "start", Carbon\Carbon::parse($contest->start)->format("Y-m-d\Th:m:s"), ['class' => 'form-control', 'step' => '1'])}}
+                                {{Form::input('dateTime-local', "start", Carbon::parse($contest->start)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
                             </div>
                 
                             <div class="form-group">
@@ -40,6 +43,34 @@
                     {{Form::close()}}
                 </div>
                 <hr/>
+            @endif
+            @if($contest->published && ($contest->end < Carbon::now() || ($user->contestNow() != null && $user->contestNow()->contest_id == $contest->id)))
+            @if(count($contest->tasks()) > 0)
+                <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">
+                    <thead><tr>
+                        <th>Task ID</th>
+                        <th>Title</th>
+                        <th class="text-center">Actions</th>
+                    </tr></thead>
+                    <tbody>
+                    @foreach($contest->tasks() as $task)
+                        <tr>
+                            <td>
+                                {{$task->task_id}}
+                            </td>
+                            <td>
+                                <a href="/task/{{$task->task_id}}">{{$task->title}}</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="/task/{{$task->task_id}}/submit" class="btn btn-success btn-sm{{($task->published)?'':' disabled'}}">Submit</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table></div>
+            @else
+                <p>No tasks at all</p>
+            @endif
             @endif
             <h3>Information</h3>
             <div class="row">

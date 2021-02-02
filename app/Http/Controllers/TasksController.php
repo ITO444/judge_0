@@ -100,8 +100,14 @@ class TasksController extends Controller
      */
     public function show(Task $task)
     {
-        $level = auth()->user()->level;
-        if(!($level >= $task->view_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
+        $user = auth()->user();
+        $level = $user->level;
+        $participation = $user->contestNow();
+        if($participation !== null){
+            if(!isset($participation->contest->configuration['tasks'][$task->id])){
+                return redirect('/contest/'.$participation->contest->contest_id);
+            }
+        }elseif(!($level >= $task->view_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))){
             return abort(404);
         }
         $task->statement = BB::convertToHtml($task->statement);
@@ -205,7 +211,7 @@ class TasksController extends Controller
     {
         $level = auth()->user()->level;
         if($test && ($task->published || $test->task->id != $task->id)){
-            return abort(404);
+            return redirect("/task/$task->task_id/tests");
         }
         if(!($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))){
             return abort(404);
@@ -309,7 +315,7 @@ class TasksController extends Controller
             return abort(404);
         }
         $test = $tests->offsetGet($testNumber - 1);
-        return Storage::download("tests/$test->id.$ext", $task->task_id."_".$testNumber.".".$ext);
+        return response()->file(base_path()."/storage/app/tests/$test->id.$ext");
     }
 
     /**
@@ -361,8 +367,14 @@ class TasksController extends Controller
     
     public function submit(Task $task)
     {
-        $level = auth()->user()->level;
-        if($level < $task->submit_level || !$task->published){
+        $user = auth()->user();
+        $level = $user->level;
+        $participation = $user->contestNow();
+        if($participation !== null){
+            if(!isset($participation->contest->configuration['tasks'][$task->id])){
+                return redirect('/contest/'.$participation->contest->contest_id);
+            }
+        }elseif($level < $task->submit_level || !$task->published){
             return abort(404);
         }
         return view('tasks.submit')->with('task', $task)->with('level', $level);
@@ -370,8 +382,14 @@ class TasksController extends Controller
 
     public function saveSubmit(Request $request, Task $task)
     {
-        $level = auth()->user()->level;
-        if($level < $task->submit_level || !$task->published){
+        $user = auth()->user();
+        $level = $user->level;
+        $participation = $user->contestNow();
+        if($participation !== null){
+            if(!isset($participation->contest->configuration['tasks'][$task->id])){
+                return redirect('/contest/'.$participation->contest->contest_id);
+            }
+        }elseif($level < $task->submit_level || !$task->published){
             return abort(404);
         }
         $sourceSize = $task->source_size * 1024;
@@ -390,6 +408,9 @@ class TasksController extends Controller
         $submission->score = 0;
         $submission->source_code = $request['code'] ?: '';
         $submission->compiler_warning = '';
+        if($participation !== null){
+            $submission->participation_id = $participation->id;
+        }
         $submission->save();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');
         return redirect("/submission/$submission->id")->with('success', 'Submitted');
@@ -400,6 +421,9 @@ class TasksController extends Controller
         $level = auth()->user()->level;
         if($level < $task->edit_level || $task->published){
             return abort(404);
+        }
+        if(!count($task->tests)){
+            return back()->with('error', 'Please add at least 1 test case to the task before publishing it');
         }
         // implement compile grader
         if($task->grader_status == ''){

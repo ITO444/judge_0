@@ -23,10 +23,10 @@ class Admin
         if($userLevel == 0) {
             return abort(418);
         }
-        $contest = $user->contestNow();
-        if($contest != null){
+        $participation = $user->contestNow();
+        if($participation != null){
             if($page == null){
-                return redirect("/contest/$contest_id");
+                return redirect('/contest/'.$participation->contest->contest_id);
             }
         }elseif($userLevel < $level) {
             return abort(404);

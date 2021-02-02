@@ -11,6 +11,7 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @auth
+                @if(Auth::user()->contestNow() == null)
                 @if(auth()->user()->level >= 2)
                 <li class="nav-item">
                     <a class="nav-link" href="/runner">Runner</a>
@@ -44,6 +45,7 @@
                     <a class="nav-link" href="/leaderboard">Leaderboard</a>
                 </li>
                 @endif
+                @endif
                 @endauth
             </ul>
 
@@ -62,7 +64,7 @@
                         </div>
                     </li>
                 @else
-                    @if(Auth::user()->temp_level < Auth::user()->getRawOriginal('level') && Auth::user()->contestNow == null)
+                    @if(Auth::user()->temp_level < Auth::user()->getRawOriginal('level') && Auth::user()->contestNow() == null)
                         <li class="nav-item">
                             <a class="nav-link text-danger text-small" href="/admin/reset_temp_level">
                                 <small>(Revert to user level {{auth()->user()->getRawOriginal("level")}})</small>
@@ -80,9 +82,11 @@
                                 <!--span class="caret"></span-->
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                @if(Auth::user()->contestNow() == null)
                                 <a class="dropdown-item" href="/settings">
                                     {{ __('Settings') }}
                                 </a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">

@@ -32,11 +32,11 @@
     @endif
 </div>
 <div class="btn-group p-1">
-    <a href="/task/{{$task->task_id}}/submit" class="btn btn-success{{($task->published && $level >= $task->submit_level)?'':' disabled'}}">Submit</a>
-    @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6))
+    <a href="/task/{{$task->task_id}}/submit" class="btn btn-success{{($task->published && ($level >= $task->submit_level || auth()->user()->contestNow() != null))?'':' disabled'}}">Submit</a>
+    @if($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4) && (!$task->published || $level >= 6) && auth()->user()->contestNow() == null)
         <a href="/task/{{$task->task_id}}/edit" class="btn btn-primary">Edit</a>
         <a href="/task/{{$task->task_id}}/solution" class="btn btn-secondary">Solution</a>
     @endif
-    <a href="/submissions/task/{{$task->task_id}}" class="btn btn-info{{($task->published && $level >= $task->submit_level)?'':' disabled'}}">Submissions</a>
+    <a href="/submissions/task/{{$task->task_id}}" class="btn btn-info{{($task->published && $level >= $task->submit_level && auth()->user()->contestNow() == null)?'':' disabled'}}">Submissions</a>
 </div>
 <hr/>

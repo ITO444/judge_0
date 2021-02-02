@@ -10,6 +10,12 @@
                 <th>Contestant</th>
                 <th class="text-center">Type</th>
                 <th class="text-center">Status</th>
+                @foreach($contest->tasksConfig() as $task => $config)
+                    <th class="text-center">
+                        {{App\Task::find($task)->task_id}}
+                    </th>
+                @endforeach
+                <th class="text-center">Extra</th>
                 <th class="text-center">Score</th>
             </tr></thead>
             <tbody>
@@ -24,9 +30,25 @@
                     <td class="text-center">
                         {{$participation->isUpcoming() ? 'Upcoming' : ($participation->isOngoing() ? 'In progress' : 'Ended')}}
                     </td>
-                    <td class="text-center">
-                        {{$participation->isUpcoming() ? '' : $participation->score}}
-                    </td>
+                    @if($participation->isUpcoming())
+                        @foreach($contest->tasksConfig() as $task => $config)
+                            <td class="text-center"></td>
+                        @endforeach
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                    @else
+                        @foreach($contest->tasksConfig() as $task => $config)
+                            <td class="text-center">
+                                {{$participation->information['tasks'][$task]['score'] / 1000}}
+                            </td>
+                        @endforeach
+                        <td class="text-center">
+                            {{$participation->information['extra']}}
+                        </td>
+                        <td class="text-center font-weight-bold">
+                            {{$participation->isUpcoming() ? '' : $participation->score / 1000}}
+                        </td>
+                    @endif
                 </tr>
             @endforeach
             </tbody>
