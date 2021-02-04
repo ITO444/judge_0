@@ -4,6 +4,7 @@
 
 @section('content')
     <h1>
+        Tasks
     @if($level >= 4)
         <a href="/admin/task" class="btn btn-primary float-right">New Task</a>
     @endif
