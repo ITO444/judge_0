@@ -75,7 +75,7 @@ class RegisterController extends Controller
             'display' => $data['name'],
             'level' => 0,
             'email' => $data['email'],
-            'password' => Hash::make(Str::random(8)),
+            'password' => Hash::make(Str::random(20)),
             'answer' => '',
         ]);
     }
@@ -93,6 +93,6 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         return $this->registered($request, $user)
-            ?: redirect($this->redirectPath())->with('success', "An account is created, please remind $user->name to set the password at ".route('password.request')." and verify the account within a week using the url sent to $user->email");
+            ?: redirect($this->redirectPath())->with('success', "An account is created, please remind $user->name to follow the instructions sent to $user->email");
     }
 }

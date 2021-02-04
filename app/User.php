@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\SetPassword;
+use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -101,5 +103,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $now = Carbon::now();
         $participation = $this->participations->where('start', '<=', $now)->where('end', '>', $now)->first();
         return $participation;
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $token = Password::broker()->createToken($this);
+        $this->notify(new SetPassword($token, $this));
     }
 }

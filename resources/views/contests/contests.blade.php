@@ -20,7 +20,7 @@
     </td>
     <td class="text-center">
         @if(!($level < $contest->add_level || ($level == 5 && $contest->add_level == 4) || !$contest->published))
-            <a href="/contest/{{$contest->contest_id}}/edit/contestants" class="btn btn-success btn-sm">Manage Contestants</a>
+            <a href="/contest/{{$contest->contest_id}}/edit/contestants" class="btn btn-success btn-sm">Contestants</a>
         @endif
         @if($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))
             <a href="/contest/{{$contest->contest_id}}/edit" class="btn btn-primary btn-sm">Edit</a>

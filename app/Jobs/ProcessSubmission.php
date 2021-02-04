@@ -118,6 +118,7 @@ class ProcessSubmission implements ShouldQueue
                 $information = $participation->information;
                 $scores = $submission->subtaskScores();
                 $submission->score = $scores['score'];
+                $submissions = $task->submissions->where('participation_id', $participation->id);
                 $last = -1;
                 if($participation->contest->cumulative()){
                     $scores['score'] = 0;

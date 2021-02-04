@@ -75,5 +75,6 @@
     @else
         <p>No recent contests</p>
     @endif
+    <br/>
     <a href="/contests/all" class="btn btn-primary">View All Contests ›</a>
 @endsection
