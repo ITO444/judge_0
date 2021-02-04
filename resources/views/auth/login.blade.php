@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', 'Login')
+
 @section('content')
     <div class="alert alert-warning" role="alert">
         Please login <a class="alert-link" href="{{ url('redirect') }}">here</a> with your school email if you have one.

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', 'Manage Users')
+
 @section('content')
     <a href="/admin" class="btn btn-secondary">Back</a><br/><br/>
     <h3>Users</h3>

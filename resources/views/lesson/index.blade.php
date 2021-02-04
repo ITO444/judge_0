@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Lesson")
+
 @section('content')
     <a href="/" class="btn btn-secondary">Back</a><br/><br/>
     <h3>Lesson</h3>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "$user->name - $user->display")
+
 @section('content')
     <h1><img src = "{{$user->avatar}}" width = "10%"/> {{$user->name}} - {{$user->display}}</h1>
     <hr/>

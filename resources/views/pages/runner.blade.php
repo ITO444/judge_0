@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Runner")
+
 @section('content')
 <div class="container">
     <h1>Run code</h1>

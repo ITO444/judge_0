@@ -3,6 +3,8 @@ use Carbon\Carbon;
 @endphp
 @extends('layouts.app')
 
+@section('pageTitle', "$contest->contest_id - $contest->name")
+
 @section('content')
     @include("contests.top")
     @include("contests.publish_warning")

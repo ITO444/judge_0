@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Tasks - $tab")
+
 @section('content')
     <h1>
     @if($level >= 4)

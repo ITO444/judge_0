@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "$task->task_id - $task->title")
+
 @section('content')
 @include("tasks.top")
 @include("tasks.publish_warning")

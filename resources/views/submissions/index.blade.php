@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+@if(isset($user))
+@section('pageTitle', "Submissions of $user->name")
+@elseif(isset($task))
+@section('pageTitle', "$task->task_id - $task->title")
+@elseif(isset($contest))
+@section('pageTitle', "$contest->contest_id - $contest->name")
+@else
+@section('pageTitle', "All Submissions")
+@endif
+
 @section('content')
     @if(isset($user))
     User: <a href="/user/{{$user->name}}" class="text-body">{{$user->name}} - {{$user->display}}</a>

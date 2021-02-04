@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Contests")
+
 @section('content')
     <h1>Contests
     @if($level >= 6)

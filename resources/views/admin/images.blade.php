@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', 'Images')
+
 @section('content')
     <h3>Images</h3>
     <br/>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Leaderboard")
+
 @section('content')
     <h1>Leaderboard
     </h1>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', 'Create User')
+
 @section('content')
     <a href="/admin" class="btn btn-secondary">Back</a><br/><br/>
     <div class="row justify-content-center">

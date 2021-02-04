@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', 'Admin')
+
 @section('content')
     <div class="row justify-content-center"><div class="col-md-8">
         <h3>Admin</h3>

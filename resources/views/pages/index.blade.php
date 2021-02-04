@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Home")
+
 @section('content')
     <div class="jumbotron text-center">
         <h1>{{config('app.name')}}</h1>

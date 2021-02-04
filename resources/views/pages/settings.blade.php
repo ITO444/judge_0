@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "User Settings")
+
 @section('content')
 <div class="card">
     <div class="card-header">Settings</div>

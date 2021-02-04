@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('pageTitle', "Submission $submission->id")
+
 @section('content')
     <h1>
         Submission {{$submission->id}}
