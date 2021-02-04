@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessSubmission;
 use App\Jobs\PublishGrader;
 use App\Helpers\BB;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
@@ -408,8 +409,15 @@ class TasksController extends Controller
             if(!isset($participation->contest->configuration['tasks'][$task->id])){
                 return redirect('/contest/'.$participation->contest->contest_id);
             }
+            if(Submission::where('task_id', $task->id)->where('participation_id', $participation->id)->count() >= 50){
+                return back()->with('error', 'You may not have over 50 submissions for each task in the contest.');
+            }
         }elseif($level < $task->submit_level || !$task->published){
             return abort(404);
+        }
+        $lastSubmission = Submission::where('task_id', $task->id)->where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
+        if($lastSubmission != null && Carbon::parse($lastSubmission->created_at)->diffInSeconds(Carbon::now()) < 60){
+            return back()->with('error', 'You may only submit once per 60 seconds for each task, please be patient.');
         }
         $sourceSize = $task->source_size * 1024;
         $validator = Validator::make($request->all(), [
