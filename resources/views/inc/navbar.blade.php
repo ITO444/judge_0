@@ -71,7 +71,8 @@
                     @if(Auth::user()->temp_level < Auth::user()->getRawOriginal('level') && Auth::user()->contestNow() == null)
                         <li class="nav-item">
                             <a class="nav-link text-danger text-small" href="/admin/reset_temp_level">
-                                <small>(Revert to user level {{auth()->user()->getRawOriginal("level")}})</small>
+                                <small>Viewing as User Level {{auth()->user()->level)}}</small><br/>
+                                <small>Click to Revert to Level {{auth()->user()->getRawOriginal("level")}}</small>
                             </a>
                         </li>
                     @endif

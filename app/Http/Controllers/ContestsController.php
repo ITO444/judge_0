@@ -44,9 +44,10 @@ class ContestsController extends Controller
         }
         $now = Carbon::now();
         $contests = Contest::where('view_level', '<=', $level)->where('published', '=', 1);
-        $ongoing = $contests->where('start', '<=', $now)->where('end', '>', $now)->get();
-        $upcoming = $contests->where('start', '>', $now)->get();
-        return view('contests.index')->with('ongoing', $ongoing)->with('upcoming', $upcoming)->with('level', $level);
+        $ongoing = $contests->where('start', '<=', $now)->where('end', '>', $now)->orderBy('end', 'asc')->get();
+        $upcoming = $contests->where('start', '>', $now)->orderBy('start', 'asc')->get();
+        $recent = $contests->where('end', '<=', $now)->orderBy('end', 'desc')->offset(0)->take(10)->get();
+        return view('contests.index')->with('ongoing', $ongoing)->with('upcoming', $upcoming)->with('recent', $recent)->with('level', $level);
     }
 
     /**

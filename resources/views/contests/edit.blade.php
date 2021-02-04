@@ -33,7 +33,7 @@ use Carbon\Carbon;
             </div>
 
             <div class="row form-group">
-                {{Form::label('reg_level', 'Resgister Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+                {{Form::label('reg_level', 'Register Level', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
                     {{Form::selectRange("reg_level", 1, $level, $contest->reg_level, ['class' => 'form-control'])}}
                 </div>
@@ -68,7 +68,7 @@ use Carbon\Carbon;
             </div>
             
             <div class="row form-group">
-                {{Form::label('duration', 'Duration (minutes)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
+                {{Form::label('duration', 'Duration (hh:mm)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
                     {{Form::time("duration", gmdate("H:i", $contest->duration), ['class' => 'form-control', 'step' => '60'])}}
                 </div>

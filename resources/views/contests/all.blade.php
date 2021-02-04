@@ -8,7 +8,7 @@
         <a href="/admin/contest" class="btn btn-primary float-right">New Contest</a>
     @endif
     </h1>
-    <a href="/contests" class="btn btn-primary">View Ongoing / Upcoming Contests</a>
+    <a href="/contests" class="btn btn-primary">View Ongoing / Upcoming / Recent Contests</a>
     <hr/>
     <h3>All Contests</h3>
     @if(count($contests) > 0)
