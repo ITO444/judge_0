@@ -19,7 +19,7 @@
                 @endif
                 @if(auth()->user()->level >= 2)
                 <li class="nav-item">
-                    <a class="nav-link" href="/tasks">Tasks</a>
+                    <a class="nav-link" href="/tasks/All">Tasks</a>
                 </li>
                 @endif
                 @if(auth()->user()->level >= 3)

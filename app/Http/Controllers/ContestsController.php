@@ -69,7 +69,7 @@ class ContestsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "contest_id" => ['required', 'string', "unique:contests,contest_id", "max:10"],
-            "name" => ['required', 'string', "max:255"],
+            "name" => ['required', 'string', "max:32"],
         ]);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -146,7 +146,7 @@ class ContestsController extends Controller
         $editLevelMin = $level == 5 ? 5 : 4;
         $validator = Validator::make($request->all(), [
             "contest_id" => ['required', 'string', "unique:contests,contest_id,$contest->id", 'max:10'],
-            "name" => ['required', 'string', 'max:255'],
+            "name" => ['required', 'string', 'max:32'],
             "view_level" => ['nullable', 'integer', "between:1, $level"],
             "reg_level" => ['nullable', 'integer', "between:1, $level"],
             "add_level" => ['nullable', 'integer', "between:4, $level"],

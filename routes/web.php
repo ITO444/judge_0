@@ -56,7 +56,7 @@ Route::group(['prefix' => 'lesson'], function () {
 });
 
 
-Route::get('tasks/{order?}', 'TasksController@index')->middleware('admin:2');
+Route::get('tasks/{tab}/{order?}', 'TasksController@index')->middleware('admin:2');
 
 Route::group(['prefix' => 'task/{task:task_id}'], function () {
     Route::get('', 'TasksController@show')->middleware('admin:2, 1');

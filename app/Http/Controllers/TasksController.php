@@ -22,10 +22,29 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($order = null)
+    public function index($tab, $order = null)
     {
         $level = auth()->user()->level;
-        $tasks = Task::where('view_level', '<=', $level)->where(function ($query) use ($level) {
+        $tabs = [
+            'All' => '%',
+            'Teacher' => '0%',
+            'Algorithm' => 'A%',
+            'BIO' => 'B%',
+            'CCC' => 'C%',
+            'USACO' => 'U%',
+            'Contest' => 'X%',
+            'Practice' => 'Y%',
+            'Basics' => 'Z%',
+        ];
+        if($level >= 4){
+            $tabs['WIP'] = false;
+        }
+        if(!isset($tabs[$tab])){
+            abort(404);
+        }
+        $column = $tab == 'WIP' ? 'published' : 'task_id';
+        $compare = $tab == 'WIP' ? '=' : 'like';
+        $tasks = Task::where('view_level', '<=', $level)->where($column, $compare, $tabs[$tab])->where(function ($query) use ($level) {
             $query->where('published', '=', 1)
                   ->orWhere(function ($query) use ($level) {
                         $query->where('edit_level', '<=', $level);
@@ -41,7 +60,7 @@ class TasksController extends Controller
         }else{
             abort(404);
         }
-        return view('tasks.index')->with('taskCount', $tasks->count())->with('tasks', $tasks->paginate(50))->with('level', $level)->with('order', $order);
+        return view('tasks.index')->with('tab', $tab)->with('tabs', $tabs)->with('taskCount', $tasks->count())->with('tasks', $tasks->paginate(50))->with('level', $level)->with('order', $order);
     }
 
     /**
@@ -64,7 +83,7 @@ class TasksController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "task_id" => ['required', 'string', "unique:tasks,task_id", "max:10"],
-            "title" => ['required', 'string', "max:255"],
+            "title" => ['required', 'string', "max:32"],
         ]);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -145,7 +164,7 @@ class TasksController extends Controller
         $editLevelMin = $level == 5 ? 5 : 4;
         $validator = Validator::make($request->all(), [
             "task_id" => ['required', 'string', "unique:tasks,task_id,$task->id", 'max:10'],
-            "title" => ['required', 'string', 'max:255'],
+            "title" => ['required', 'string', 'max:32'],
             "source_size" => ['nullable', 'integer', "between:0, 128"],
             "compile_time" => ['nullable', 'integer', "between:0, 30"],
             "runtime_limit" => ['nullable', 'numeric', "between:0, 10"],

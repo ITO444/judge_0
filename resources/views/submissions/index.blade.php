@@ -35,7 +35,7 @@
                     <tr class="{{$submission->user->id == auth()->user()->id ? ($loop->iteration % 2 ? 'table-primary' : 'table-info') : ''}}">
                         <td class="text-center"><a href="/submission/{{$submission->id}}">{{$submission->created_at}}</a></td>
                         <td><a href="/user/{{$submission->user->name}}">{{$submission->user->name}} - {{$submission->user->display}}</a></td>
-                        <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->title}}</a></td>
+                        <td><a href="/task/{{$submission->task->task_id}}">{{$submission->task->task_id}} - {{$submission->task->title}}</a></td>
                         <td class="text-center">{{$submission->language == 'cpp' ? "C++" : "Python 3"}}</td>
                         @if(isset($noFeedback) && $noFeedback)
                         <td class="text-center text-muted">Hidden</td>
