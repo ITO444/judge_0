@@ -4,7 +4,7 @@
     <span class="badge badge-danger">WIP</span>
     @endif
     @if($contest->doneBy(auth()->user()))
-    <span class="badge badge-success">Done</span>
+    <span class="badge badge-success">Registered</span>
     @endif
 </h1>
 <div class="btn-group p-1">
@@ -38,7 +38,7 @@
     @if($contest->canSeeSubmissions(auth()->user()))
     <a href="/submissions/contest/{{$contest->contest_id}}" class="btn btn-info">Submissions</a>
     @endif
-    @if(!($level < $contest->edit_level || ($level == 5 && $contest->edit_level == 4)) || !(!$contest->hasEnded() || $level < $contest->view_level))
+    @if(!($level < $contest->edit_level || ($level == 5 && $contest->edit_level == 4)) || !(!$contest->hasEnded() || $level < $contest->view_level || auth()->user()->contestNow() != null))
         <a href="/contest/{{$contest->contest_id}}/editorial" class="btn btn-secondary">Editorial</a>
     @endif
 </div>

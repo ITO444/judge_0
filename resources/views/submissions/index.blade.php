@@ -1,15 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Submissions
     @if(isset($user))
-     - User: <a href="/user/{{$user->name}}" class="text-body">{{$user->name}} - {{$user->display}}</a>
+    User: <a href="/user/{{$user->name}}" class="text-body">{{$user->name}} - {{$user->display}}</a>
     @elseif(isset($task))
-     - Task: <a href="/task/{{$task->task_id}}" class="text-body">{{$task->task_id}} - {{$task->title}}</a>
+    @include('tasks.top')
     @elseif(isset($contest))
-     - Contest: <a href="/contest/{{$contest->contest_id}}" class="text-body">{{$contest->contest_id}} - {{$contest->name}}</a>
-     @endif
-    </h1>
+    @include('contests.top')
+    @endif
+    <h1>Submissions</h1>
     @if(count($submissions) > 0)
         {{$submissions->links()}}
         <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">

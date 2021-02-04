@@ -1,3 +1,6 @@
+@php
+use Carbon\Carbon;
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -39,7 +42,17 @@
                     @else
                         @foreach($contest->tasksConfig() as $task => $config)
                             <td class="text-center">
-                                {{$participation->information['tasks'][$task]['score'] / 1000}}
+                                <span class="{{$participation->submissions->where('result', 'Accepted')->where('task_id', $task)->isNotEmpty() ? ' text-success font-weight-bold' : ''}}">{{$participation->information['tasks'][$task]['score'] / 1000}}</span>
+                                @php
+                                    $time = $participation->information['tasks'][$task]['solve_time'];
+                                    if($time !== null){
+                                        $time = Carbon::parse($participation->start)->diffInSeconds($time);
+                                    }
+                                @endphp
+                                @if($time !== null)
+                                <br/>
+                                <small class="text-muted">{{gmdate('H:i:s', $time)}}
+                                @endif
                             </td>
                         @endforeach
                         <td class="text-center">

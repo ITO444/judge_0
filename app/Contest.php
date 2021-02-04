@@ -66,8 +66,8 @@ class Contest extends Model
         }elseif($this->isUpcoming() || !$this->published || $level < $this->view_level){
             return false;
         }
-        if($this->results > Carbon::now() && ($level < $this->edit_level || ($level == 5 && $this->edit_level == 4))){
-            return false;
+        if($this->results > Carbon::now() && ($level < $this->edit_level || ($level == 5 && $this->edit_level == 4) || $participation !== null)){
+            return $this->feedback();
         }
         return true;
     }
@@ -84,6 +84,10 @@ class Contest extends Model
         return $this->hasEnded();
     }
 
+    public function maxScore(Task $task){
+        $taskConfig = $this->tasksConfig()[$task->id];
+        return array_sum($this->configuration['tasks'][$task->id]['subtasks']);
+    }
     public function isOngoing(){
         $now = Carbon::now();
         return $this->published && $this->start <= $now && $this->end > $now;

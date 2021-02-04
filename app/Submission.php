@@ -46,6 +46,28 @@ class Submission extends Model
         }
         return $scores;
     }
+
+    public function subtaskVerdicts(){
+        if($this->participation === null){
+            return null;
+        }
+        $participation = $this->participation;
+        $task = $this->task;
+        $taskConfig = $participation->contest->configuration['tasks'][$task->id];
+        $verdicts = [];
+        foreach($taskConfig['subtasks'] as $subtask => $score){
+            $verdicts[$subtask] = 'Accepted';
+        }
+        foreach($this->runs as $run){
+            foreach($taskConfig['tests'][$run->test_id] as $subtask => $checked){
+                if($checked && $verdicts[$subtask] == 'Accepted' && $run->result != 'Accepted'){
+                    $verdicts[$subtask] = $run->result;
+                }
+            }
+        }
+        return $verdicts;
+    }
+
     public function getResultAttribute($value){
         $strings = [
             -5 => 'Saved',

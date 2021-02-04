@@ -45,6 +45,10 @@
                     <a class="nav-link" href="/leaderboard">Leaderboard</a>
                 </li>
                 @endif
+                @else
+                <li class="nav-item">
+                    <a class="nav-link" href="/contest/{{Auth::user()->contestNow()->contest->contest_id}}">Contest: {{Auth::user()->contestNow()->contest->name}}</a>
+                </li>
                 @endif
                 @endauth
             </ul>

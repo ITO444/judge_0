@@ -42,7 +42,7 @@ class ContestsController extends Controller
         if($page != null){
             abort(404);
         }
-        $now = Carbon::now()->timestamp;
+        $now = Carbon::now();
         $contests = Contest::where('view_level', '<=', $level)->where('published', '=', 1);
         $ongoing = $contests->where('start', '<=', $now)->where('end', '>', $now)->get();
         $upcoming = $contests->where('start', '>', $now)->get();
@@ -476,9 +476,13 @@ class ContestsController extends Controller
             return abort(404);
         }
         if($contest->results > Carbon::now() && ($level < $contest->edit_level || ($level == 5 && $contest->edit_level == 4))){
-            return redirect("/contest/$contest->contest_id")->with('error', 'Results are not open yet');
+            if(!$contest->feedback()){
+                return redirect("/contest/$contest->contest_id")->with('error', 'Results are not open yet');
+            }
+            $contest->participations = Participation::where('contest_id', $contest->id)->where('user_id', $user->id)->get();
+        }else{
+            $contest->participations = Participation::where('contest_id', $contest->id)->orderBy('type', 'desc')->orderBy('score', 'desc')->orderBy('start', 'asc')->get();
         }
-        $contest->participations = Participation::where('contest_id', $contest->id)->orderBy('start', 'asc')->orderBy('score', 'desc')->orderBy('type', 'desc')->get();
         return view('contests.results')->with('contest', $contest)->with('level', $level);
     }
 

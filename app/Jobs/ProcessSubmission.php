@@ -116,17 +116,11 @@ class ProcessSubmission implements ShouldQueue
             $user = $submission->user;
             if($participation !== null){
                 $information = $participation->information;
-                $contest = $participation->contest;
-                $submissions = $task->submissions->where('participation_id', $participation->id);
-                $firstAC = $submissions->where('result', 'Accepted')->first();
-                if($contest->cumulative()){
-                    $scores = $submission->subtaskScores();
+                $scores = $submission->subtaskScores();
+                $submission->score = $scores['score'];
+                $last = -1;
+                if($participation->contest->cumulative()){
                     $scores['score'] = 0;
-                    if($firstAC != null){
-                        $scores['solve_time'] = $firstAC->created_at;
-                    }else{
-                        $scores['solve_time'] = null;
-                    }
                     foreach($submissions as $submission2){
                         $scores2 = $submission2->subtaskScores();
                         foreach($scores['subtasks'] as $subtask => $score){
@@ -136,20 +130,19 @@ class ProcessSubmission implements ShouldQueue
                     foreach($scores['subtasks'] as $subtask => $score){
                         $scores['score'] += $scores['subtasks'][$subtask];
                     }
-                    $information['tasks'][$task->id] = $scores;
-                }else{
-                    $information['tasks'][$task->id] = $submission->subtaskScores();
-                    if($firstAC != null){
-                        $information['tasks'][$task->id]['solve_time'] = $firstAC->created_at;
-                    }else{
-                        $information['tasks'][$task->id]['solve_time'] = null;
-                    }
+                    $last = $information['tasks'][$task->id]['score'];
                 }
+                if($scores['score'] > $last){
+                    $scores['solve_time'] = $submission->created_at;
+                }else{
+                    $scores['solve_time'] = $information['tasks'][$task->id]['solve_time'];
+                }
+                $information['tasks'][$task->id] = $scores;
+                
                 $participation->score = 0;
                 foreach($information['tasks'] as $taskid => $scores){
                     $participation->score += $scores['score'];
                 }
-                $submission->score = $information['tasks'][$task->id]['score'];
                 $submission->save();
                 $participation->information = $information;
                 $participation->save();

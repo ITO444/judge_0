@@ -1,3 +1,12 @@
+@php
+$participationNow = Auth::user()->contestNow();
+if($participationNow != null){
+    $contest = $participationNow->contest;
+}
+@endphp
+@if(isset($contest))
+@include("contests.top")
+@endif
 <h1>
     <a href="/task/{{$task->task_id}}" class="text-body">{{$task->title}}</a>
     @if(!$task->published)

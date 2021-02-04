@@ -98,7 +98,7 @@ class SubmissionsController extends Controller
         $contestNow = $user->contestNow();
         $task = $submission->task;
         if($contestNow != null){
-            if($contestNow->id != $submission->participation->id){
+            if($contestNow->id != $submission->participation_id){
                 return redirect('/contest/'.$contestNow->contest->contest_id);
             }
         }elseif(!($level >= $task->submit_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4)))) || ($submission->participation !== null && $submission->participation->user_id != auth()->user()->id && auth()->user()->level < 7)){
@@ -107,10 +107,12 @@ class SubmissionsController extends Controller
         $participation = $submission->participation;
         if($participation != null){
             $feedback = $participation->contest->feedback() || ($level >= 7 && $level >= $participation->contest->edit_level && $contestNow == null);
+            $verdicts = $submission->subtaskVerdicts();
         }else{
             $feedback = 1;
+            $verdicts = [];
         }
-        return view('submissions.show')->with('task', $task)->with('submission', $submission)->with('level', $level)->with('noFeedback', !$feedback);
+        return view('submissions.show')->with('task', $task)->with('submission', $submission)->with('user', $user)->with('level', $level)->with('noFeedback', !$feedback)->with('verdicts', $verdicts);
     }
 
     public function rejudge(Submission $submission)
@@ -126,7 +128,7 @@ class SubmissionsController extends Controller
         $submission->save();
         $submission->runs()->delete();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');
-        return redirect("/submission/$submission->id")->with('success', 'Re-judging');;
+        return redirect("/submission/$submission->id")->with('success', 'Re-judging');
     }
 
     /**

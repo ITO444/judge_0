@@ -25,9 +25,15 @@
                     <td>
                         {{$task->task_id}}
                     </td>
+                    @if($level >= $task->view_level && ($task->published || ($level >= $task->edit_level && ($level != 5 || $task->edit_level != 4))))
                     <td>
                         <a href="/task/{{$task->task_id}}">{{$task->title}}</a>
                     </td>
+                    @else
+                    <td class="text-muted">
+                        Hidden
+                    </td>
+                    @endif
                     <td class="text-center">
                         {{count($config['subtasks'])}}
                     </td>

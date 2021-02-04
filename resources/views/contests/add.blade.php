@@ -59,7 +59,7 @@
                         {{$participation->isUpcoming() ? 'Upcoming' : ($participation->isOngoing() ? 'In progress' : 'Ended')}}
                     </td>
                     <td class="text-center">
-                        {{$participation->isUpcoming() ? '' : $participation->score}}
+                        {{$participation->isUpcoming() ? '' : $participation->score / 1000}}
                     </td>
                     <td class="text-center">
                         <a data-id="{{$participation->id}}" class="btn btn-sm btn-danger del"><span aria-hidden="true">&times;</span></a>
