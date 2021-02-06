@@ -57,7 +57,7 @@
                         <div class="col">{{Form::text("display", $user->display, ['class'=>'form-control', 'readonly'])}}</div>
                         <div class="col">{{Form::email("email", $user->email, ['class'=>'form-control', 'readonly'])}}</div>
                         <div class="col">{{Form::text("type", $user->google_id ? "DGS" : "Others", ['class'=>'form-control', 'disabled'])}}</div>
-                        <div class="col">{{Form::number("level", 0, auth()->user()->level, $user->level, ['class'=>'form-control', 'readonly'])}}</div>
+                        <div class="col">{{Form::number("level", $user->level, ['class'=>'form-control', 'readonly'])}}</div>
                         <div class="col">{{Form::submit('Go', ['class' => 'btn btn-primary disabled', 'disabled'])}}</div>
                     </div>
                 @else
