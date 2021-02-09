@@ -140,42 +140,58 @@ class ContestsController extends Controller
     public function update(Request $request, Contest $contest)
     {
         $level = auth()->user()->level;
-        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4)) || $contest->published){
+        if(!($level >= $contest->edit_level && ($level != 5 || $contest->edit_level != 4) && (!$contest->published || $level >= 6))){
             return abort(404);
         }
         $editLevelMin = $level == 5 ? 5 : 4;
-        $validator = Validator::make($request->all(), [
-            "contest_id" => ['required', 'string', "unique:contests,contest_id,$contest->id", 'max:10'],
-            "name" => ['required', 'string', 'max:32'],
-            "view_level" => ['nullable', 'integer', "between:1, $level"],
-            "reg_level" => ['nullable', 'integer', "between:1, $level"],
-            "add_level" => ['nullable', 'integer', "between:4, $level"],
-            "edit_level" => ['nullable', 'integer', "between:$editLevelMin, $level"],
-            "start" => ['required', 'date'],
-            "end" => ['required', 'date'],
-            "duration" => ['required', 'date_format:H:i', 'after_or_equal:00:00', 'before_or_equal:23:59'],
-            "results" => ['required', 'date'],
-            "feedback" => ['boolean'],
-            "cumulative" => ['boolean'],
-            "description" => ['nullable', 'string', 'max:65535'],
-            "editorial" => ['nullable', 'string', 'max: 65535'],
-        ]);
+        if($contest->published){
+            $validator = Validator::make($request->all(), [
+                "contest_id" => ['required', 'string', "unique:contests,contest_id,$contest->id", 'max:10'],
+                "name" => ['required', 'string', 'max:32'],
+                "view_level" => ['nullable', 'integer', "between:1, $level"],
+                "reg_level" => ['nullable', 'integer', "between:1, $level"],
+                "add_level" => ['nullable', 'integer', "between:4, $level"],
+                "edit_level" => ['nullable', 'integer', "between:$editLevelMin, $level"],
+                "results" => ['required', 'date'],
+                "description" => ['nullable', 'string', 'max:65535'],
+                "editorial" => ['nullable', 'string', 'max: 65535'],
+            ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                "contest_id" => ['required', 'string', "unique:contests,contest_id,$contest->id", 'max:10'],
+                "name" => ['required', 'string', 'max:32'],
+                "view_level" => ['nullable', 'integer', "between:1, $level"],
+                "reg_level" => ['nullable', 'integer', "between:1, $level"],
+                "add_level" => ['nullable', 'integer', "between:4, $level"],
+                "edit_level" => ['nullable', 'integer', "between:$editLevelMin, $level"],
+                "start" => ['required', 'date'],
+                "end" => ['required', 'date'],
+                "duration" => ['required', 'date_format:H:i', 'after_or_equal:00:00', 'before_or_equal:23:59'],
+                "results" => ['required', 'date'],
+                "feedback" => ['boolean'],
+                "cumulative" => ['boolean'],
+                "description" => ['nullable', 'string', 'max:65535'],
+                "editorial" => ['nullable', 'string', 'max: 65535'],
+            ]);
+        }
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
         $infos = [];
         $contest->contest_id = $request["contest_id"];
         $contest->name = $request["name"];
-        $start = Carbon::parse($request["start"]);
-        $contest->start = $start->format('Y-m-d H:i:s');
-        $end = Carbon::parse($request["end"]);
-        $contest->end = $end->format('Y-m-d H:i:s');
-        $contest->results = Carbon::parse($request["results"]);
-        $contest->duration = Carbon::parse($request["duration"])->secondsSinceMidnight();
-        $diffInSeconds = $end->diffInSeconds($start);
-        if($contest->duration != $diffInSeconds){
-            $infos[] = "Note that the contest duration is not the same as the time between the start and end of the contest (You may ignore this if it is intended)";
+        if(!$contest->published){
+            $start = Carbon::parse($request["start"]);
+            $contest->start = $start->format('Y-m-d H:i:s');
+            $end = Carbon::parse($request["end"]);
+            $contest->end = $end->format('Y-m-d H:i:s');
+            $contest->duration = Carbon::parse($request["duration"])->secondsSinceMidnight();
+            $diffInSeconds = $end->diffInSeconds($start);
+            if($contest->duration != $diffInSeconds){
+                $infos[] = "Note that the contest duration is not the same as the time between the start and end of the contest (You may ignore this if it is intended)";
+            }
         }
+        $contest->results = Carbon::parse($request["results"]);
 
         $contest->view_level = $request["view_level"] ?: $level;
         $contest->reg_level = $request["reg_level"] ?: $level;
@@ -194,10 +210,12 @@ class ContestsController extends Controller
             $contest->edit_level = $contest->add_level;
         }
 
-        $configuration = $contest->configuration;
-        $configuration["feedback"] = $request["feedback"] ? true : false;
-        $configuration["cumulative"] = $request["cumulative"] ? true : false;
-        $contest->configuration = $configuration;
+        if(!$contest->published){
+            $configuration = $contest->configuration;
+            $configuration["feedback"] = $request["feedback"] ? true : false;
+            $configuration["cumulative"] = $request["cumulative"] ? true : false;
+            $contest->configuration = $configuration;
+        }
 
         $contest->description = $request["description"] ?: '';
         $contest->editorial = $request["editorial"] ?: '';

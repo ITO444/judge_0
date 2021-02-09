@@ -26,10 +26,10 @@ Route::get('leaderboard', 'PagesController@leaderboard')->middleware('admin:3');
 Route::get('leaderboard/{page?}', 'PagesController@leaderboard')->middleware('admin:3');
 
 Route::group(['prefix' => 'runner'], function () {
-    Route::get('', 'RunnerController@index')->middleware('admin:2');
-    Route::post('run', 'RunnerController@run')->middleware('admin:2');
-    Route::post('save', 'RunnerController@save')->middleware('admin:2');
-    Route::post('language', 'RunnerController@language')->middleware('admin:2');
+    Route::get('', 'RunnerController@index')->middleware('admin:3');
+    Route::post('run', 'RunnerController@run')->middleware('admin:3');
+    Route::post('save', 'RunnerController@save')->middleware('admin:3');
+    Route::post('language', 'RunnerController@language')->middleware('admin:3');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -101,10 +101,10 @@ Route::group(['prefix' => 'contest/{contest:contest_id}'], function () {
     Route::post('edit/contestants', 'ContestsController@addContestant')->middleware('admin:4');
     Route::delete('edit/contestants/{participation}', 'ContestsController@deleteContestant')->middleware('admin:4');
 
-    Route::post('register', 'ContestsController@register')->middleware('admin:1');
-    Route::delete('register', 'ContestsController@unregister')->middleware('admin:1');
+    Route::post('register', 'ContestsController@register')->middleware('admin:2');
+    Route::delete('register', 'ContestsController@unregister')->middleware('admin:2');
 
-    Route::get('results', 'ContestsController@results')->middleware('admin:1, 1');
+    Route::get('results', 'ContestsController@results')->middleware('admin:2, 1');
 
     Route::get('publish', 'ContestsController@publish')->middleware('admin:7');
     Route::get('unpublish', 'ContestsController@unpublish')->middleware('admin:7');

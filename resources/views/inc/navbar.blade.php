@@ -12,7 +12,7 @@
             <ul class="navbar-nav mr-auto">
                 @auth
                 @if(Auth::user()->contestNow() == null)
-                @if(auth()->user()->level >= 2)
+                @if(auth()->user()->level >= 3)
                 <li class="nav-item">
                     <a class="nav-link" href="/runner">Runner</a>
                 </li>
@@ -26,6 +26,8 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/lesson">Lesson</a>
                 </li>
+                @endif
+                @if(auth()->user()->level >= 2)
                 <li class="nav-item">
                     <a class="nav-link" href="/contests">Contests</a>
                 </li>

@@ -56,21 +56,21 @@ use Carbon\Carbon;
             <div class="row form-group">
                 {{Form::label('start', 'Start Time', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::input('dateTime-local', "start", Carbon::parse($contest->start)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
+                    {{Form::input('dateTime-local', "start", Carbon::parse($contest->start)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1', $contest->published ? 'disabled' : ''])}}
                 </div>
             </div>
 
             <div class="row form-group">
                 {{Form::label('end', 'End Time', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::input('dateTime-local', "end", Carbon::parse($contest->end)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1'])}}
+                    {{Form::input('dateTime-local', "end", Carbon::parse($contest->end)->format("Y-m-d\TH:i:s"), ['class' => 'form-control', 'step' => '1', $contest->published ? 'disabled' : ''])}}
                 </div>
             </div>
             
             <div class="row form-group">
                 {{Form::label('duration', 'Duration (hh:mm)', ['class' => 'col-md-4 col-form-label text-md-right'])}}
                 <div class="col-md-6">
-                    {{Form::time("duration", gmdate("H:i", $contest->duration), ['class' => 'form-control', 'step' => '60'])}}
+                    {{Form::time("duration", gmdate("H:i", $contest->duration), ['class' => 'form-control', 'step' => '60', $contest->published ? 'disabled' : ''])}}
                 </div>
             </div>
 
@@ -85,7 +85,7 @@ use Carbon\Carbon;
                 {{Form::label('feedback', 'Instant Feedback', ['class' => 'col-md-4 col-form-check-label text-md-right'])}}
                 <div class="col-md-6">
                     <div class="form-check">
-                        {{Form::checkbox('feedback', true, $contest->configuration["feedback"], ['class' => 'form-check-input'])}}
+                        {{Form::checkbox('feedback', true, $contest->configuration["feedback"], ['class' => 'form-check-input', $contest->published ? 'disabled' : ''])}}
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@ use Carbon\Carbon;
                 {{Form::label('cumulative', 'Cumulative Scoring', ['class' => 'col-md-4 col-form-check-label text-md-right'])}}
                 <div class="col-md-6">
                     <div class="form-check">
-                        {{Form::checkbox('cumulative', true, $contest->configuration["cumulative"], ['class' => 'form-check-input'])}}
+                        {{Form::checkbox('cumulative', true, $contest->configuration["cumulative"], ['class' => 'form-check-input', $contest->published ? 'disabled' : ''])}}
                     </div>
                 </div>
             </div>
@@ -123,7 +123,7 @@ use Carbon\Carbon;
 
             <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
-                    @if($contest->published)
+                    @if($contest->published && $level < 6)
                     {{Form::submit('Save', ['class' => 'btn btn-primary disabled', 'disabled'])}}
                     @else
                     {{Form::submit('Save', ['class' => 'btn btn-primary'])}}

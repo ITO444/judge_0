@@ -12,6 +12,7 @@ use Carbon\Carbon;
     @if(count($contest->participations) > 0)
         <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">
             <thead><tr>
+                <th class="text-center">Rank</th>
                 <th>Contestant</th>
                 <th class="text-center">Type</th>
                 <th class="text-center">Status</th>
@@ -24,8 +25,17 @@ use Carbon\Carbon;
                 <th class="text-center">Score</th>
             </tr></thead>
             <tbody>
-            @foreach($contest->participations as $participation)
+            @foreach($contest->participations as $key => $participation)
                 <tr class="{{$participation->user->id == auth()->user()->id ? 'table-primary' : ''}}">
+                    <td class="text-center">
+                        @if($participation->isUpcoming() || !$participation->type)
+                        <span class="text-muted">-</span>
+                        @elseif(!$loop->first && $participation->score == $participations[$key - 1]->score)
+                        {{$rank}}
+                        @else
+                        {{$rank = $loop->iteration}}
+                        @endif
+                    </td>
                     <td>
                         {{$participation->user->name}} - {{$participation->user->display}}
                     </td>
@@ -44,7 +54,6 @@ use Carbon\Carbon;
                     @else
                         @foreach($contest->tasksConfig() as $task => $config)
                             <td class="text-center">
-                                <span class="{{$participation->submissions->where('result', 'Accepted')->where('task_id', $task)->isNotEmpty() ? ' text-success font-weight-bold' : ''}}">{{$participation->information['tasks'][$task]['score'] / 1000}}</span>
                                 @php
                                     $time = $participation->information['tasks'][$task]['solve_time'];
                                     if($time !== null){
@@ -52,8 +61,9 @@ use Carbon\Carbon;
                                     }
                                 @endphp
                                 @if($time !== null)
+                                <span class="{{$participation->submissions->where('result', 'Accepted')->where('task_id', $task)->isNotEmpty() ? ' text-success font-weight-bold' : ''}}">{{$participation->information['tasks'][$task]['score'] / 1000}}</span>
                                 <br/>
-                                <small class="text-muted">{{gmdate('H:i:s', $time)}}
+                                <small class="text-muted">{{gmdate('H:i:s', $time)}}</small>
                                 @endif
                             </td>
                         @endforeach

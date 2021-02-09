@@ -29,9 +29,9 @@
                     <th>Task ID</th>
                     <th class="text-center">
                         @if($order == 'solved')
-                            <a href="/tasks/All">Solved <span class="dropdown-toggle"></span></a>
+                            <a href="/tasks/{{$tab}}">Solved <span class="dropdown-toggle"></span></a>
                         @else
-                            <a href="/tasks/All/solved">Solved</span></a>
+                            <a href="/tasks/{{$tab}}/solved">Solved</span></a>
                         @endif
                     </th>
                     <th>Title</th>
