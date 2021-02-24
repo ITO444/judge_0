@@ -64,7 +64,7 @@ class ProcessTest implements ShouldQueue
             $run->save();
             return;
         }
-        if($run->memory == $task->memory_limit || isset($executeData['status'])){
+        if($run->memory >= $task->memory_limit || isset($executeData['status'])){
             $run->result = 'Runtime Error';
             $run->grader_feedback .= isset($executeData['status']) ? $executeData['error'] : "Memory limit exceeded\n";
             $run->save();

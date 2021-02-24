@@ -30,7 +30,7 @@ use Carbon\Carbon;
                     <td class="text-center">
                         @if($participation->isUpcoming() || !$participation->type)
                         <span class="text-muted">-</span>
-                        @elseif(!$loop->first && $participation->score == $participations[$key - 1]->score)
+                        @elseif(!$loop->first && $participation->score == $contest->participations[$key - 1]->score)
                         {{$rank}}
                         @else
                         {{$rank = $loop->iteration}}

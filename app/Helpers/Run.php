@@ -31,6 +31,9 @@ class Run
 
         $exitCode = $runCommand->run();
         $error = $runCommand->getErrorOutput();
+        if(strlen($error) > 5000){
+            $error = substr($error, 0, 5000).'...';
+        }
         return ['error' => $error];
     }
 

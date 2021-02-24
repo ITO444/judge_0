@@ -32,6 +32,7 @@ class TasksController extends Controller
             'Algorithm' => 'A%',
             'BIO' => 'B%',
             'CCC' => 'C%',
+            'Python Tutorials' => 'P%',
             'USACO' => 'U%',
             'Contest' => 'X%',
             'Practice' => 'Y%',
@@ -440,7 +441,7 @@ class TasksController extends Controller
         }
         $submission->save();
         ProcessSubmission::dispatch($submission->id)->onQueue('code');
-        return redirect("/submission/$submission->id")->with('success', 'Submitted');
+        return redirect("/submission/$submission->id")->with('success', 'We are processing your submission, please be patient.');
     }
 
     public function publish(Task $task)
