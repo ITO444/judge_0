@@ -1,4 +1,6 @@
 $(function(){
+    var editor = ace.edit("editor");
+    var code = $('#code');
     var input = $('#input');
     var timeoutId;
     

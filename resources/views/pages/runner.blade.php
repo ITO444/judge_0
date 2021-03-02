@@ -27,7 +27,7 @@
     <a id='toggle' class='btn btn-secondary'>Toggle highlighting</a>
     <div id='runstatus' class="d-inline text-muted">{{auth()->user()->runner_status/*?'Loading...':''*/}}</div>
     {!! Form::close() !!}
-<pre id='result' class='text-monospace'>{{$output}}</pre>
+    <div id='result'>{!!$output!!}</div>
 @endsection
 
 @push('scripts')

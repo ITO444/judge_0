@@ -13,7 +13,8 @@
                 Login as Others
             </a>
         @else
-            <p>Hi {{auth()->user()->display}}!</p><hr/>
+            <p>Hi {{auth()->user()->display}}!</p>
+
             {{-- We strongly advise you all to go to HKOI team trainings.<br/>
             <a href="https://hkoi.org/en/schedule-2021/">Here</a> is the training schedule.<br/>
             <a href="https://hkoi.org/en/training-team-general-information/#join">Here</a> is some general information for the training team.<br/>

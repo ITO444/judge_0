@@ -46,7 +46,7 @@ class RunnerController extends Controller
         $saved = $this->validateAndSave($request);
         if (!$saved) {
             return response()->json([
-                'status' => "ITO doesn\'t let you run"
+                'status' => "Error running"
             ]);
         }
         ProcessRunner::dispatch($userId, $request['language'])->onQueue('code');
@@ -61,7 +61,7 @@ class RunnerController extends Controller
         $saved = $this->validateAndSave($request);
         if (!$saved) {
             return response()->json([
-                'status' => 'ITO doesn\'t let you save'
+                'status' => 'Error saving'
             ]);
         }
         return response()->json([
@@ -73,7 +73,7 @@ class RunnerController extends Controller
         $saved = $this->validateAndSave($request);
         if (!$saved) {
             return response()->json([
-                'status' => 'ITO doesn\'t let you switch'
+                'status' => 'Error switching'
             ]);
         }
         $language = $request['language'];

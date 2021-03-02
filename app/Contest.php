@@ -119,4 +119,18 @@ class Contest extends Model
     public function cumulative(){
         return $this->configuration["cumulative"];
     }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($contest) {
+            foreach ($contest->participations as $participation) {
+                $participation->delete();
+            }
+        });
+    }
 }

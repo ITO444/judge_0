@@ -55,13 +55,14 @@ class ProcessRunner implements ShouldQueue
         $user->save();
         $compileData = Run::compile($boxId, 10, 262144, $language);
         
-        $error = $compileData['error'];
-        Storage::put("$userDir/output.txt", "Box: $boxId\nCompile:\n$error\n");
+        $error = e($compileData['error']);
+        // Storage::put("$userDir/output.txt", "Box: $boxId\nCompile:\n$error\n");
 
         $compile = 1;//intval($compileData['exitcode']);
         if(isset($compileData['status'])){
             $user->runner_status = '';
             $user->save();
+            Storage::put("$userDir/output.txt", "<hr/> <pre class=\"alert alert-danger\">Compilation error</pre> <pre class=\"alert alert-info\">$error</pre>");
             event(new UpdateRunner('Compilation Error', $userId));
             return;
         }
@@ -78,25 +79,28 @@ class ProcessRunner implements ShouldQueue
         $user->save();
         $executeData = Run::execute($boxId, 2, 262144, 1024, $language);
 
-        $error = $executeData['error'];//var_export($executeData, True);
-        $output = Storage::get("$boxHereS/output.txt");
-        Storage::append("$userDir/output.txt", "Execute:\n$error\nOutput:\n$output");
+        $error = e($executeData['error']);//var_export($executeData, True);
+        $output = e(Storage::get("$boxHereS/output.txt"));
+        // Storage::append("$userDir/output.txt", "Execute:\n$error\nOutput:\n$output");
 
         $execute = 1;//intval($executeData['exitcode']);
         if(isset($executeData['status'])){
             if($executeData['status'] == 'TO'){
                 $user->runner_status = '';
                 $user->save();
+                Storage::put("$userDir/output.txt", "<hr/> <pre class=\"alert alert-danger\">Time Limit Exceeded</pre> <h6>Output:</h6> <pre class=\"col border rounded bg-white shadow-sm m-1 py-2 io monospace\">$output</pre>");
                 event(new UpdateRunner('Time Limit Exeeded', $userId));
                 return;
             }
             $user->runner_status = '';
             $user->save();
+            Storage::put("$userDir/output.txt", "<hr/> <pre class=\"alert alert-danger\">Runtime Error</pre> <pre class=\"alert alert-info\">$error</pre>");
             event(new UpdateRunner('Runtime Error', $userId));
             return;
         }
         $user->runner_status = '';
         $user->save();
+        Storage::put("$userDir/output.txt", "<hr/> Output <pre class=\"col border rounded bg-white shadow-sm m-1 py-2 io monospace\">$output</pre>");
         event(new UpdateRunner('Done', $userId));
         return;
     }

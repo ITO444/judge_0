@@ -61,4 +61,21 @@ class Task extends Model
         ];
         $this->attributes['grader_status'] = $IDs[$value];
     }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($task) {
+            foreach ($task->submissions as $submission) {
+                $submission->delete();
+            }
+            foreach ($task->tests as $test) {
+                $test->delete();
+            }
+        });
+    }
 }

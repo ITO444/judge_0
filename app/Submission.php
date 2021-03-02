@@ -103,4 +103,17 @@ class Submission extends Model
         ];
         $this->attributes['result'] = $IDs[$value];
     }
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($submission) {
+            foreach ($submission->runs as $run) {
+                $run->delete();
+            }
+        });
+    }
 }

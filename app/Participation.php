@@ -36,4 +36,19 @@ class Participation extends Model
         $now = Carbon::now();
         return $this->start > $now;
     }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($participation) {
+            foreach ($participation->submissions as $submission) {
+                $submission->participation_id = null;
+                $submission->save();
+            }
+        });
+    }
 }

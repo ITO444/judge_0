@@ -110,4 +110,21 @@ class User extends Authenticatable implements MustVerifyEmail
         $token = Password::broker()->createToken($this);
         $this->notify(new SetPassword($token, $this));
     }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            foreach ($user->participations as $participation) {
+                $participation->delete();
+            }
+            foreach ($user->submissions as $submission) {
+                $submission->delete();
+            }
+        });
+    }
 }

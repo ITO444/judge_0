@@ -42,6 +42,11 @@ class BB
             '<br/>',
             '$1'
         )->addParser(
+            'hr',
+            '/\[hr\/?\]/s',
+            '<hr/>',
+            '$1'
+        )->addParser(
             'sample',
             '/\[sampletop left=(.*?) right=(.*?)\/?\]/s',
             '<div class="row font-weight-bold"><div class="col">$1</div><div class="col">$2</div></div>',
@@ -52,9 +57,24 @@ class BB
             '<div class="row">$1</div>',
             '$1'
         )->addParser(
+            'row',
+            '/\[row\](.*?)\[\/row\]/s',
+            '<div class="row">$1</div>',
+            '$1'
+        )->addParser(
+            'col',
+            '/\[col\](.*?)\[\/col\]/s',
+            '<div class="col">$1</div>',
+            '$1'
+        )->addParser(
             'io',
             '/\[io\](.*?)\[\/io\]/s',
             '<pre class="col border rounded shadow-sm m-1 py-2 io monospace">$1</pre>',
+            '$1'
+        )->addParser(
+            'code',
+            '/\[code\](.*?)\[\/code\]/s',
+            '<pre class="border rounded shadow-sm m-1 py-2 io monospace">$1</pre>',
             '$1'
         )->addParser(
             'monospace',
