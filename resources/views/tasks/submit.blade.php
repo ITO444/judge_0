@@ -10,7 +10,7 @@
             {{Form::open(['action' => ['TasksController@saveSubmit', $task->task_id], 'method' => 'POST'])}}
             <div class='form-group'>
                 {{Form::label('language', 'Language')}}
-                {{Form::select('language', ['cpp' => 'C++', 'py' => 'Python 3'], 'cpp', ['class' => 'form-control'])}}
+                {{Form::select('language', ['cpp' => 'C++', 'py' => 'Python 3'], 'py', ['class' => 'form-control'])}}
             </div>
             <div class="form-group">
                 {{Form::label('code', 'Source code', ['class' => 'form-label'])}}
