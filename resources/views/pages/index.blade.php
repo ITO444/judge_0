@@ -14,7 +14,11 @@
             </a>
         @else
             <p>Hi {{auth()->user()->display}}!</p>
-
+            <hr/>
+            Welcome to the DGS Programming Team Online Judge.<br/>
+            Feel free to click around and try doing various tasks!<br/>
+            We recommend you to try doing <a href="tasks/P000">P000 - Output</a> to learn basic output in Python.<br/>
+            <strong>You may fill in <a href="https://forms.gle/buigXNjhAEqBS2397">this Google form</a> after completing P000 to earn points for your house in the 2021 Inter-House Programming Contest.</strong><br/>
             {{-- We strongly advise you all to go to HKOI team trainings.<br/>
             <a href="https://hkoi.org/en/schedule-2021/">Here</a> is the training schedule.<br/>
             <a href="https://hkoi.org/en/training-team-general-information/#join">Here</a> is some general information for the training team.<br/>

@@ -47,13 +47,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('reset_temp_level', 'AdminController@resetTempLevel');
 });
 
-Route::group(['prefix' => 'lesson'], function () {
+/*Route::group(['prefix' => 'lesson'], function () {
     Route::get('', 'AdminController@lesson')->middleware('admin:3');
     Route::get('attend', 'AdminController@attend')->middleware('admin:3');
     Route::post('attend', 'AdminController@saveAttend')->middleware('admin:3');
     Route::get('answer', 'AdminController@answer')->middleware('admin:3');
     Route::post('answer', 'AdminController@saveAnswer')->middleware('admin:3');
-});
+});*/
 
 
 Route::get('tasks/{tab}/{order?}', 'TasksController@index')->middleware('admin:2');

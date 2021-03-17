@@ -7,11 +7,14 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="google-signin-client_id" content="856937592028-9ccgv0c373vmn3h5g0furehcptidgtr1.apps.googleusercontent.com">
+
     <title>@yield('pageTitle') - {{config('app.name')}}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" src="/js/mathjax/tex-chtml.js" defer></script>
     @stack('scripts')

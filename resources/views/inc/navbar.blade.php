@@ -22,7 +22,7 @@
                     <a class="nav-link" href="/tasks/All">Tasks</a>
                 </li>
                 @endif
-                @if(auth()->user()->level >= 3)
+                @if(auth()->user()->level >= 3 && false)
                 <li class="nav-item">
                     <a class="nav-link" href="/lesson">Lesson</a>
                 </li>
