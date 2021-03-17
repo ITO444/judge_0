@@ -91,6 +91,21 @@ class BB
             '/\[table\](.*?)\[\/table\]/s',
             '<div class="table-responsive"><table class="table table-bordered">$1</table></div>',
             '$1'
+        )->addParser(
+            'link',
+            '/\[url\](.*?)\[\/url\]/s',
+            '<a href="$1" target="_blank">$1</a>',
+            '$1'
+        )->addParser(
+            'namedlink',
+            '/\[url\=(.*?)\](.*?)\[\/url\]/s',
+            '<a href="$1" target="_blank">$2</a>',
+            '$2'
+        )->addParser(
+            'image',
+            '/\[img\](.*?)\[\/img\]/s',
+            '<img src="$1" class="img-fluid">',
+            '$1'
         );
 
         return $bbCode->convertToHtml(htmlspecialchars($text));

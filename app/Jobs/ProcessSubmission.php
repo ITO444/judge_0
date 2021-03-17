@@ -14,6 +14,7 @@ use App\Run as ARun;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
+use App\Events\UpdateSubmit;
 use Throwable;
 
 class ProcessSubmission implements ShouldQueue
@@ -154,6 +155,7 @@ class ProcessSubmission implements ShouldQueue
                 $user->solved = $user->submissions->where('participation_id', null)->where('result', 'Accepted')->unique('task_id')->count();
                 $user->save();
             }
+            event(new UpdateSubmit($submission->id));
         })->allowFailures()->onQueue('code')->dispatch();
     }
 
@@ -168,6 +170,7 @@ class ProcessSubmission implements ShouldQueue
         $submission = Submission::find($this->submissionId);
         $submission->result = '';
         $submission->save();
+        event(new UpdateSubmit($submission->id));
         return;
     }
 

@@ -27,16 +27,16 @@ class TasksController extends Controller
     {
         $level = auth()->user()->level;
         $tabs = [
+            'Python Tutorials' => 'P%',
             'All' => '%',
+            'Basics' => 'Z%',
+            'Contest' => 'X%',
             'Teacher' => '0%',
             'Algorithm' => 'A%',
+            'Practice' => 'Y%',
             'BIO' => 'B%',
             'CCC' => 'C%',
-            'Python Tutorials' => 'P%',
             'USACO' => 'U%',
-            'Contest' => 'X%',
-            'Practice' => 'Y%',
-            'Basics' => 'Z%',
         ];
         if($level >= 4){
             $tabs['WIP'] = false;
@@ -263,9 +263,9 @@ class TasksController extends Controller
         }
         $testChange = $test ? $test->id : NULL;
         $validator = Validator::make($request->all(), [
-            "inputFile" => ['required_without:inputText', 'file', 'max:65536', 'mimes:txt'],
+            "inputFile" => ['nullable', 'file', 'max:65536', 'mimes:txt'],
             "inputText" => ['nullable', 'string', 'max:67108864'],
-            "outputFile" => ['required_without:outputText', 'file', 'max:65536', 'mimes:txt'],
+            "outputFile" => ['nullable', 'file', 'max:65536', 'mimes:txt'],
             "outputText" => ['nullable', 'string', 'max:67108864'],
         ]);
         if ($validator->fails()) {
@@ -288,12 +288,12 @@ class TasksController extends Controller
         if($request->hasFile("inputFile")){
             $request->file('inputFile')->storeAs('tests', "$test->id.in");
         }else{
-            Storage::put("tests/$test->id.in", $request["inputText"]);
+            Storage::put("tests/$test->id.in", $request["inputText"] ?: '');
         }
         if($request->hasFile("outputFile")){
             $request->file('outputFile')->storeAs('tests', "$test->id.out");
         }else{
-            Storage::put("tests/$test->id.out", $request["outputText"]);
+            Storage::put("tests/$test->id.out", $request["outputText"] ?: '');
         }
         if($testChange){
             return back()->with('success', "Test case changed");

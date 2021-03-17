@@ -22,10 +22,9 @@ class UpdateSubmit implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($submissionId, $result)
+    public function __construct($submissionId)
     {
         $this->submissionId = $submissionId;
-        $this->result = $result;
     }
 
     /**
@@ -35,6 +34,6 @@ class UpdateSubmit implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("update.submit.$this->submissionId");
+        return new Channel("update.submit.$this->submissionId");
     }
 }

@@ -95,8 +95,10 @@
 <script>
     var ace_language = "{{$submission->language}}";
     var ace_theme = "twilight";
+    var id = "{{$submission->id}}";
 </script>
 <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/ace/keybinding-vscode.js"></script>
 <script src="/js/dptj/editor.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/dptj/submit-reload.js" type="text/javascript" charset="utf-8"></script>
 @endpush

@@ -55877,7 +55877,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
   // forceTLS: true,
   wsHost: window.location.hostname,
-  wsPort: 6001,
+  //wsPort: 6001,
+  wsPort: 8444,
   forceTLS: false,
   disableStats: true
 });
@@ -55971,8 +55972,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /media/sf_judge/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /media/sf_judge/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\code\judge\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\code\judge\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

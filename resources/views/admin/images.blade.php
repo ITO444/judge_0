@@ -16,7 +16,7 @@
             </tr></thead><tbody>
         @foreach($images as $image)
             <tr>
-                <td><img class="img-fluid" src="/storage/images/{{$image->name}}.{{$image->extension}}"/></td>
+                <td><img src="/storage/images/{{$image->name}}.{{$image->extension}}" class="img-fluid"/></td>
                 <td>{{$image->name}}</td>
                 <td><span class="io">/storage/images/{{$image->name}}.{{$image->extension}}</div></td>
                 <td>
