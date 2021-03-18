@@ -106,6 +106,11 @@ class BB
             '/\[img\](.*?)\[\/img\]/s',
             '<img src="$1" class="img-fluid">',
             '$1'
+        )->addParser(
+            'comment',
+            '/\[comment\](.*?)\[\/comment\]/s',
+            '<!--$1-->',
+            '$1'
         );
 
         return $bbCode->convertToHtml(htmlspecialchars($text));
