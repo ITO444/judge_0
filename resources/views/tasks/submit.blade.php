@@ -27,7 +27,7 @@
 
 @push('scripts')
 <script>
-    var ace_language = "cpp";
+    var ace_language = "py";
     var ace_theme = "twilight";
 </script>
 <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>

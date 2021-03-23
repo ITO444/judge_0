@@ -32,7 +32,7 @@
 
 @push('scripts')
 <script>
-    var ace_language = "cpp";
+    var ace_language = "py";
     var ace_theme = "twilight";
     var user_id = "{{auth()->user()->id}}";
 </script>

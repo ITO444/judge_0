@@ -45,11 +45,16 @@ class AdminController extends Controller
         if ($validator->fails()) {
             return redirect('/admin/users')->withErrors($validator)->withInput();
         }
-        if($myLevel <= 5 && !$user->google_id){
+        if ($myLevel <= 5 && !$user->google_id) {
             return abort(404);
         }
-        if($myLevel <= $user->level){
+        if ($myLevel <= $user->level) {
             return back()->with('error', 'The user you edit must be lower than your level');
+        }
+        if ($request["email"] != $user->email) {
+            if (!preg_match('/dgs\.edu\.hk$/', $request["email"])) {
+                $user->google_id = null;
+            }
         }
         $user->name = $request["name"];
         $user->real_name = $request["real_name"];

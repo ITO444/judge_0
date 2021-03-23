@@ -75,6 +75,10 @@ class LoginController extends Controller
         $existingUser = User::where('email', $user->email)->first();
         if($existingUser){
             // log them in
+            $existingUser->google_id       = $user->id;
+            $existingUser->avatar          = $user->avatar;
+            $existingUser->avatar_original = $user->avatar_original;
+            $existingUser->save();
             auth()->login($existingUser, true);
         } else {
             // create a new user
