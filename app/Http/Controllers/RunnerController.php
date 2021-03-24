@@ -30,7 +30,7 @@ class RunnerController extends Controller
             Storage::put("$directory/input.txt", '');
             Storage::put("$directory/output.txt", '');
         }
-        $code = Storage::get("$directory/program.cpp");
+        $code = Storage::get("$directory/program.py");
         $input = Storage::get("$directory/input.txt");
         return view('pages.runner')->with('code', $code)->with('input', $input)->with('output', Storage::get("$directory/output.txt"));
     }
@@ -43,12 +43,12 @@ class RunnerController extends Controller
                 'status' => "Please be patient"
             ]);
         }
-        $saved = $this->validateAndSave($request);
-        if (!$saved) {
+        if (!$this->validateData($request)) {
             return response()->json([
                 'status' => "Error running"
             ]);
         }
+        $this->saveData($request);
         ProcessRunner::dispatch($userId, $request['language'])->onQueue('code');
         $user->runner_status = 'On Queue';
         $user->save();
@@ -58,20 +58,19 @@ class RunnerController extends Controller
     }
 
     public function save(Request $request){
-        $saved = $this->validateAndSave($request);
-        if (!$saved) {
+        if (!$this->validateData($request)) {
             return response()->json([
                 'status' => 'Error saving'
             ]);
         }
+        $this->saveData($request);
         return response()->json([
             'status' => 'Saved'
         ]);
     }
 
     public function language(Request $request){
-        $saved = $this->validateAndSave($request);
-        if (!$saved) {
+        if (!$this->validateData($request)) {
             return response()->json([
                 'status' => 'Error switching'
             ]);
@@ -89,9 +88,26 @@ class RunnerController extends Controller
      * Saves the user's code for runner
      *
      * @param Request $request
+     * @return
+     */
+    public static function saveData($request)
+    {
+        $code = $request['code'];
+        $input = $request['input'];
+        $language = $request['language'];
+        $directory = '/usercode/'.auth()->user()->id;
+
+        Storage::put("$directory/program.$language", $code);
+        Storage::put("$directory/input.txt", $input);
+    }
+
+    /**
+     * Saves the user's code for runner
+     *
+     * @param Request $request
      * @return bool
      */
-    public static function validateAndSave($request)
+    public static function validateData($request)
     {
         $validator = Validator::make($request->all(), [
             "code" => ['nullable', 'string', 'max:131072'],
@@ -101,13 +117,6 @@ class RunnerController extends Controller
         if ($validator->fails()) {
             return False;
         }
-        $code = $request['code'];
-        $input = $request['input'];
-        $language = $request['language'];
-        $directory = '/usercode/'.auth()->user()->id;
-
-        Storage::put("$directory/program.$language", $code);
-        Storage::put("$directory/input.txt", $input);
         return True;
     }
 }
