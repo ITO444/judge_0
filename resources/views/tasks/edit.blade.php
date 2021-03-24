@@ -3,9 +3,10 @@
 @section('pageTitle', "$task->task_id - $task->title")
 
 @section('content')
+<div class="row justify-content-center"><div class="col-md-10">
     @include("tasks.top")
     @include("tasks.publish_warning")
-    <div class="row justify-content-center"><div class="col-md-10"><div class="card">
+    <div class="card">
         <div class="card-header"><a class="btn disabled text-dark" disabled>Edit Task</a><a href="/task/{{$task->task_id}}/tests" class="btn btn-secondary float-right">Manage test data</a></div>
         <div class="card-body">{{Form::open(['action' => ['TasksController@update', $task->task_id], 'method' => 'POST'])}}
             <div class="row form-group">
@@ -140,7 +141,8 @@
                 </div>
             </div>
         {{Form::close()}}</div>
-    </div></div></div>
+    </div>
+</div></div>
 @endsection
 
 @push('scripts')

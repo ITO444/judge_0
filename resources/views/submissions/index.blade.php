@@ -12,13 +12,12 @@
 
 @section('content')
     @if(isset($user))
-    User: <a href="/user/{{$user->name}}" class="text-body">{{$user->name}} - {{$user->display}}</a>
+    <h2><img src = "{{$user->avatar}}" width = "5%"/> {{$user->name}} - {{$user->display}}</h2>
     @elseif(isset($task))
     @include('tasks.top')
     @elseif(isset($contest))
     @include('contests.top')
     @endif
-    <h1>Submissions</h1>
     @if(count($submissions) > 0)
         {{$submissions->links()}}
         <div class="table-responsive"><table class="table table-striped table-bordered table-hover text-nowrap">

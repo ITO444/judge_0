@@ -3,8 +3,10 @@
 @section('pageTitle', "$task->task_id - $task->title")
 
 @section('content')
+    
+<div class="row justify-content-center"><div class="col-md-8">
     @include("tasks.top")
-    <div class="row justify-content-center"><div class="col-md-8"><div class="card">
+    <div class="card">
         <div class="card-header">Submit</div>
         <div class="card-body">
             {{Form::open(['action' => ['TasksController@saveSubmit', $task->task_id], 'method' => 'POST'])}}
@@ -22,7 +24,8 @@
             </div>
             {{Form::close()}}
         </div>
-    </div></div></div>
+    </div>
+</div></div>
 @endsection
 
 @push('scripts')

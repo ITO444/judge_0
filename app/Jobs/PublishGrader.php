@@ -46,13 +46,13 @@ class PublishGrader implements ShouldQueue
 
         $task->grader_status = 'Compiling';
         $task->save();
-        event(new UpdatePublish($task->id, 'Compiling', 'Wait'));
+        event(new UpdatePublish($task->id, 'Compiling', '<div class="alert alert-info">Compiling (This may take a while)</div>'));
         $compileData = Run::compile($boxId, 30, 262144, 'cpp');
 
         if(isset($compileData['status'])){
             $task->grader_status = 'Compilation Error';
             $task->save();
-            event(new UpdatePublish($task->id, 'Compilation Error', $compileData['error']));
+            event(new UpdatePublish($task->id, 'Compilation Error', '<div class="alert alert-danger">'.$compileData['error'].'</div>'));
             return;
         }
         Storage::delete("/graders/$task->id.exe");
@@ -60,7 +60,7 @@ class PublishGrader implements ShouldQueue
         $task->published = 1;
         $task->grader_status = 'Accepted';
         $task->save();
-        event(new UpdatePublish($task->id, 'Published', 'Yay'));
+        event(new UpdatePublish($task->id, 'Published', '<div class="alert alert-success">Done</div>'));
     }
 
     /**

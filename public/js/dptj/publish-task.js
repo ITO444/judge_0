@@ -5,6 +5,6 @@ $(function(){
             window.location.replace("/task/" + task_id);
         }
         $("#result").html(e.result);
-        $("#message").html(e.message);
+        $("#message").append(e.message);
     });
 });

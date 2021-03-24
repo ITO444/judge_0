@@ -5,7 +5,8 @@
 @section('content')
     <div class="row justify-content-center"><div class="col-md-10">
         @include("tasks.top")
-        <div id="result">
+        <div class="alert alert-primary">Please be patient</div>
+        <div id="result" class="alert alert-secondary">
             {{$task->grader_status}}
         </div>
         <div id="message">
