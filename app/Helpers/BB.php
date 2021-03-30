@@ -74,7 +74,7 @@ class BB
         )->addParser(
             'code',
             '/\[code\](.*?)\[\/code\]/s',
-            '<pre class="border rounded shadow-sm m-1 py-2 io monospace">$1</pre>',
+            '<div class="row"><pre class="col border rounded shadow-sm m-1 py-2 io monospace">$1</pre></div>',
             '$1'
         )->addParser(
             'monospace',
@@ -89,7 +89,7 @@ class BB
         )->addParser(
             'table',
             '/\[table\](.*?)\[\/table\]/s',
-            '<div class="table-responsive"><table class="table table-bordered">$1</table></div>',
+            '<div class="table-responsive"><table class="table table-bordered border shadow-sm">$1</table></div>',
             '$1'
         )->addParser(
             'link',
