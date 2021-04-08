@@ -69,7 +69,7 @@ class ContestsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "contest_id" => ['required', 'string', "unique:contests,contest_id", "max:10"],
-            "name" => ['required', 'string', "max:32"],
+            "name" => ['required', 'string', "max:64"],
         ]);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -147,7 +147,7 @@ class ContestsController extends Controller
         if($contest->published){
             $validator = Validator::make($request->all(), [
                 "contest_id" => ['required', 'string', "unique:contests,contest_id,$contest->id", 'max:10'],
-                "name" => ['required', 'string', 'max:32'],
+                "name" => ['required', 'string', 'max:64'],
                 "view_level" => ['nullable', 'integer', "between:1, $level"],
                 "reg_level" => ['nullable', 'integer', "between:1, $level"],
                 "add_level" => ['nullable', 'integer', "between:4, $level"],
