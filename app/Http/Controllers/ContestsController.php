@@ -159,7 +159,7 @@ class ContestsController extends Controller
         }else{
             $validator = Validator::make($request->all(), [
                 "contest_id" => ['required', 'string', "unique:contests,contest_id,$contest->id", 'max:10'],
-                "name" => ['required', 'string', 'max:32'],
+                "name" => ['required', 'string', 'max:64'],
                 "view_level" => ['nullable', 'integer', "between:1, $level"],
                 "reg_level" => ['nullable', 'integer', "between:1, $level"],
                 "add_level" => ['nullable', 'integer', "between:4, $level"],
