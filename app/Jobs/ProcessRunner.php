@@ -100,7 +100,8 @@ class ProcessRunner implements ShouldQueue
         }
         $user->runner_status = '';
         $user->save();
-        Storage::put("$userDir/output.txt", "<hr/> Output <pre class=\"col border rounded bg-white shadow-sm m-1 py-2 io monospace\">$output</pre>");
+        $time = $executeData['time'];
+        Storage::put("$userDir/output.txt", "<hr/> Execute Time: $time seconds <br/> Output <pre class=\"col border rounded bg-white shadow-sm m-1 py-2 io monospace\">$output</pre>");
         event(new UpdateRunner('Done', $userId));
         return;
     }
