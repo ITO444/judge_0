@@ -26,7 +26,7 @@
                 <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/out" target="_blank">Download</a> ({{$test->size('out')}}B)</div></td>
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
-                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>
+                    <a href="/task/{{$task->task_id}}/tests/{{$test->id}}#collapse" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>
                     <a data-id="{{$test->id}}" class="btn btn-danger {{$task->published ? 'disabled' : ''}} del">Delete</a>
                 </td>
             </tr>
