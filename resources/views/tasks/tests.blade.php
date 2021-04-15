@@ -22,8 +22,8 @@
         @foreach($task->tests as $test)
             <tr>
                 <td><div class="col-form-label">{{$loop->iteration}}</div></td>
-                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/in" target="_blank">Download</a> ({{$test->size('in')}}B)</div></td>
-                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/out" target="_blank">Download</a> ({{$test->size('out')}}B)</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/in" target="_blank">Download</a> ({{$test->readableSize('in')}})</div></td>
+                <td><div class="col-form-label"><a href="/task/{{$task->task_id}}/test/{{$loop->iteration}}/download/out" target="_blank">Download</a> ({{$test->readableSize('out')}})</div></td>
                 <td><div class="col-form-label">{{$test->updated_at}}</div></td>
                 <td>
                     <a href="/task/{{$task->task_id}}/tests/{{$test->id}}#collapse" class="btn btn-primary {{$task->published ? 'disabled' : ''}}">Edit</a>

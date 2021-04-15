@@ -19,6 +19,20 @@ class Test extends Model
         return Storage::size("tests/$this->id.$ext");
     }
 
+    public function readableSize($ext){
+        $size = $this->size($ext);
+        $unit = 'B';
+        if ($size >= 1024) {
+            $size /= 1024;
+            $unit = 'KB';
+            if ($size > 1024) {
+                $size /= 1024;
+                $unit = 'MB';
+            }
+        }
+        $size = round($size);
+        return "$size $unit";
+    }
     /**
      * The "booted" method of the model.
      *
