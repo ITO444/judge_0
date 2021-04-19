@@ -50,7 +50,7 @@ class Run
     {
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
-        $wallTime = $compileTime * 2;
+        $wallTime = $compileTime * 10;
         if($language == "cpp"){
             $runCommand = new Process([
                 'isolate', '--cg', "--box-id=$boxId", "--time=$compileTime", "--wall-time=$wallTime",
@@ -97,7 +97,7 @@ class Run
     {
         $boxHere = base_path()."/storage/app/run/$boxId";
         $boxThere = "/var/local/lib/isolate/$boxId/box";
-        $wallTime = $runtimeLimit * 2;
+        $wallTime = $runtimeLimit * 10;
         if($language == "cpp"){
             chmod("$boxHere/program.exe", 0764);
             $runCommand = new Process([
