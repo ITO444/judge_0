@@ -41,8 +41,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('contest', 'ContestsController@create')->middleware('admin:6');
     Route::post('contest', 'ContestsController@store')->middleware('admin:6');
     Route::get('lesson/{language}', 'AdminController@adminLesson')->middleware('admin:6');
-    Route::get('images/{image:name?}', 'AdminController@images')->middleware('admin:4');
-    Route::post('images/{image:name?}', 'AdminController@saveImage')->middleware('admin:4');
+    Route::get('images/{image:name?}', 'AdminController@images')->middleware('admin:6');
+    Route::post('images/{image:name?}', 'AdminController@saveImage')->middleware('admin:6');
     Route::post('temp_level', 'AdminController@changeTempLevel')->middleware('admin:4');
     Route::get('reset_temp_level', 'AdminController@resetTempLevel');
 });

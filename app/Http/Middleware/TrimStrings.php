@@ -16,5 +16,7 @@ class TrimStrings extends Middleware
         'password_confirmation',
         'inputText',
         'outputText',
+        'code',
+        'input',
     ];
 }

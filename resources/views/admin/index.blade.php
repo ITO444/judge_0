@@ -21,7 +21,7 @@
             <a href="/admin/lesson/cpp" class="list-group-item list-group-item-action {{$level>=6?'':'disabled'}}">
                 Lesson
             </a>
-            <a href="/admin/images" class="list-group-item list-group-item-action {{$level>=4?'':'disabled'}}">
+            <a href="/admin/images" class="list-group-item list-group-item-action {{$level>=6?'':'disabled'}}">
                 Images
             </a>
         </div>
